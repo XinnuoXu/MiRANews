@@ -42,7 +42,9 @@ if __name__ == '__main__':
                 else:
                     clusters[cid]['multi_news_url'] = 'NONE'
                 clusters[cid]['doc_summ_cluster'] = {}
-            clusters[cid]['doc_summ_cluster'][uid] = [document, summary]
+            clusters[cid]['doc_summ_cluster'][uid] = {}
+            clusters[cid]['doc_summ_cluster'][uid]['[DOCUMENT]'] = document
+            clusters[cid]['doc_summ_cluster'][uid]['[SUMMARY]'] = summary
 
     fpout = open(OUPUT_FILE, 'w')
     for cid in clusters:
