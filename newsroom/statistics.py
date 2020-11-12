@@ -17,8 +17,6 @@ def novel_ngrams(document, gold_summ, ngram):
 
 if __name__ == '__main__':
     import json
-    import spacy
-    nlp_seg = spacy.load("en_core_web_sm")
 
     source_dict = {}
     cluster_size = {}
@@ -66,8 +64,8 @@ if __name__ == '__main__':
 
         for pid in pair_obj:
             pair = pair_obj[pid]
-            document = pair['[DOCUMENT]'].lower()
-            summary = pair['[SUMMARY]'].lower()
+            document = pair['[DOCUMENT]']
+            summary = pair['[SUMMARY]']
             source = pair['[SORUCE]'].replace(':80', '')
             timestamp = pair['[DATE]']
             year = timestamp[:4]
@@ -82,19 +80,19 @@ if __name__ == '__main__':
                 source_dict[source] += 1
 
             # Document length
+            document_sent_num += len(document)
+            document = ' '.join(document)
             document_toks = document.split()
             document_length += len(document_toks)
             document_num += 1
-            doc_sentences = nlp_seg(document)
-            document_sent_num += len(doc_sentences)
             document_vocabs |= set(document_toks)
 
             # Summary length
+            summary_sent_num += len(summary)
+            summary = ' '.join(summary)
             summary_toks = summary.split()
             summary_length += len(summary_toks)
             summary_num += 1
-            summary_sentences = nlp_seg(summary)
-            summary_sent_num += len(summary_sentences)
             summary_vocabs |= set(summary_toks)
 
             # Novelty
