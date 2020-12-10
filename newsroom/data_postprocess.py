@@ -33,16 +33,20 @@ def one_line(line):
             continue
         if '[SUMMARY]' not in pair:
             continue
+        if '[TITLE]' not in pair:
+            continue
         if '[URL]' not in pair:
             continue
         document = pair['[DOCUMENT]']
         summary = pair['[SUMMARY]']
+        title = pair['[TITLE]']
         url = pair['[URL]']
-        if document == None or summary == None or url == None:
+        if document == None or summary == None or url == None or title == None:
             continue
 
         doc_tokens = document.split()
         summ_tokens = summary.split()
+        title_tokens = title.split()
 
         if len(doc_tokens) < DOC_MIN_LEN:
             continue
@@ -68,10 +72,12 @@ def one_line(line):
         
         document = ' '.join(word_tokenize(document.replace('\n', ' ')))
         summary = ' '.join(word_tokenize(summary.replace('\n', ' ')))
+        title = ' '.join(word_tokenize(title.replace('\n', ' ')))
         docs = [str(d) for d in list(nlp_seg(document).sents)]
         summs = [str(s) for s in list(nlp_seg(summary).sents)]
+        tits = [str(s) for s in list(nlp_seg(title).sents)]
 
-        filtered_pairs[pid] = {'[DOCUMENT]': docs, '[SUMMARY]': summs, '[URL]': url, '[DATE]': timestamp, '[SORUCE]': url_domain}
+        filtered_pairs[pid] = {'[DOCUMENT]': docs, '[SUMMARY]': summs, '[TITLE]':tits, '[URL]': url, '[DATE]': timestamp, '[SORUCE]': url_domain}
         #filtered_pairs[pid] = {'[SUMMARY]': summary, '[URL]': url, '[DATE]': timestamp}
 
     if len(filtered_pairs) < CLUSTER_MIN_SIZE:

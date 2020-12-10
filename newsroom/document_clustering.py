@@ -33,6 +33,7 @@ if __name__ == '__main__':
         for entry in train_file:
             document = clean_document(entry["text"])
             summary = entry["summary"]
+            title = entry["title"]
             url = entry["archive"]
             uid = map_dict[url]
             cid = uid.replace('articles/', '').split('-')[0]
@@ -46,6 +47,7 @@ if __name__ == '__main__':
             clusters[cid]['doc_summ_cluster'][uid] = {}
             clusters[cid]['doc_summ_cluster'][uid]['[DOCUMENT]'] = document
             clusters[cid]['doc_summ_cluster'][uid]['[SUMMARY]'] = summary
+            clusters[cid]['doc_summ_cluster'][uid]['[TITLE]'] = title
             clusters[cid]['doc_summ_cluster'][uid]['[URL]'] = url
 
     fpout = open(OUPUT_FILE, 'w')
