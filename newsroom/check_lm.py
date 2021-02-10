@@ -68,10 +68,10 @@ if __name__ == '__main__':
     fpout.write('\n'.join(res_source_single))
     fpout.close()
 
-    fpout = open('check_lm_test_cross.txt', 'w')
+    fpout = open('check_lm_test_same.txt', 'w')
     fpout.write('\n'.join([pair[0] for pair in res_pairs]))
     fpout.close()
 
-    fpout = open('check_lm_test_same.txt', 'w')
+    fpout = open('check_lm_test_cross.txt', 'w')
     fpout.write('\n'.join([pair[1] for pair in res_pairs]))
     fpout.close()
