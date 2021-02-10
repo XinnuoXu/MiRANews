@@ -17,7 +17,10 @@ INPUT_FILE = '/scratch/xxu/multi-multi/multi_multi_clean.jsonl'
 CW_GOLD_PATH = './tmp_'+sys.argv[1]+'.txt'
 TMP_CHECKPOINT_FILE = './tmp_'+sys.argv[1]+'.checkpoint'
 CHUNK_ID = int(sys.argv[1])
-CW_THREAD = 1
+CW_THREAD = -1
+MAX_DOCS_IN_CLUSTER = 5
+MAX_LEN_SUMM = 200
+MAX_LEN_DOC = 500
 
 srl_obj = Str2Srl.Str2Srl(SRL_ARCHIVE_PATH)
 tree_obj = Srl2Tree.Srl2Tree()
@@ -33,6 +36,16 @@ def read_from_tree(tree_res):
         doc_trees.append(doc_tree)
         gold_trees.append(gold_tree)
     return doc_trees, gold_trees
+
+def cut_by_length(doc, max_length):
+    sents = doc.split('\t')
+    new_doc = []; length = 0
+    for line in sents:
+        flist = line.split()
+        length += len(flist)
+        if length < max_length:
+            new_doc.append(line)
+    return '\t'.join(new_doc)
 
 def load_clusters(sample_num):
     cluster_num = len([l for l in open(INPUT_FILE)])
@@ -59,8 +72,12 @@ def load_clusters(sample_num):
                 summary = '\t'.join(pair['[TITLE]']) + '\t' + '\t'.join(pair['[SUMMARY]'])
             else:
                 summary = '\t'.join(pair['[SUMMARY]'])
+            document = cut_by_length(document, MAX_LEN_DOC)
+            summary = cut_by_length(summary, MAX_LEN_SUMM)
             docs.append(document.lower())
             summs.append(summary.lower())
+            if len(docs) == MAX_DOCS_IN_CLUSTER:
+                break
         clusters.append((docs, summs))
     return clusters
 
