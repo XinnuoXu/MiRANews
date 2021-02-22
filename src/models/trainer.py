@@ -104,35 +104,15 @@ class Trainer(object):
 
         with torch.no_grad():
             for batch in valid_iter:
-                if self.args.mode == 'validate':
-                    src = batch.src
-                    tgt = batch.tgt
+                src = batch.src
+                tgt = batch.tgt.contiguous()
+                mask_src = batch.mask_src
+                mask_tgt = batch.mask_tgt
+                labels = tgt[:, 1:].clone()
+                labels[tgt[:, 1:] == self.pad_id] = -100
 
-                    pmt_msk = batch.pmt_msk
-                    states = batch.states
-                    ex_idx = batch.ex_idx
-                    tgt_idx = batch.tgt_idx
-
-                    mask_src = batch.mask_src
-                    mask_tgt = batch.mask_tgt
-
-                    outputs, _ = self.model(src, tgt, mask_src, pmt_msk, ex_idx)
-                    init_logps, trans_logps = self.model.trans_logprobs()
-                    ext_logps = self.model.external_logprobs()
-                    batch_stats = self.loss.mono_compute_loss(batch, outputs, states,
-                                                            ex_idx, tgt_idx, mask_tgt,
-                                                            init_logps, trans_logps,
-                                                            ext_logps)
-                else:
-                    src = batch.src
-                    tgt = batch.tgt
-                    segs = batch.segs
-                    mask_src = batch.mask_src
-                    mask_tgt = batch.mask_tgt
-
-                    outputs, _ = self.model(src, tgt, segs, mask_src, mask_tgt)
-                    batch_stats = self.loss.monolithic_compute_loss(batch, outputs)
-
+                loss, logits = self.model(src, tgt[:, :-1], mask_src, mask_tgt[:, :-1], labels)
+                batch_stats = Statistics(loss.clone().item(), 1)
                 stats.update(batch_stats)
             self._report_step(0, step, valid_stats=stats)
 

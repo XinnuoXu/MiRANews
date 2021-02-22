@@ -111,6 +111,10 @@ class ErrorHandler(object):
         raise Exception(msg)
 
 
+'''
+@ Validation
+'''
+
 def validation(args, device_id):
     timestep = 0
     if (args.test_all):
@@ -131,7 +135,7 @@ def validation(args, device_id):
         logger.info('PPL %s' % str(xent_lst))
         for xent, cp in xent_lst:
             step = int(cp.split('.')[-2].split('_')[-1])
-            test_abs(args, device_id, cp, step)
+            #test(args, device_id, cp, step)
     else:
         if args.test_from != "":
             step = args.test_from.split('_')[-1].split('.')[0]
@@ -150,7 +154,7 @@ def validation(args, device_id):
                         timestep = time_of_cp
                         step = int(cp.split('.')[-2].split('_')[-1])
                         validate_single(args, device_id, cp, step)
-                        test_abs(args, device_id, cp, step)
+                        #test(args, device_id, cp, step)
 
                 cp_files = sorted(glob.glob(os.path.join(args.model_path, 'model_step_*.pt')))
                 cp_files.sort(key=os.path.getmtime)
@@ -179,9 +183,7 @@ def validate_single(args, device_id, pt, step):
     valid_iter = data_seq2seq.Dataloader(args, load_dataset(args, 'dev', shuffle=False),
                                             args.batch_size, device,
                                             shuffle=False, is_test=False)
-    symbols = {'PAD': 0}
-    valid_loss = abs_loss(model.generator, symbols, model.dec_vocab_size, train=False, device=device)
-    trainer = build_trainer(args, device_id, model, None, valid_loss)
+    trainer = build_trainer(args, device_id, model, None)
     stats = trainer.validate(valid_iter, step)
     return stats.xent()
 

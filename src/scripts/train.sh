@@ -17,7 +17,7 @@ python train.py  \
 	-report_every 50 \
 	-warmup_steps 1000 \
 	-train_steps 50000 \
-	-visible_gpus 0,1,2,3 \
+	-visible_gpus 0,1,2 \
 	-save_checkpoint_steps 5000 \
 	-log_file ../logs/abs_bert_cnndm
 	#-train_from ${MODEL_PATH}/model_step_16000.pt \
