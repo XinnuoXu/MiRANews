@@ -65,17 +65,17 @@ class Translator(object):
 
         with torch.no_grad():
             for batch in data_iter:
-                batch_data = self.translate_batch(batch)
-                translations = self.from_batch(batch_data, batch)
-                for trans in translations:
-                    pred, gold, src, example_id = trans
-                    pred_str = pred.replace('[unused0]', '')\
-                                .replace('[unused1]', '')\
-                                .replace('[PAD]', '')\
-                                .replace('[SEP]', '')\
-                                .replace('[UNK]', '')\
-                                .replace(r' +', ' ').strip()
-                    gold_str = gold.strip()
+                translations = self.translate_batch(batch)
+                preds = self.ids_to_toks(translations)
+                golds = self.ids_to_toks(batch.tgt)
+                srcs = batch.src_str
+                example_ids = batch.example_ids
+                for i, pred in enumerate(preds):
+                    pred_str = pred.strip()
+                    gold_str = golds[i].strip()
+                    src = '\t'.join(srcs[i])
+                    example_id = example_ids[i]
+                    # write out
                     self.can_out_file.write(pred_str + '\n')
                     self.gold_out_file.write(gold_str + '\n')
                     self.src_out_file.write(src.strip() + '\n')
@@ -103,14 +103,17 @@ class Translator(object):
         results_dict = test_rouge(self.args.temp_dir, can_path, gold_path)
         return results_dict
 
+    def ids_to_toks(self, ids):
+        toks = [self.tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=False) for g in ids]
+        return toks
 
     def translate_batch(self, batch, fast=False):
         with torch.no_grad():
             src = batch.src
             mask_src = batch.mask_src
             hypos = self.model.generate(src, 
-                        num_beams=self.beam_size,
+                        beam_size=self.beam_size,
                         max_length=self.max_length,
                         min_length=self.min_length,
                         early_stopping=True)
-            hypos = [self.tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=False) for g in hypos[0]]
+        return hypos

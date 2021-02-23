@@ -81,5 +81,6 @@ class FineTuneModel(nn.Module):
         hypos = self.model.generate(src,
                     num_beams=beam_size,
                     max_length=max_length,
-                    min_length=min_length,
+                    #min_length=min_length,
                     early_stopping=early_stopping)
+        return hypos
