@@ -17,7 +17,7 @@ import distributed
 from models import data_seq2seq, model_builder
 from models.data_seq2seq import load_dataset
 from models.model_builder import FineTuneModel
-from models.test_pretrain import build_predictor
+from models.test_seq2seq import Translator
 from models.trainer import build_trainer
 from others.logging import logger, init_logger
 
@@ -246,11 +246,11 @@ def test(args, device_id, pt, step):
     opt = vars(checkpoint['opt'])
     print(args)
 
-    model = FineTuneModel(args, device, checkpoint)
+    model = FineTuneModel(args, device, checkpoint=checkpoint)
     model.eval()
     test_iter = data_seq2seq.Dataloader(args, load_dataset(args, 'test', shuffle=False),
-                                       args.test_batch_size, device,
-                                       shuffle=False, is_test=True)
-    predictor = build_predictor(args, model, logger)
+                                           args.test_batch_size, device,
+                                           shuffle=False, is_test=True)
+    predictor = Translator(args, model, logger)
     predictor.translate(test_iter, step)
 

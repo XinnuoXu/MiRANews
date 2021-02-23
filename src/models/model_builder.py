@@ -55,7 +55,7 @@ class FineTuneModel(nn.Module):
 
         if checkpoint is not None:
             self.load_state_dict(checkpoint['model'], strict=True)
-        # else: initialize parameters
+        # initialize parameters
 
         self.to(device)
 
@@ -76,3 +76,10 @@ class FineTuneModel(nn.Module):
                     decoder_input_ids=tgt,
                     decoder_attention_mask=mask_tgt)
             return res.logits
+
+    def generate(self, src, beam_size, max_length, min_length, early_stopping=True):
+        hypos = self.model.generate(src,
+                    num_beams=beam_size,
+                    max_length=max_length,
+                    min_length=min_length,
+                    early_stopping=early_stopping)
