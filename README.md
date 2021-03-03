@@ -7,4 +7,6 @@ conda install -c huggingface transformers
 conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
 pip install multiprocess
 pip install importlib_metadata
+pip install tensorboardX
+pip install pyrouge
 ```
