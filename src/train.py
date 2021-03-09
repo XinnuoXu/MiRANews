@@ -4,12 +4,12 @@
 """
 from __future__ import division
 
-import argparse
 import os
+import argparse
 from others.logging import init_logger
-from models import data_seq2seq
-from models.data_seq2seq import load_dataset
 import pytorch_lightning as pl
+from models.Loaddata import SummDataset, batch_collate
+from torch.utils.data import DataLoader
 from lightning_trainer import LightningObject
 
 def str2bool(v):
@@ -30,6 +30,7 @@ if __name__ == '__main__':
     parser.add_argument("-train_from", default='')
     parser.add_argument("-temp_dir", default='../temp')
     parser.add_argument('-log_file', default='../logs/cnndm.log')
+    parser.add_argument("-num_dataload_workers", default=0, type=int)
 
     parser.add_argument("-finetune_bart", type=str2bool, nargs='?', const=True, default=True)
     parser.add_argument("-pad_id", default=0, type=int)
@@ -79,10 +80,12 @@ if __name__ == '__main__':
 
     if (args.mode == 'train'):
         # Data_loader
-        train_loader = data_seq2seq.Dataloader(args, 
-                            load_dataset(args, 'train', shuffle=True),
-                            args.batch_size, device,
-                            shuffle=True, is_test=False)
+        train_dataset = SummDataset(args, 'train', shuffle=True)
+        train_loader = DataLoader(train_dataset, 
+                            batch_size=args.batch_size,
+                            shuffle=True,
+                            collate_fn=batch_collate,
+                            num_workers=args.num_dataload_workers)
         # Checkpoint
         if args.train_from != '':
             logger.info('Loading checkpoint from %s' % args.train_from)

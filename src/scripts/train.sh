@@ -13,7 +13,7 @@ python train.py  \
 	-adam_eps 1e-08 \
 	-weight_decay 0.01 \
 	-accum_count 5 \
-	-batch_size 50 \
+	-batch_size 3 \
 	-report_every 50 \
 	-warmup_steps 2000 \
 	-train_steps 30000 \

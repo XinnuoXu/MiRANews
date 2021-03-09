@@ -5,6 +5,7 @@ amrtotext_*
 log.txt
 models/*
 logs/
+*logs*
 temp/
 amr.log*
 nohup*

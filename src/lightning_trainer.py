@@ -23,10 +23,10 @@ class LightningObject(pl.LightningModule):
         return hypos
 
     def training_step(self, batch, batch_idx):
-        src = batch.src
-        tgt = batch.tgt.contiguous()
-        mask_src = batch.mask_src
-        mask_tgt = batch.mask_tgt
+        src = batch[0]
+        tgt = batch[1].contiguous()
+        mask_src = batch[2]
+        mask_tgt = batch[3]
         labels = tgt[:, 1:].clone()
         labels[tgt[:, 1:] == self.pad_id] = -100
         loss, logits = self.model(src, tgt[:, :-1], mask_src, mask_tgt[:, :-1], labels)
@@ -37,7 +37,8 @@ class LightningObject(pl.LightningModule):
         optimizer = torch.optim.Adam(self.parameters(), 
                                     lr=self.args.lr,
                                     betas=(self.args.beta1, self.args.beta2),
-                                    eps=self.args.adam_eps)
+                                    eps=self.args.adam_eps,
+                                    weight_decay=self.args.weight_decay)
         scheduler = NoamLR(optimizer, self.args.warmup_steps)
         opt_obj = {'optimizer':optimizer,
                     'lr_scheduler':scheduler,
