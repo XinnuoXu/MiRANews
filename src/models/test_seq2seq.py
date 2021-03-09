@@ -34,23 +34,6 @@ class Translator(object):
         self.tensorboard_writer = SummaryWriter(tensorboard_log_dir, comment="Unmt")
 
 
-    def from_batch(self, translation_batch, batch):
-        preds, tgt_str, src = translation_batch["predictions"], batch.tgt_str, batch.src
-        raw_srcs = batch.src_str
-        batch_size = batch.batch_size
-        translations = []
-        for b in range(batch_size):
-            pred_sents = [self.vocab[int(n)] for n in preds[b][0]]
-            pred_sents = ' '.join(pred_sents)
-            gold_sent = ' '.join(tgt_str[b].split())
-            #raw_src = [self.src_vocab[int(t)] for t in src[b]][:500]
-            #raw_src = ' '.join(raw_src)
-            raw_src = '[CLS] ' + ' [SEP] '.join(raw_srcs[b]) + ' [SEP]'
-            translation = (pred_sents, gold_sent, raw_src, batch.example_ids[b])
-            translations.append(translation)
-        return translations
-
-
     def translate(self, data_iter, step):
 
         self.model.eval()

@@ -2,12 +2,9 @@ import bisect
 import gc
 import glob
 import random
-
 import torch
 
 from others.logging import logger
-
-
 
 class Batch(object):
     def _pad(self, data, pad_id, width=-1):
@@ -84,8 +81,7 @@ def abs_batch_size_fn(new, count):
 
 
 class Dataloader(object):
-    def __init__(self, args, datasets,  batch_size,
-                 device, shuffle, is_test):
+    def __init__(self, args, datasets, batch_size, device, shuffle, is_test):
         self.args = args
         self.datasets = datasets
         self.batch_size = batch_size

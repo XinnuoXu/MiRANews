@@ -11,7 +11,6 @@ python train.py \
 	-pad_id 1 \
 	-max_pos 800 \
 	-batch_size 140 \
-	-test_batch_size 100 \
 	-alpha 0.9 \
 	-visible_gpus 0 \
 	-log_file ../logs/val_abs_bert_cnndm \
