@@ -8,7 +8,7 @@ import os
 import argparse
 import pytorch_lightning as pl
 from pytorch_lightning import loggers as pl_loggers
-from pytorch_lightning.callbacks import LearningRateMonitor
+from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning import seed_everything
 from lightning_trainer import LightningObject, LightningDataObject
 
@@ -93,13 +93,18 @@ if __name__ == '__main__':
             checkpoint = None
         # Init Object
         train_obj = LightningObject(args, device, checkpoint)
+        # Initialize checkpoint_callback
+        checkpoint_callback = ModelCheckpoint(monitor='val_loss',
+                                                filename='sample-mnist-{epoch:02d}-{val_loss:.2f}',
+                                                save_top_k=3,
+                                                mode='min')
         # Log
         trainer = pl.Trainer(gpus=args.gpu_ranks, 
                             accelerator=args.lightning_accelerator, 
                             max_epochs=args.train_epochs,
                             val_check_interval=args.val_check_interval,
                             accumulate_grad_batches=args.accum_count,
-                            callbacks=[lr_monitor],
+                            callbacks=[lr_monitor, checkpoint_callback],
                             log_every_n_steps=args.log_every_n_steps)
         trainer.fit(train_obj, train_loader)
 
