@@ -1,7 +1,6 @@
 import glob
 import random
 import torch
-from others.logging import logger
 from torch.utils.data import Dataset
 
 def batch_collate(batch=None):
@@ -55,15 +54,11 @@ class SummDataset(Dataset):
                 random.shuffle(pts)
             for pt_file in pts:
                 dataset = torch.load(pt_file)
-                logger.info('Loading %s dataset from %s, number of examples: %d' %
-                            (corpus_type, pt_file, len(dataset)))
                 for ex in dataset:
                     examples.append(self.preprocess(ex, corpus_type == "test"))
         else:
             pt_file = args.data_path + '.' + corpus_type + '.pt'
             dataset = torch.load(pt_file)
-            logger.info('Loading %s dataset from %s, number of examples: %d' %
-                        (corpus_type, pt_file, len(dataset)))
             for ex in dataset:
                 examples.append(self.preprocess(ex, corpus_type == "test"))
         return examples
