@@ -40,6 +40,8 @@ if __name__ == '__main__':
     parser.add_argument("-accum_count", default=1, type=int)
     parser.add_argument('-visible_gpus', default='-1', type=str)
     parser.add_argument('-gpu_ranks', default='0', type=str)
+    parser.add_argument("-num_nodes", default=1, type=int)
+
     parser.add_argument('-seed', default=777, type=int)
     parser.add_argument("-train_epochs", default=1000, type=int)
     parser.add_argument("-batch_size", default=140, type=int)
@@ -101,7 +103,7 @@ if __name__ == '__main__':
                                                 mode='min')
         # Log
         trainer = pl.Trainer(gpus=args.gpu_ranks, 
-                                num_nodes=1,
+                                num_nodes=args.num_nodes,
                                 accelerator=args.lightning_accelerator, 
                                 max_epochs=args.train_epochs,
                                 val_check_interval=args.val_check_interval,
