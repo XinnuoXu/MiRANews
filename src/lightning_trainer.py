@@ -8,10 +8,10 @@ from models.Loaddata import SummDataset, batch_collate
 from torch.utils.data import DataLoader
 
 class LightningObject(pl.LightningModule):
-    def __init__(self, args, device, checkpoint):
+    def __init__(self, args, device):
         super(LightningObject, self).__init__()
         self.args = args
-        self.model = FineTuneModel(args, device, checkpoint)
+        self.model = FineTuneModel(args, device)
         self.pad_id = args.pad_id
 
     def forward(self, batch):

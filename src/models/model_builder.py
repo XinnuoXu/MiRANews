@@ -5,7 +5,7 @@ import torch.nn as nn
 from transformers import BartModel, BartConfig, BartForConditionalGeneration
 
 class FineTuneModel(nn.Module):
-    def __init__(self, args, device, checkpoint=None):
+    def __init__(self, args, device):
         super(FineTuneModel, self).__init__()
         self.args = args
         self.finetune = args.finetune_bart
@@ -19,11 +19,7 @@ class FineTuneModel(nn.Module):
         else:
             self.model = BartForConditionalGeneration(config).from_pretrained('facebook/bart-base', cache_dir=temp_dir)
 
-        if checkpoint is not None:
-            self.load_state_dict(checkpoint['model'], strict=True)
-
         # ===== initialize parameters =====
-
         self.to(device)
 
 

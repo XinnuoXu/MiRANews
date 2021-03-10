@@ -7,6 +7,8 @@ python train.py  \
 	-mode train \
 	-data_path ${DATA_PATH} \
 	-model_path ${MODEL_PATH} \
+	-train_from ./lightning_logs/version_0/checkpoints/sample-mnist-epoch=00-val_loss=8.41.ckpt \
+	-train_state ./lightning_logs/version_0/hparams.yaml \
 	-lr 0.001 \
 	-pad_id 1 \
 	-max_pos 800 \
@@ -18,4 +20,3 @@ python train.py  \
 	-train_epochs 35 \
 	-val_check_interval 0.25 \
 	-log_every_n_steps 50 \
-	#-train_from ${MODEL_PATH}/model_step_16000.pt \

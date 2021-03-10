@@ -28,6 +28,7 @@ if __name__ == '__main__':
     parser.add_argument("-model_path", default='../models/')
     parser.add_argument("-result_path", default='../results/cnndm')
     parser.add_argument("-train_from", default='')
+    parser.add_argument("-train_state", default='')
     parser.add_argument("-temp_dir", default='../temp')
     parser.add_argument("-num_dataload_workers", default=0, type=int)
 
@@ -85,14 +86,14 @@ if __name__ == '__main__':
         lr_monitor = LearningRateMonitor(logging_interval='step')
         # Data_loader
         train_loader = LightningDataObject(args)
-        # Checkpoint
-        if args.train_from != '':
-            checkpoint = torch.load(args.train_from, map_location=lambda storage, loc: storage)
-            opt = vars(checkpoint['opt'])
-        else:
-            checkpoint = None
         # Init Object
-        train_obj = LightningObject(args, device, checkpoint)
+        if args.train_from != '':
+            train_obj = LightningObject.load_from_checkpoint(checkpoint_path=args.train_from, 
+                                                                hparams_file=args.train_state,
+                                                                args=args, 
+                                                                device=device)
+        else:
+            train_obj = LightningObject(args, device)
         # Initialize checkpoint_callback
         checkpoint_callback = ModelCheckpoint(monitor='val_loss',
                                                 filename='sample-mnist-{epoch:02d}-{val_loss:.2f}',
