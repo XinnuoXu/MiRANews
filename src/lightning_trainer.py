@@ -59,13 +59,13 @@ class LightningObject(pl.LightningModule):
                                     betas=(self.args.beta1, self.args.beta2),
                                     eps=self.args.adam_eps,
                                     weight_decay=self.args.weight_decay)
-        scheduler = NoamLR(optimizer, self.args.warmup_steps)
-        opt_obj = {'optimizer':optimizer,
-                    'lr_scheduler':scheduler,
-                    'interval': 'step',
-                    'frequency': 1
-                  }
-        return opt_obj
+        scheduler = {'scheduler': NoamLR(optimizer, self.args.warmup_steps),
+                     'monitor': 'metric_to_track',
+                     'interval': 'step',
+                     'frequency': 1,
+                     'strict': True,
+                    }
+        return [optimizer], [scheduler]
 
 
 class LightningDataObject(pl.LightningDataModule):
