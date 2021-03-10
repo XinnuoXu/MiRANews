@@ -14,12 +14,9 @@ python train.py  \
 	-weight_decay 0.01 \
 	-accum_count 5 \
 	-batch_size 3 \
-	-report_every 50 \
 	-warmup_steps 2000 \
-	-train_steps 30000 \
-	-visible_gpus 0 \
-	-save_checkpoint_steps 5000 \
+	-train_epochs 2 \
+	-val_check_interval 0.1 \
 	-log_file ../logs/abs_bert_cnndm
 	#-train_from ${MODEL_PATH}/model_step_16000.pt \
-	#-lr 3e-05 \
-	#-visible_gpus 0,1,2,3 \
+	#-warmup_steps 2000 \

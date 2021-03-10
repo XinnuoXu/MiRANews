@@ -8,9 +8,7 @@ import os
 import argparse
 from others.logging import init_logger
 import pytorch_lightning as pl
-from models.Loaddata import SummDataset, batch_collate
-from torch.utils.data import DataLoader
-from lightning_trainer import LightningObject
+from lightning_trainer import LightningObject, LightningDataObject
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -41,10 +39,10 @@ if __name__ == '__main__':
     parser.add_argument('-visible_gpus', default='-1', type=str)
     parser.add_argument('-gpu_ranks', default='0', type=str)
     parser.add_argument('-seed', default=777, type=int)
-    parser.add_argument("-save_checkpoint_steps", default=5, type=int)
-    parser.add_argument("-report_every", default=1, type=int)
-    parser.add_argument("-train_steps", default=1000, type=int)
+    parser.add_argument("-train_epochs", default=1000, type=int)
     parser.add_argument("-batch_size", default=140, type=int)
+    parser.add_argument("-val_check_interval", default= 0.5, type=float)
+    parser.add_argument("-lightning_accelerator", default='ddp', type=str, choices=['dp', 'ddp', 'ddp2'])
 
     # optimizer
     parser.add_argument("-optim", default='adam', type=str)
@@ -73,19 +71,17 @@ if __name__ == '__main__':
     parser.add_argument("-block_trigram", type=str2bool, nargs='?', const=True, default=True)
 
     args = parser.parse_args()
-    args.gpu_ranks = [int(i) for i in range(len(args.visible_gpus.split(',')))]
+    if args.visible_gpus == '-1':
+        args.gpu_ranks = -1
+    else:
+        args.gpu_ranks = [int(i) for i in range(len(args.visible_gpus.split(',')))]
     init_logger(args.log_file)
     device = "cpu" if args.visible_gpus == '-1' else "cuda"
     device_id = 0 if device == "cuda" else -1
 
     if (args.mode == 'train'):
         # Data_loader
-        train_dataset = SummDataset(args, 'train', shuffle=True)
-        train_loader = DataLoader(train_dataset, 
-                            batch_size=args.batch_size,
-                            shuffle=True,
-                            collate_fn=batch_collate,
-                            num_workers=args.num_dataload_workers)
+        train_loader = LightningDataObject(args)
         # Checkpoint
         if args.train_from != '':
             logger.info('Loading checkpoint from %s' % args.train_from)
@@ -95,7 +91,11 @@ if __name__ == '__main__':
             checkpoint = None
         # Init Object
         train_obj = LightningObject(args, device, checkpoint)
-        trainer = pl.Trainer(gpus=-1, accelerator='ddp', accumulate_grad_batches=args.accum_count)
+        trainer = pl.Trainer(gpus=args.gpu_ranks, 
+                            accelerator=args.lightning_accelerator, 
+                            max_epochs=args.train_epochs,
+                            val_check_interval=args.val_check_interval,
+                            accumulate_grad_batches=args.accum_count)
         trainer.fit(train_obj, train_loader)
 
     '''

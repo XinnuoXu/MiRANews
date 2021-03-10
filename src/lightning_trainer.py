@@ -4,6 +4,8 @@ from torch import nn
 import pytorch_lightning as pl
 from models.model_builder import FineTuneModel
 from models.Schedulers import NoamLR
+from models.Loaddata import SummDataset, batch_collate
+from torch.utils.data import DataLoader
 
 class LightningObject(pl.LightningModule):
     def __init__(self, args, device, checkpoint):
@@ -33,6 +35,17 @@ class LightningObject(pl.LightningModule):
         self.log('train_loss', loss)
         return loss
 
+    def validation_step(self, batch, batch_idx):
+        src = batch[0]
+        tgt = batch[1].contiguous()
+        mask_src = batch[2]
+        mask_tgt = batch[3]
+        labels = tgt[:, 1:].clone()
+        labels[tgt[:, 1:] == self.pad_id] = -100
+        loss, logits = self.model(src, tgt[:, :-1], mask_src, mask_tgt[:, :-1], labels)
+        self.log('val_loss', loss)
+        return {'loss': loss}
+
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), 
                                     lr=self.args.lr,
@@ -46,3 +59,38 @@ class LightningObject(pl.LightningModule):
                     'frequency': 1
                   }
         return opt_obj
+
+
+class LightningDataObject(pl.LightningDataModule):
+
+    def __init__(self, args):
+        super().__init__()
+        self.args = args
+
+    def train_dataloader(self):
+        train_dataset = SummDataset(self.args, 'train', shuffle=True)
+        train_loader = DataLoader(train_dataset,
+                            batch_size=self.args.batch_size,
+                            shuffle=True,
+                            collate_fn=batch_collate,
+                            num_workers=self.args.num_dataload_workers)
+        return train_loader
+
+    def val_dataloader(self):
+        dev_dataset = SummDataset(self.args, 'dev', shuffle=True)
+        dev_loader = DataLoader(dev_dataset,
+                            batch_size=self.args.batch_size,
+                            shuffle=True,
+                            collate_fn=batch_collate,
+                            num_workers=self.args.num_dataload_workers)
+        return dev_loader
+
+    def test_dataloader(self):
+        test_dataset = SummDataset(self.args, 'test', shuffle=False)
+        test_loader = DataLoader(test_dataset,
+                            batch_size=self.args.batch_size,
+                            shuffle=False,
+                            collate_fn=batch_collate,
+                            num_workers=self.args.num_dataload_workers)
+        return test_loader
+
