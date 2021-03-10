@@ -101,12 +101,13 @@ if __name__ == '__main__':
                                                 mode='min')
         # Log
         trainer = pl.Trainer(gpus=args.gpu_ranks, 
-                            accelerator=args.lightning_accelerator, 
-                            max_epochs=args.train_epochs,
-                            val_check_interval=args.val_check_interval,
-                            accumulate_grad_batches=args.accum_count,
-                            callbacks=[lr_monitor, checkpoint_callback],
-                            log_every_n_steps=args.log_every_n_steps)
+                                num_nodes=1,
+                                accelerator=args.lightning_accelerator, 
+                                max_epochs=args.train_epochs,
+                                val_check_interval=args.val_check_interval,
+                                accumulate_grad_batches=args.accum_count,
+                                callbacks=[lr_monitor, checkpoint_callback],
+                                log_every_n_steps=args.log_every_n_steps)
         trainer.fit(train_obj, train_loader)
 
     '''
