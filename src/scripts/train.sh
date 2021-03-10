@@ -14,7 +14,7 @@ python train.py  \
 	-weight_decay 0.01 \
 	-accum_count 5 \
 	-batch_size 3 \
-	-warmup_steps 2000 \
+	-warmup_steps 20 \
 	-train_epochs 2 \
 	-val_check_interval 0.1 \
 	-log_every_n_steps 5 \
