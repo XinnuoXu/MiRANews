@@ -6,8 +6,10 @@ from __future__ import division
 
 import os
 import argparse
-from others.logging import init_logger
 import pytorch_lightning as pl
+from pytorch_lightning import loggers as pl_loggers
+from pytorch_lightning.callbacks import LearningRateMonitor
+from pytorch_lightning import seed_everything
 from lightning_trainer import LightningObject, LightningDataObject
 
 def str2bool(v):
@@ -27,7 +29,6 @@ if __name__ == '__main__':
     parser.add_argument("-result_path", default='../results/cnndm')
     parser.add_argument("-train_from", default='')
     parser.add_argument("-temp_dir", default='../temp')
-    parser.add_argument('-log_file', default='../logs/cnndm.log')
     parser.add_argument("-num_dataload_workers", default=0, type=int)
 
     parser.add_argument("-finetune_bart", type=str2bool, nargs='?', const=True, default=True)
@@ -41,6 +42,7 @@ if __name__ == '__main__':
     parser.add_argument('-seed', default=777, type=int)
     parser.add_argument("-train_epochs", default=1000, type=int)
     parser.add_argument("-batch_size", default=140, type=int)
+    parser.add_argument("-log_every_n_steps", default=50, type=int)
     parser.add_argument("-val_check_interval", default= 0.5, type=float)
     parser.add_argument("-lightning_accelerator", default='ddp', type=str, choices=['dp', 'ddp', 'ddp2'])
 
@@ -75,32 +77,33 @@ if __name__ == '__main__':
         args.gpu_ranks = -1
     else:
         args.gpu_ranks = [int(i) for i in range(len(args.visible_gpus.split(',')))]
-    init_logger(args.log_file)
     device = "cpu" if args.visible_gpus == '-1' else "cuda"
     device_id = 0 if device == "cuda" else -1
 
     if (args.mode == 'train'):
+        seed_everything(args.seed)
+        lr_monitor = LearningRateMonitor(logging_interval='step')
         # Data_loader
         train_loader = LightningDataObject(args)
         # Checkpoint
         if args.train_from != '':
-            logger.info('Loading checkpoint from %s' % args.train_from)
             checkpoint = torch.load(args.train_from, map_location=lambda storage, loc: storage)
             opt = vars(checkpoint['opt'])
         else:
             checkpoint = None
         # Init Object
         train_obj = LightningObject(args, device, checkpoint)
+        # Log
         trainer = pl.Trainer(gpus=args.gpu_ranks, 
                             accelerator=args.lightning_accelerator, 
                             max_epochs=args.train_epochs,
                             val_check_interval=args.val_check_interval,
-                            accumulate_grad_batches=args.accum_count)
+                            accumulate_grad_batches=args.accum_count,
+                            callbacks=[lr_monitor],
+                            log_every_n_steps=args.log_every_n_steps)
         trainer.fit(train_obj, train_loader)
 
     '''
-    elif (args.mode == 'validate'):
-        validation(args, device_id)
     elif (args.mode == 'test'):
         cp = args.test_from
         try:

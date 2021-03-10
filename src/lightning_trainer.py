@@ -46,6 +46,13 @@ class LightningObject(pl.LightningModule):
         self.log('val_loss', loss)
         return {'loss': loss}
 
+    def validation_step_end(self, batch_parts):
+        if self.args.lightning_accelerator in ['dp', 'ddp2']:
+            losses = [batch_parts[i]['loss'] for i in range(len(batch_parts))]
+            return sum(losses)/len(losses)
+        else:
+            return batch_parts['loss']
+
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), 
                                     lr=self.args.lr,

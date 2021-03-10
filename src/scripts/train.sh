@@ -17,6 +17,6 @@ python train.py  \
 	-warmup_steps 2000 \
 	-train_epochs 2 \
 	-val_check_interval 0.1 \
-	-log_file ../logs/abs_bert_cnndm
+	-log_every_n_steps 5 \
 	#-train_from ${MODEL_PATH}/model_step_16000.pt \
 	#-warmup_steps 2000 \
