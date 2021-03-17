@@ -115,3 +115,7 @@ if __name__ == '__main__':
         trainer.test(model=model, datamodule=test_loader)
         rouge_scores = model.translator.report_rouge()
         print (rouge_scores)
+
+    elif (args.mode == 'evaluate'):
+        model = LightningObject(args, device)
+        rouge_scores = model.translator.report_rouge()

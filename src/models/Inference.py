@@ -27,12 +27,14 @@ class Translator(object):
         else:
             self.tokenizer = BartTokenizer.from_pretrained('facebook/bart-base', do_lower_case=True)
 
-        gold_path = self.args.result_path + '.gold'
-        can_path = self.args.result_path + '.candidate'
-        raw_src_path = self.args.result_path + '.raw_src'
-        self.gold_out_file = codecs.open(gold_path, 'w', 'utf-8')
-        self.can_out_file = codecs.open(can_path, 'w', 'utf-8')
-        self.src_out_file = codecs.open(raw_src_path, 'w', 'utf-8')
+        self.gold_path = self.args.result_path + '.gold'
+        self.can_path = self.args.result_path + '.candidate'
+        self.raw_src_path = self.args.result_path + '.raw_src'
+
+        if self.args.mode == 'test':
+            self.gold_out_file = codecs.open(self.gold_path, 'w', 'utf-8')
+            self.can_out_file = codecs.open(self.can_path, 'w', 'utf-8')
+            self.src_out_file = codecs.open(self.raw_src_path, 'w', 'utf-8')
 
 
     def translate(self, batch):
