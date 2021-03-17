@@ -8,7 +8,6 @@ import json
 import torch
 
 from transformers import BartTokenizer
-from tensorboardX import SummaryWriter
 from others.utils import rouge_results_to_str, test_rouge, tile
 
 
@@ -28,8 +27,12 @@ class Translator(object):
         else:
             self.tokenizer = BartTokenizer.from_pretrained('facebook/bart-base', do_lower_case=True)
 
-        tensorboard_log_dir = args.model_path
-        self.tensorboard_writer = SummaryWriter(tensorboard_log_dir, comment="Unmt")
+        gold_path = self.args.result_path + '.gold'
+        can_path = self.args.result_path + '.candidate'
+        raw_src_path = self.args.result_path + '.raw_src'
+        self.gold_out_file = codecs.open(gold_path, 'w', 'utf-8')
+        self.can_out_file = codecs.open(can_path, 'w', 'utf-8')
+        self.src_out_file = codecs.open(raw_src_path, 'w', 'utf-8')
 
 
     def translate(self, batch):
@@ -45,29 +48,19 @@ class Translator(object):
 
             preds = self.ids_to_toks(translations)
             golds = self.ids_to_toks(tgt)
+
             for i, pred in enumerate(preds):
                 pred_str = pred.strip()
                 gold_str = golds[i].strip()
                 src_str = '\t'.join(src_strs[i])
-                self.tensorboard_writer.add_text('pred_str', pred_str)
-                self.tensorboard_writer.add_text('gold_str', gold_str)
-                self.tensorboard_writer.add_text('src_str', src_str)
-
-        '''
-        if (step != -1):
-            rouges = self._report_rouge(gold_path, can_path)
-            self.logger.info('Rouges at step %d \n%s' % (step, rouge_results_to_str(rouges)))
-            if self.tensorboard_writer is not None:
-                self.tensorboard_writer.add_scalar('test/rouge1-F', rouges['rouge_1_f_score'], step)
-                self.tensorboard_writer.add_scalar('test/rouge2-F', rouges['rouge_2_f_score'], step)
-                self.tensorboard_writer.add_scalar('test/rougeL-F', rouges['rouge_l_f_score'], step)
-        '''
+                self.can_out_file.write(pred_str+'\n')
+                self.gold_out_file.write(gold_str+'\n')
+                self.src_out_file.write(src_str+'\n')
 
 
-    def _report_rouge(self, gold_path, can_path):
-        self.logger.info("Calculating Rouge")
-        results_dict = test_rouge(self.args.temp_dir, can_path, gold_path)
-        return results_dict
+    def report_rouge(self):
+        results_dict = test_rouge(self.args.temp_dir, self.can_path, self.gold_path)
+        return rouge_results_to_str(results_dict)
 
     def ids_to_toks(self, ids):
         toks = [self.tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=False) for g in ids]

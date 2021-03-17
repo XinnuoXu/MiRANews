@@ -7,6 +7,7 @@ from __future__ import division
 import os
 import argparse
 import pytorch_lightning as pl
+
 from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning import seed_everything
@@ -22,7 +23,7 @@ def str2bool(v):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-mode", default='train', type=str, choices=['train', 'validate', 'test'])
+    parser.add_argument("-mode", default='train', type=str, choices=['train', 'validate', 'test', 'evaluate'])
     parser.add_argument("-test_data", default='test', type=str, choices=['test'])
     parser.add_argument("-data_path", default='../bert_data_new/cnndm')
     parser.add_argument("-model_path", default='../models/')
@@ -58,22 +59,14 @@ if __name__ == '__main__':
     parser.add_argument("-weight_decay", default=0.0, type=float)
     parser.add_argument("-dropout", default=0.1, type=float)
     parser.add_argument("-attention_dropout", default=0.1, type=float)
-
     parser.add_argument("-warmup_steps", default=8000, type=int)
     parser.add_argument("-max_grad_norm", default=0, type=float)
 
     # testing parameters
-    parser.add_argument("-test_all", type=str2bool, nargs='?',const=True,default=False)
     parser.add_argument("-test_from", default='')
-    parser.add_argument("-test_start_from", default=-1, type=int)
-
-    parser.add_argument("-alpha",  default=0.6, type=float)
     parser.add_argument("-beam_size", default=5, type=int)
     parser.add_argument("-min_length", default=15, type=int)
     parser.add_argument("-max_length", default=150, type=int)
-
-    parser.add_argument("-report_rouge", type=str2bool, nargs='?',const=True,default=True)
-    parser.add_argument("-block_trigram", type=str2bool, nargs='?', const=True, default=True)
 
     args = parser.parse_args()
     if args.visible_gpus == '-1':
@@ -96,6 +89,7 @@ if __name__ == '__main__':
                                                                 device=device)
         else:
             train_obj = LightningObject(args, device)
+
         # Initialize checkpoint_callback
         checkpoint_callback = ModelCheckpoint(monitor='val_loss',
                                                 filename='sample-mnist-{epoch:02d}-{val_loss:.2f}',
@@ -119,3 +113,5 @@ if __name__ == '__main__':
                                                     device=device)
         trainer = pl.Trainer(gpus=args.gpu_ranks, num_nodes=args.num_nodes)
         trainer.test(model=model, datamodule=test_loader)
+        rouge_scores = model.translator.report_rouge()
+        print (rouge_scores)
