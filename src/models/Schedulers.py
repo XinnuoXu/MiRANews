@@ -22,5 +22,6 @@ class NoamLR(_LRScheduler):
 
     def get_lr(self):
         last_epoch = max(1, self.last_epoch)
-        scale = self.warmup_steps ** 0.5 * min(last_epoch ** (-0.5), last_epoch * self.warmup_steps ** (-1.5))
+        #scale = self.warmup_steps ** 0.5 * min(last_epoch ** (-0.5), last_epoch * self.warmup_steps ** (-1.5))
+        scale = min(last_epoch ** (-0.5), last_epoch * self.warmup_steps ** (-1.5))
         return [base_lr * scale for base_lr in self.base_lrs]

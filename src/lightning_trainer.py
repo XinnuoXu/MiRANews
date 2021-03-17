@@ -1,9 +1,11 @@
 import os
 import torch
+import math
 from torch import nn
 import pytorch_lightning as pl
 from models.model_builder import FineTuneModel
 from models.Schedulers import NoamLR
+from models.Inference import Translator
 from models.Loaddata import SummDataset, batch_collate
 from torch.utils.data import DataLoader
 
@@ -12,6 +14,7 @@ class LightningObject(pl.LightningModule):
         super(LightningObject, self).__init__()
         self.args = args
         self.model = FineTuneModel(args, device)
+        self.translator = Translator(args, self.model)
         self.pad_id = args.pad_id
 
     def forward(self, batch):
@@ -33,6 +36,7 @@ class LightningObject(pl.LightningModule):
         labels[tgt[:, 1:] == self.pad_id] = -100
         loss, logits = self.model(src, tgt[:, :-1], mask_src, mask_tgt[:, :-1], labels)
         self.log('train_loss', loss)
+        self.lself.logog('ppl', math.exp(min(loss, 100)))
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -52,6 +56,10 @@ class LightningObject(pl.LightningModule):
             return sum(losses)/len(losses)
         else:
             return batch_parts['loss']
+
+    def test_step(self, batch, batch_idx):
+        self.translator.translate(batch)
+        return 0.0
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), 

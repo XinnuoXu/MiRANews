@@ -79,7 +79,7 @@ if __name__ == '__main__':
     if args.visible_gpus == '-1':
         args.gpu_ranks = -1
     else:
-        args.gpu_ranks = [int(i) for i in range(len(args.visible_gpus.split(',')))]
+        args.gpu_ranks = [int(gpu_id) for gpu_id in args.visible_gpus.split(',')]
     device = "cpu" if args.visible_gpus == '-1' else "cuda"
     device_id = 0 if device == "cuda" else -1
 
@@ -112,12 +112,10 @@ if __name__ == '__main__':
                                 log_every_n_steps=args.log_every_n_steps)
         trainer.fit(train_obj, train_loader)
 
-    '''
     elif (args.mode == 'test'):
-        cp = args.test_from
-        try:
-            step = int(cp.split('.')[-2].split('_')[-1])
-        except:
-            step = 0
-        test(args, device_id, cp, step)
-    '''
+        test_loader = LightningDataObject(args)
+        model = LightningObject.load_from_checkpoint(checkpoint_path=args.test_from,
+                                                    args=args,
+                                                    device=device)
+        trainer = pl.Trainer(gpus=args.gpu_ranks, num_nodes=args.num_nodes)
+        trainer.test(model=model, datamodule=test_loader)

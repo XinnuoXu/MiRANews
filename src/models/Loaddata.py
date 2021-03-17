@@ -75,7 +75,7 @@ class SummDataset(Dataset):
         end_id = [tgt[-1]]
         tgt = tgt[:-1][:self.args.max_pos - 1] + end_id
 
-        if(is_test):
+        if(not is_test):
             src_txt = None
             tgt_txt = None
 
