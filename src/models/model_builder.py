@@ -30,7 +30,8 @@ class FineTuneModel(nn.Module):
                     decoder_input_ids=tgt,
                     decoder_attention_mask=mask_tgt,
                     labels=labels)
-            return res.loss, res.logits
+            normalization = labels[:, 1:].ne(-100).sum().item()
+            return res.loss.div(float(normalization)), res.logits
         else:
             self.eval()
             with torch.no_grad():

@@ -8,6 +8,7 @@ from models.Schedulers import NoamLR
 from models.Inference import Translator
 from models.Loaddata import SummDataset, batch_collate
 from torch.utils.data import DataLoader
+from torch.optim.lr_scheduler import ExponentialLR
 
 class LightningObject(pl.LightningModule):
     def __init__(self, args, device):
@@ -35,8 +36,9 @@ class LightningObject(pl.LightningModule):
         labels = tgt[:, 1:].clone()
         labels[tgt[:, 1:] == self.pad_id] = -100
         loss, logits = self.model(src, tgt[:, :-1], mask_src, mask_tgt[:, :-1], labels)
-        self.log('train_loss', loss)
         self.log('ppl', math.exp(min(loss, 100)))
+        loss = loss * 100
+        self.log('train_loss', loss)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -47,6 +49,7 @@ class LightningObject(pl.LightningModule):
         labels = tgt[:, 1:].clone()
         labels[tgt[:, 1:] == self.pad_id] = -100
         loss, logits = self.model(src, tgt[:, :-1], mask_src, mask_tgt[:, :-1], labels)
+        loss = loss * 100
         self.log('val_loss', loss)
         return {'loss': loss}
 
@@ -67,6 +70,7 @@ class LightningObject(pl.LightningModule):
                                     betas=(self.args.beta1, self.args.beta2),
                                     eps=self.args.adam_eps,
                                     weight_decay=self.args.weight_decay)
+
         scheduler = {'scheduler': NoamLR(optimizer, self.args.warmup_steps),
                      'monitor': 'metric_to_track',
                      'interval': 'step',
