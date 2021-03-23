@@ -37,9 +37,9 @@ class LightningObject(pl.LightningModule):
         labels[tgt[:, 1:] == self.pad_id] = -100
         loss, logits = self.model(src, tgt[:, :-1], mask_src, mask_tgt[:, :-1], labels)
         self.log('ppl', math.exp(min(loss, 100)))
-        loss = loss * 100
         self.log('train_loss', loss)
-        return loss
+        normalization = labels[:, 1:].ne(-100).sum().item()
+        return loss.div(float(normalization))
 
     def validation_step(self, batch, batch_idx):
         src = batch[0]
