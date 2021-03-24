@@ -57,7 +57,7 @@ class SummDataset(Dataset):
                 for ex in dataset:
                     examples.append(self.preprocess(ex, corpus_type == "test"))
         else:
-            pt_file = args.data_path + '.' + corpus_type + '.pt'
+            pt_file = self.args.data_path + '.' + corpus_type + '.pt'
             dataset = torch.load(pt_file)
             for ex in dataset:
                 examples.append(self.preprocess(ex, corpus_type == "test"))

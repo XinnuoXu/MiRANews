@@ -13,7 +13,8 @@ class FineTuneModel(nn.Module):
         temp_dir = args.temp_dir
         config = BartConfig(max_position_embeddings=args.max_pos,
                             dropout=args.dropout,
-                            attention_dropout=args.attention_dropout)
+                            attention_dropout=args.attention_dropout,
+                            label_smoothing=args.label_smoothing)
         if(args.large):
             self.model = BartForConditionalGeneration(config).from_pretrained('facebook/bart-large', cache_dir=temp_dir)
         else:

@@ -9,6 +9,7 @@ from models.Inference import Translator
 from models.Loaddata import SummDataset, batch_collate
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ExponentialLR
+from transformers import get_polynomial_decay_schedule_with_warmup
 
 class LightningObject(pl.LightningModule):
     def __init__(self, args, device):
@@ -71,7 +72,11 @@ class LightningObject(pl.LightningModule):
                                     eps=self.args.adam_eps,
                                     weight_decay=self.args.weight_decay)
 
-        scheduler = {'scheduler': NoamLR(optimizer, self.args.warmup_steps),
+        scheduler = get_polynomial_decay_schedule_with_warmup(optimizer,
+                                                            num_warmup_steps=self.args.warmup_steps,
+                                                            num_training_steps=self.args.train_steps)
+        #scheduler = {'scheduler': NoamLR(optimizer, self.args.warmup_steps),
+        scheduler = {'scheduler': scheduler,
                      'monitor': 'metric_to_track',
                      'interval': 'step',
                      'frequency': 1,

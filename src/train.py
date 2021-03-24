@@ -44,7 +44,8 @@ if __name__ == '__main__':
     parser.add_argument("-num_nodes", default=1, type=int)
 
     parser.add_argument('-seed', default=777, type=int)
-    parser.add_argument("-train_epochs", default=1000, type=int)
+    parser.add_argument("-max_epochs", default=10, type=int)
+    parser.add_argument("-train_steps", default=1000, type=int)
     parser.add_argument("-batch_size", default=140, type=int)
     parser.add_argument("-log_every_n_steps", default=50, type=int)
     parser.add_argument("-val_check_interval", default= 0.5, type=float)
@@ -60,7 +61,8 @@ if __name__ == '__main__':
     parser.add_argument("-dropout", default=0.1, type=float)
     parser.add_argument("-attention_dropout", default=0.1, type=float)
     parser.add_argument("-warmup_steps", default=8000, type=int)
-    parser.add_argument("-max_grad_norm", default=0, type=float)
+    parser.add_argument("-max_grad_norm", default=0.1, type=float)
+    parser.add_argument("-label_smoothing", default= 0.1, type=float)
 
     # testing parameters
     parser.add_argument("-test_from", default='')
@@ -99,11 +101,13 @@ if __name__ == '__main__':
         trainer = pl.Trainer(gpus=args.gpu_ranks, 
                                 num_nodes=args.num_nodes,
                                 accelerator=args.lightning_accelerator, 
-                                max_epochs=args.train_epochs,
+                                max_epochs=args.max_epochs,
+                                max_steps=args.train_steps,
                                 val_check_interval=args.val_check_interval,
                                 accumulate_grad_batches=args.accum_count,
                                 callbacks=[lr_monitor, checkpoint_callback],
-                                log_every_n_steps=args.log_every_n_steps)
+                                log_every_n_steps=args.log_every_n_steps,
+                                gradient_clip_val=args.max_grad_norm)
         trainer.fit(train_obj, train_loader)
 
     elif (args.mode == 'test'):
@@ -113,8 +117,6 @@ if __name__ == '__main__':
                                                     device=device)
         trainer = pl.Trainer(gpus=args.gpu_ranks, num_nodes=args.num_nodes)
         trainer.test(model=model, datamodule=test_loader)
-        rouge_scores = model.translator.report_rouge()
-        print (rouge_scores)
 
     elif (args.mode == 'evaluate'):
         model = LightningObject(args, device)

@@ -59,6 +59,10 @@ class Translator(object):
                 self.gold_out_file.write(gold_str+'\n')
                 self.src_out_file.write(src_str+'\n')
 
+            self.can_out_file.flush()
+            self.gold_out_file.flush()
+            self.src_out_file.flush()
+
 
     def report_rouge(self):
         results_dict = test_rouge(self.args.temp_dir, self.can_path, self.gold_path)
