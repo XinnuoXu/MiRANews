@@ -12,7 +12,6 @@ import subprocess
 from collections import Counter
 from os.path import join as pjoin
 from multiprocess import Pool
-from others.logging import logger
 from transformers import BartTokenizer
 
 class TrainData():
@@ -78,11 +77,11 @@ class PreproTrainData():
         corpus_type, json_file, args, save_file = params
         is_test = corpus_type == 'test'
         if (os.path.exists(save_file)):
-            logger.info('Ignore %s' % save_file)
+            print('Ignore %s' % save_file)
             return
 
         bert = TrainData(args)
-        logger.info('Processing %s' % json_file)
+        print('Processing %s' % json_file)
         jobs = json.load(open(json_file))
         datasets = []
         for d in jobs:
@@ -102,8 +101,8 @@ class PreproTrainData():
                            "tgt_txt": tgt_txt}
             datasets.append(b_data_dict)
 
-        logger.info('Processed instances %d' % len(datasets))
-        logger.info('Saving to %s' % save_file)
+        print('Processed instances %d' % len(datasets))
+        print('Saving to %s' % save_file)
         torch.save(datasets, save_file)
         datasets = []
         gc.collect()
@@ -135,7 +134,7 @@ class PreproTrainJson():
         root_src = self.args.raw_path + corpus_type + "_src.jsonl"
         for line in open(root_src):
             flist = line.strip().split("\t")
-            srcs.append([sen.split() for sen in flist])
+            srcs.append(' '.join([sen for sen in flist]))
         return srcs
 
     def preprocess(self):
@@ -151,11 +150,11 @@ class PreproTrainJson():
             tgts = []
             root_tgt = self.args.raw_path + corpus_type + "_tgt.jsonl"
             for line in open(root_tgt):
-                tgts.append([item.split() for item in line.strip().split('\t')])
+                tgts.append(' '.join([item for item in line.strip().split('\t')]))
 
             json_objs = []
             for i, src in enumerate(srcs):
-                json_objs.append({'src': src, 'tgt': tgts[i], 'example_id':i})
+                json_objs.append(json.dumps({'text': src, 'summary': tgts[i]}))
 
             dataset = []
             p_ct = 0
@@ -166,13 +165,12 @@ class PreproTrainJson():
                 if (len(dataset) > self.args.shard_size):
                     pt_file = "{:s}.{:s}.{:d}.json".format(self.args.save_path, corpus_type, p_ct)
                     with open(pt_file, 'w') as save:
-                        save.write(json.dumps(dataset))
+                        save.write('\n'.join(dataset))
                         p_ct += 1
                         dataset = []
             if (len(dataset) > 0):
                 pt_file = "{:s}.{:s}.{:d}.json".format(self.args.save_path, corpus_type, p_ct)
                 with open(pt_file, 'w') as save:
-                    save.write(json.dumps(dataset))
+                    save.write('\n'.join(dataset))
                     p_ct += 1
                     dataset = []
-

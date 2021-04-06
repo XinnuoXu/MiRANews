@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#RAW_PATH=/scratch/xxu/multi-multi/raw_data/multi_
-RAW_PATH=/home/xx6/Factroid_Summarization/XSum/bbc-summary-no_structure/xsum_
+RAW_PATH=/scratch/xxu/multi-multi/raw_data/multi_
+#RAW_PATH=/home/xx6/Factroid_Summarization/XSum/bbc-summary-no_structure/xsum_
 JSON_PATH=/scratch/xxu/multi-multi/json/multi
 
 python preprocess.py \
