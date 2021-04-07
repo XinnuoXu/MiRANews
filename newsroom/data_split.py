@@ -5,10 +5,13 @@ MIN_SENTENCE_LENGTH = 3
 MIN_LENGTH = 3
 MAX_LEN_SUMM = 200
 MAX_LEN_DOC = 500
+MAX_LEN_SUP = 500
 TEST_NUM = 6000
 DEV_NUM = 5000
 INPUT_FILE = '/scratch/xxu/multi-multi/multi_multi_clean.jsonl'
 RAW_DATA_DIR = '/scratch/xxu/multi-multi/raw_data/'
+CLS_TOK = '<s>'
+SEP_TOK = '</s>'
 
 import sys
 import json
@@ -150,6 +153,76 @@ def extract_pairs():
     _extract_pairs('dev', high_freq_src, high_freq_tgt)
     _extract_pairs('test', high_freq_src, high_freq_tgt)
 
+def _multi_in_single_out(set_name, high_freq_src, high_freq_tgt):
+    if set_name == 'train':
+        path = RAW_DATA_DIR + '/train.json'
+        src_path = RAW_DATA_DIR + '/multi_train_src.jsonl'
+        tgt_path = RAW_DATA_DIR + '/multi_train_tgt.jsonl'
+    elif set_name == 'dev':
+        path = RAW_DATA_DIR + '/dev.json'
+        src_path = RAW_DATA_DIR + '/multi_dev_src.jsonl'
+        tgt_path = RAW_DATA_DIR + '/multi_dev_tgt.jsonl'
+    elif set_name == 'test':
+        path = RAW_DATA_DIR + '/test.json'
+        src_path = RAW_DATA_DIR + '/multi_test_src.jsonl'
+        tgt_path = RAW_DATA_DIR + '/multi_test_tgt.jsonl'
+
+    fpout_src = open(src_path, 'w')
+    fpout_tgt = open(tgt_path, 'w')
+    with open(path) as f:
+        line = f.read().strip()
+        json_obj = json.loads(line)
+
+        for line in json_obj:
+            flist = line.strip().split('\t')
+            cluster_id = flist[0]
+            summ_url = flist[1]
+            pairs = flist[2]
+            pair_obj = json.loads(pairs)
+
+            docs = []; summs = []
+            for pid in pair_obj:
+                pair = pair_obj[pid]
+                document = '\t'.join(pair['[DOCUMENT]'])
+                source = pair['[SORUCE]'].replace(':80', '')
+                if source.find('www.newser.com') > -1:
+                    summary = '\t'.join(pair['[TITLE]']) + '\t' + '\t'.join(pair['[SUMMARY]'])
+                else:
+                    summary = '\t'.join(pair['[SUMMARY]'])
+                document = _preprocess(document, MAX_LEN_DOC, high_freq_src)
+                summary = _preprocess(summary, MAX_LEN_SUMM, high_freq_tgt)
+                if len(document.split()) > MIN_LENGTH and len(summary.split()) > MIN_LENGTH:
+                    docs.append(document)
+                    summs.append(summary)
+                if len(docs) == MAX_DOCS_IN_CLUSTER:
+                    break
+            if len(docs) < 2:
+                continue
+            for i in range(len(docs)):
+                src, tgt = _prepare_sup_docs(docs, summs, i)
+                fpout_src.write(src+'\n')
+                fpout_tgt.write(tgt+'\n')
+
+        fpout_src.close()
+        fpout_tgt.close()
+
+def _prepare_sup_docs(docs, summs, idx):
+    sup_doc_num = len(docs)-1
+    max_sup_len = MAX_LEN_SUP / sup_doc_num
+    sups = []
+    for i in range(len(docs)):
+        if i == idx:
+            continue
+        sup = _preprocess(docs[i], max_sup_len, [])
+        sups.append(SEP_TOK+' '+sup)
+    return CLS_TOK + ' ' + docs[idx] + '\t' + '\t'.join(sups), summs[idx]
+
+def multi_in_single_out():
+    high_freq_src, high_freq_tgt = _preprocess_high_freq()
+    _multi_in_single_out('train', high_freq_src, high_freq_tgt)
+    _multi_in_single_out('dev', high_freq_src, high_freq_tgt)
+    _multi_in_single_out('test', high_freq_src, high_freq_tgt)
+
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print ('need parameters: split/extract_pairs')
@@ -158,3 +231,5 @@ if __name__ == '__main__':
         split()
     elif sys.argv[1] == 'extract_pairs':
         extract_pairs()
+    elif sys.argv[1] == 'multi_pairs':
+        multi_in_single_out()
