@@ -31,10 +31,11 @@ python3 -m torch.distributed.launch \
         --predict_with_generate \
         --do_eval \
         --validation_path data/multi \
-	--evaluation_strategy=steps \
-	--eval_steps=3000 \
-	--metric_for_best_model=loss \
-	--load_best_model_at_end=true \
-	--greater_is_better=false \
-	--save_steps=2000 \
+	--evaluation_strategy=no \
+	--save_steps=3000 \
 	--logging_steps=50 \
+	#--eval_steps=3000 \
+	#--evaluation_strategy=steps \
+	#--metric_for_best_model=loss \
+	#--load_best_model_at_end=true \
+	#--greater_is_better=false \
