@@ -324,7 +324,10 @@ def main():
         if data_args.validation_path is not None:
             data_files["validation"] = sorted(glob.glob(data_args.validation_path + '.dev.[0-9]*.json'))
         if data_args.test_path is not None:
-            data_files["test"] = sorted(glob.glob(data_args.test_path + '.test.[0-9]*.json'))
+            shards_names = sorted(glob.glob(data_args.test_path + '.test.[0-9]*.json'))
+            for name in shards_names:
+                shard_id = name.split('.')[-2]
+                data_files["test_"+shard_id] = [name]
         datasets = load_dataset('json', data_files=data_files)
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.
@@ -361,7 +364,7 @@ def main():
     elif training_args.do_eval:
         column_names = datasets["validation"].column_names
     elif training_args.do_predict:
-        column_names = datasets["test"].column_names
+        column_names = datasets["test_0"].column_names
     else:
         logger.info("There is nothing to do. Please pass `do_train`, `do_eval` and/or `do_predict`.")
         return
@@ -446,18 +449,22 @@ def main():
 
     if training_args.do_predict:
         max_target_length = data_args.val_max_target_length
-        if "test" not in datasets:
-            raise ValueError("--do_predict requires a test dataset")
-        test_dataset = datasets["test"]
-        if data_args.max_test_samples is not None:
-            test_dataset = test_dataset.select(range(data_args.max_test_samples))
-        test_dataset = test_dataset.map(
-            preprocess_function,
-            batched=True,
-            num_proc=data_args.preprocessing_num_workers,
-            remove_columns=column_names,
-            load_from_cache_file=not data_args.overwrite_cache,
-        )
+        #if "test" not in datasets:
+        #    raise ValueError("--do_predict requires a test dataset")
+        test_shards = []
+        for file_id in datasets:
+            if not file_id.startswith("test"):
+                continue
+            test_dataset = datasets[file_id]
+            if data_args.max_test_samples is not None:
+                test_dataset = test_dataset.select(range(data_args.max_test_samples))
+            test_dataset = test_dataset.map(
+                preprocess_function,
+                batched=True,
+                num_proc=data_args.preprocessing_num_workers,
+                remove_columns=column_names,
+                load_from_cache_file=not data_args.overwrite_cache,)
+            test_shards.append(test_dataset)
 
     # Data collator
     label_pad_token_id = -100 if data_args.ignore_pad_token_for_loss else tokenizer.pad_token_id
@@ -551,28 +558,33 @@ def main():
 
     if training_args.do_predict:
         logger.info("*** Test ***")
-
-        test_results = trainer.predict(
-            test_dataset,
-            metric_key_prefix="test",
-            max_length=data_args.val_max_target_length,
-            num_beams=data_args.num_beams,
-        )
-        metrics = test_results.metrics
-        max_test_samples = data_args.max_test_samples if data_args.max_test_samples is not None else len(test_dataset)
-        metrics["test_samples"] = min(max_test_samples, len(test_dataset))
-
-        trainer.log_metrics("test", metrics)
-        trainer.save_metrics("test", metrics)
-
         if trainer.is_world_process_zero():
             if training_args.predict_with_generate:
-                test_preds = tokenizer.batch_decode(
-                    test_results.predictions, skip_special_tokens=True, clean_up_tokenization_spaces=True
-                )
-                test_preds = [pred.strip() for pred in test_preds]
                 output_test_preds_file = os.path.join(training_args.output_dir, "test_generations.txt")
-                with open(output_test_preds_file, "w") as writer:
+                writer = open(output_test_preds_file, "w")
+
+        for test_dataset in test_shards:
+            test_results = trainer.predict(
+                test_dataset,
+                metric_key_prefix="test",
+                max_length=data_args.val_max_target_length,
+                num_beams=data_args.num_beams,
+            )
+            metrics = test_results.metrics
+            max_test_samples = data_args.max_test_samples if data_args.max_test_samples is not None else len(test_dataset)
+            metrics["test_samples"] = min(max_test_samples, len(test_dataset))
+
+            trainer.log_metrics("test", metrics)
+            trainer.save_metrics("test", metrics)
+
+            if trainer.is_world_process_zero():
+                if training_args.predict_with_generate:
+                    test_preds = tokenizer.batch_decode(
+                        test_results.predictions, skip_special_tokens=True, clean_up_tokenization_spaces=True
+                    )
+                    test_preds = [pred.strip() for pred in test_preds]
+                    #output_test_preds_file = os.path.join(training_args.output_dir, "test_generations.txt")
+                    #with open(output_test_preds_file, "w") as writer:
                     writer.write("\n".join(test_preds))
 
     return results
