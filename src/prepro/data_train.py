@@ -144,6 +144,10 @@ class PreproTrainJson():
             datasets = ['train', 'test', 'dev']
 
         for corpus_type in datasets:
+            if corpus_type == 'test':
+                shard_size = self.args.test_shard_size
+            else:
+                shard_size = self.args.shard_size
             #relation_dict
             srcs = self._load_src(corpus_type)
 
@@ -162,7 +166,7 @@ class PreproTrainJson():
                 if (d is None):
                     continue
                 dataset.append(d)
-                if (len(dataset) > self.args.shard_size):
+                if (len(dataset) > shard_size):
                     pt_file = "{:s}.{:s}.{:d}.json".format(self.args.save_path, corpus_type, p_ct)
                     with open(pt_file, 'w') as save:
                         save.write('\n'.join(dataset))

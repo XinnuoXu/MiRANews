@@ -1,11 +1,5 @@
 #!/bin/bash
-/bin/hostname -s
-python3 -m torch.distributed.launch \
-	--nproc_per_node=$NPROC_PER_NODE \
-	--nnodes=$SLURM_JOB_NUM_NODES \
-	--node_rank=$SLURM_PROCID \
-	--master_addr="$PARENT" --master_port="$MPORT" \
-	run_summarization.py \
+python run_summarization.py \
 	--output_dir ./tmp/xsum-test/ \
 	--overwrite_output_dir \
         --text_column text \
@@ -16,5 +10,5 @@ python3 -m torch.distributed.launch \
 	--max_source_length=512 \
 	--max_target_length=128 \
 	--val_max_target_length=60 \
-        --test_path data/multi \
+        --test_path /scratch/xxu/multi-multi/json//multi \
 	--num_beams 6 \

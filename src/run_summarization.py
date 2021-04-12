@@ -324,7 +324,7 @@ def main():
         if data_args.validation_path is not None:
             data_files["validation"] = sorted(glob.glob(data_args.validation_path + '.dev.[0-9]*.json'))
         if data_args.test_path is not None:
-            data_files["test"] = sorted(glob.glob(data_args.validation_path + '.test.[0-9]*.json'))
+            data_files["test"] = sorted(glob.glob(data_args.test_path + '.test.[0-9]*.json'))
         datasets = load_dataset('json', data_files=data_files)
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.
