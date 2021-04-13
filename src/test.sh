@@ -1,9 +1,19 @@
 #!/bin/bash
 
+# Multi-multi single
+#DATA_PATH=data.multi/multi
+#MODEL_PATH=./tmp/multi-summarization
+#OUTPUT_DIR=./tmp/multi-test/
+
+# Multi-multi supp
+DATA_PATH=data.supp/multi
+MODEL_PATH=./tmp/multi-supp
+OUTPUT_DIR=./tmp/supp-test/
+
 # XSum
-MODEL_PATH=./tmp/xsum-summarization/
-OUTPUT_DIR=./tmp/xsum-test/
-DATA_PATH=./data/multi
+#MODEL_PATH=./tmp/xsum-summarization/
+#OUTPUT_DIR=./tmp/xsum-test/
+#DATA_PATH=./data/multi
 
 python run_summarization.py \
 	--output_dir ${OUTPUT_DIR} \
