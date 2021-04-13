@@ -1,4 +1,20 @@
 #!/bin/bash
+
+# Multi-multi single
+#INPUT_DIR=data.multi/multi
+#OUTPUT_DIR=./tmp/multi-summarization
+#MAX_SORCE_LEN=1024
+
+# Multi-multi cluster
+INPUT_DIR=data.supp/multi
+OUTPUT_DIR=./tmp/multi-supp
+MAX_SORCE_LEN=1024
+
+# XSum
+#INPUT_DIR=data/multi
+#OUTPUT_DIR=./tmp/xsum-summarization
+#MAX_SORCE_LEN=512
+
 /bin/hostname -s
 python3 -m torch.distributed.launch \
 	--nproc_per_node=$NPROC_PER_NODE \
@@ -8,15 +24,15 @@ python3 -m torch.distributed.launch \
 	run_summarization.py \
 	--model_name_or_path facebook/bart-large \
         --do_train \
-        --train_path data/multi \
+        --train_path ${INPUT_DIR} \
         --text_column text \
         --summary_column summary \
-        --output_dir ./tmp/multi-summarization \
-	--max_source_length=512 \
+        --output_dir ${OUTPUT_DIR} \
+	--max_source_length=${MAX_SORCE_LEN} \
 	--max_target_length=128 \
 	--num_train_epochs=12 \
 	--group_by_length=true \
-	--learning_rate=3e-05 \
+	--learning_rate=1e-04 \
 	--weight_decay=0.01 \
 	--max_grad_norm=0.1 \
 	--label_smoothing_factor=0.1 \
@@ -24,9 +40,9 @@ python3 -m torch.distributed.launch \
 	--attention_dropout=0.1 \
 	--dropout=0.1 \
 	--warmup_steps=500 \
-	--gradient_accumulation_steps=8 \
-        --per_device_train_batch_size=4 \
-        --per_device_eval_batch_size=4 \
+	--gradient_accumulation_steps=32 \
+        --per_device_train_batch_size=1 \
+        --per_device_eval_batch_size=1 \
         --overwrite_output_dir \
         --predict_with_generate \
         --do_eval \

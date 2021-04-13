@@ -406,7 +406,10 @@ def main():
 
         # Setup the tokenizer for targets
         with tokenizer.as_target_tokenizer():
-            labels = tokenizer(targets, max_length=max_target_length, padding=padding, truncation=True)
+            if training_args.do_predict:
+                labels = tokenizer(targets, max_length=None, padding=padding, truncation=False)
+            else:
+                labels = tokenizer(targets, max_length=max_target_length, padding=padding, truncation=True)
 
         # If we are padding here, replace all tokenizer.pad_token_id in the labels by -100 when we want to ignore
         # padding in the loss.
@@ -561,7 +564,9 @@ def main():
         if trainer.is_world_process_zero():
             if training_args.predict_with_generate:
                 output_test_preds_file = os.path.join(training_args.output_dir, "test_generations.txt")
-                writer = open(output_test_preds_file, "w")
+                writer_pred = open(output_test_preds_file, "w")
+                output_test_labels_file = os.path.join(training_args.output_dir, "test_labels.txt")
+                writer_label = open(output_test_labels_file, "w")
 
         for test_dataset in test_shards:
             test_results = trainer.predict(
@@ -580,13 +585,16 @@ def main():
             if trainer.is_world_process_zero():
                 if training_args.predict_with_generate:
                     test_preds = tokenizer.batch_decode(
-                        test_results.predictions, skip_special_tokens=True, clean_up_tokenization_spaces=True
-                    )
+                        test_results.predictions, skip_special_tokens=True, clean_up_tokenization_spaces=True)
+                    lbs = np.where(test_results.label_ids != -100, test_results.label_ids, tokenizer.pad_token_id)
+                    test_labels = tokenizer.batch_decode(
+                        lbs, skip_special_tokens=True, clean_up_tokenization_spaces=True)
                     test_preds = [pred.strip() for pred in test_preds]
+                    test_labels = [label.strip() for label in test_labels]
                     #output_test_preds_file = os.path.join(training_args.output_dir, "test_generations.txt")
                     #with open(output_test_preds_file, "w") as writer:
-                    writer.write("\n".join(test_preds))
-
+                    writer_pred.write("\n".join(test_preds)+"\n")
+                    writer_label.write("\n".join(test_labels)+"\n")
     return results
 
 
