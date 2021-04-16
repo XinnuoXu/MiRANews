@@ -30,6 +30,7 @@ class SelectRank():
         self.bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         self.bert_model = BertModel.from_pretrained('bert-base-uncased')
         self.bert_model.to(self.args.device)
+        self.bert_model.eval()
         
         self.cos = nn.CosineSimilarity(dim=1, eps=1e-6)
 
@@ -68,24 +69,71 @@ class SelectRank():
                 break
         return main_docs, left_docs, summs
 
+    def _batch_emb(self, sents):
+        idx = 0; emb_list = []
+        while idx < len(sents):
+            with torch.no_grad():
+                tmp_sents = sents[idx:min(len(sents), idx+self.args.batch_size)]
+                inputs = self.bert_tokenizer(tmp_sents, 
+                                                padding=True, 
+                                                truncation=True, 
+                                                return_tensors="pt").to(self.args.device)
+                outputs = self.bert_model(**inputs)
+                last_hidden_states = outputs.last_hidden_state
+                last_hidden_states = last_hidden_states[:,0,:].squeeze(dim=1)
+                emb_list.append(last_hidden_states)
+                idx += self.args.batch_size
+        return torch.cat(emb_list)
+
     def _get_embeddings(self, main_docs, left_docs):
         main_doc_embs = []
         for doc in main_docs:
             sents = doc.split('\t')
-            embs = self.bert_tokenizer(sents, padding=True, return_tensors="pt").to(self.args.device)
-            outputs = self.bert_model(**embs)
-            last_hidden_states = outputs.last_hidden_state
-            last_hidden_states = last_hidden_states[:,0,:].squeeze(dim=1)
-            main_doc_embs.append(last_hidden_states)
+            embs = self._batch_emb(sents)
+            main_doc_embs.append(embs)
         left_doc_embs = []
         for doc in left_docs:
             sents = doc.split('\t')
-            embs = self.bert_tokenizer(sents, padding=True, return_tensors="pt").to(self.args.device)
-            outputs = self.bert_model(**embs)
-            last_hidden_states = outputs.last_hidden_state
-            last_hidden_states = last_hidden_states[:,0,:].squeeze(dim=1)
-            left_doc_embs.append(last_hidden_states)
+            embs = self._batch_emb(sents)
+            left_doc_embs.append(embs)
         return main_doc_embs, left_doc_embs
+
+    def _cosin_sim(self, y1, y2):
+        dim_1 = y1.size(0)
+        dim_2 = y2.size(0)
+        y1 = torch.repeat_interleave(y1, dim_2, dim=0)
+        y2 = torch.cat(dim_1*[y2])
+        cos_scores = self.cos(y1, y2)
+        return torch.reshape(cos_scores, (-1, dim_2))
+
+    def _rank_one_example(self, main_docs, left_docs, main_doc_embs, left_doc_embs, idx):
+        sentences = []; embeddings = []
+        curr_main_doc = main_docs[idx]
+        curr_main_emb = main_doc_embs[idx]
+        sentences.extend(left_docs[idx].split('\t'))
+        embeddings.append(left_doc_embs[idx])
+        for i in range(len(main_docs)):
+            if i == idx:
+                continue
+            sentences.extend(main_docs[i].split('\t'))
+            sentences.extend(left_docs[i].split('\t'))
+            embeddings.append(main_doc_embs[i])
+            embeddings.append(left_doc_embs[i])
+        cand_sentence_emb = torch.cat(embeddings)
+        cosin_sim_scores = self._cosin_sim(curr_main_emb, cand_sentence_emb)
+        coherent_scores = cosin_sim_scores * (cosin_sim_scores > self.args.coherent_threshold)
+        filterd_scores = coherent_scores + (-1000 * (coherent_scores >= self.args.paraphrase_threshold))
+        sum_scores = torch.sum(filterd_scores, dim=0)
+        sorted_scores, indices = torch.sort(sum_scores, descending=True)
+        sorted_scores = sorted_scores.tolist()
+        indices = indices.tolist()
+        sorted_sentences = []
+        for i in range(len(indices)):
+            sent_id = indices[i]
+            score = sorted_scores[i]
+            sorted_sentences.append(sentences[sent_id])
+        sups = '\t'.join(sorted_sentences)
+        return (self.args.cls_tok + ' ' + curr_main_doc + ' ' + self.args.sep_tok + ' ' + sups).replace('\t', ' ')
 
     def _sentence_rank(self, path, src_path, tgt_path):
         fpout_src = open(src_path, 'w')
@@ -105,42 +153,6 @@ class SelectRank():
                     fpout_tgt.write(tgt+'\n')
             fpout_src.close()
             fpout_tgt.close()
-
-    def _cosin_sim(self, y1, y2):
-        dim_1 = y1.size(0)
-        dim_2 = y2.size(0)
-        y1 = torch.repeat_interleave(y1, dim_2, dim=0)
-        y2 = torch.cat(dim_1*[y2])
-        cos_scores = self.cos(y1, y2)
-        return torch.reshape(cos_scores, (-1, dim_2))
-
-    def _rank_one_example(self, main_docs, left_docs, main_doc_embs, left_doc_embs, idx):
-        sentences = []; embeddings = []
-        curr_main_doc = main_docs[idx]
-        curr_main_emb = main_doc_embs[idx]
-        sentences.extend(left_docs[idx])
-        embeddings.append(left_doc_embs[idx])
-        for i in range(len(main_docs)):
-            if i == idx:
-                continue
-            sentences.extend(main_docs[i])
-            sentences.extend(left_docs[i])
-            embeddings.append(main_doc_embs[i])
-            embeddings.append(left_doc_embs[i])
-        cand_sentence_emb = torch.cat(embeddings)
-        cosin_sim_scores = self._cosin_sim(curr_main_emb, cand_sentence_emb)
-        print (curr_main_emb.size())
-        print (cand_sentence_emb.size())
-        print (cosin_sim_scores.size())
-        print ('')
-
-        #cand_sentence_emb = torch.transpose(cand_sentence_emb, 0, 1)
-        #main_to_cands = torch.matmul(curr_main_emb, cand_sentence_emb)
-        print (corh_scores.size())
-        
-        #sups.append(self.args.sep_tok+' '+sup_docs[i])
-        #return self.args.cls_tok + ' ' + docs[idx] + '\t' + '\t'.join(sups), summs[idx]
-        return main_docs[idx]
 
     def run(self):
         self._sentence_rank(self.train_path,
