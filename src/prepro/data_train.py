@@ -134,7 +134,7 @@ class PreproTrainJson():
         root_src = self.args.raw_path + corpus_type + "_src.jsonl"
         for line in open(root_src):
             flist = line.strip().split("\t")
-            srcs.append(' '.join([sen for sen in flist]))
+            srcs.append(' '.join(flist))
         return srcs
 
     def preprocess(self):
@@ -158,7 +158,7 @@ class PreproTrainJson():
 
             json_objs = []
             for i, src in enumerate(srcs):
-                json_objs.append(json.dumps({'text': src, 'summary': tgts[i]}))
+                json_objs.append(json.dumps({'text': src.lower(), 'summary': tgts[i].lower()}))
 
             dataset = []
             p_ct = 0
