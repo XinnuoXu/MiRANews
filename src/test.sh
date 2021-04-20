@@ -6,9 +6,14 @@
 #OUTPUT_DIR=./tmp/multi-test/
 
 # Multi-multi supp
-DATA_PATH=data.supp/multi
-MODEL_PATH=./tmp/multi-supp
-OUTPUT_DIR=./tmp/supp-test/
+#DATA_PATH=data.supp/multi
+#MODEL_PATH=./tmp/multi-supp
+#OUTPUT_DIR=./tmp/supp-test/
+
+# Multi-multi rank
+DATA_PATH=data.rank/multi
+MODEL_PATH=./tmp/multi-rank
+OUTPUT_DIR=./tmp/rank-test
 
 # XSum
 #MODEL_PATH=./tmp/xsum-summarization/

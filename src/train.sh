@@ -6,8 +6,13 @@
 #MAX_SORCE_LEN=1024
 
 # Multi-multi cluster
-INPUT_DIR=data.supp/multi
-OUTPUT_DIR=./tmp/multi-supp
+#INPUT_DIR=data.supp/multi
+#OUTPUT_DIR=./tmp/multi-supp
+#MAX_SORCE_LEN=1024
+
+# Multi-multi rank
+INPUT_DIR=data.rank/multi
+OUTPUT_DIR=./tmp/multi-rank
 MAX_SORCE_LEN=1024
 
 # XSum
