@@ -3,6 +3,7 @@
 from util import preprocess_high_freq
 from selection_lead import SelectLead
 from selection_rank import SelectRank
+from selection_full import NoSelect
 import argparse
 import torch
 import sys
@@ -23,10 +24,12 @@ if __name__ == '__main__':
     parser.add_argument("-mode", default='lead')
     parser.add_argument("-batch_size", default=128, type=int)
     parser.add_argument("-max_len_doc", default=500, type=int)
+    parser.add_argument("-max_len_paragraph", default=200, type=int)
     parser.add_argument('-max_len_sup', default=500, type=int)
     parser.add_argument('-max_len_summ', default=200, type=int)
     parser.add_argument('-min_length', default=3, type=int)
     parser.add_argument('-max_docs_in_cluster', default=5, type=int)
+    parser.add_argument('-max_paragraph_in_cluster', default=50, type=int)
     parser.add_argument('-min_sentence_length', default=3, type=int)
     parser.add_argument('-max_sentence_length', default=500, type=int)
     parser.add_argument("-cls_tok", default='<s>')
@@ -40,15 +43,6 @@ if __name__ == '__main__':
         selector_obj = SelectLead(args, high_freq_src, high_freq_tgt)
     if args.mode == 'rank':
         selector_obj = SelectRank(args, high_freq_src, high_freq_tgt)
+    if args.mode == 'full':
+        selector_obj = NoSelect(args, high_freq_src, high_freq_tgt)
     selector_obj.run()
-
-'''
-if __name__ == '__main__':
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    model = BertModel.from_pretrained('bert-base-uncased')
-    model.to(DEVICE)
-    inputs = tokenizer(["hello, my dog is cute", "hello, my dog is cute test"], padding=True, return_tensors="pt").to(DEVICE)
-    outputs = model(**inputs)
-    last_hidden_states = outputs.last_hidden_state
-    print (last_hidden_states[:,0,:].squeeze().size())
-'''

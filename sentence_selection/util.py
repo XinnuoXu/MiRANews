@@ -2,6 +2,31 @@
 
 import json
 
+def split_paragraph(doc, max_length, min_sentence_length, high_freq_sent, tokenizer=None):
+    sents = doc.lower().split('\t')
+    new_doc = []; length = 0; paragraph = []
+    for i, line in enumerate(sents):
+        if line in high_freq_sent:
+            continue
+        if line.find('newser') > -1:
+            continue
+        flist = line.split()
+        if len(flist) <= min_sentence_length or len(flist) > max_length:
+            continue
+        if tokenizer is not None:
+            inputs = tokenizer(line)
+            length += len(inputs['input_ids'])
+        else:
+            length += len(flist)
+        if length > max_length:
+            new_doc.append(paragraph)
+            paragraph = []
+            length = 0
+        paragraph.append(line)
+    if len(paragraph) > 0:
+        new_doc.append(paragraph)
+    return new_doc
+
 def trunc_string(doc, max_length, min_sentence_length, high_freq_sent, tokenizer=None):
     sents = doc.lower().split('\t')
     new_doc = []; left_over = []; length = 0
