@@ -6,6 +6,7 @@ LOG_PATH=../log/
 python train_abstractive.py \
 	-data_path ${DATA_PATH} \
 	-mode validate \
+	-test_all \
 	-batch_size 30000 \
 	-valid_batch_size 7500 \
 	-seed 666 \

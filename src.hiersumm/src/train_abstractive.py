@@ -139,7 +139,7 @@ def wait_and_validate(args, device_id):
         ppl_lst = []
         for i, cp in enumerate(cp_files):
             step = int(cp.split('.')[-2].split('_')[-1])
-            ppl = validate(device_id, cp, step)
+            ppl = validate(args, device_id, cp, step)
             ppl_lst.append((ppl, cp))
             max_step = ppl_lst.index(min(ppl_lst))
             if (i - max_step > 5):
