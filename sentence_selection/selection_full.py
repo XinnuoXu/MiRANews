@@ -68,7 +68,7 @@ class NoSelect():
             merge_docs.extend(main_docs[i])
         return merge_docs
 
-    def _sentence_rank(self, path, src_path, tgt_path):
+    def _sentence_rank(self, path, src_path, tgt_path, if_single=False):
         fpout_src = open(src_path, 'w')
         fpout_tgt = open(tgt_path, 'w')
         with open(path) as f:
@@ -79,7 +79,10 @@ class NoSelect():
                 if len(main_docs) < 2:
                     continue
                 for i in range(len(main_docs)):
-                    src = self._rank_one_example(main_docs, i)
+                    if if_single:
+                        src = main_docs[i]
+                    else:
+                        src = self._rank_one_example(main_docs, i)
                     tgt = summs[i]
                     fpout_src.write(json.dumps(src)+'\n')
                     fpout_tgt.write(tgt+'\n')
@@ -87,14 +90,21 @@ class NoSelect():
             fpout_tgt.close()
 
     def run(self):
+        if_single = False
+        if self.args.mode == 'single':
+            if_single = True
+
         self._sentence_rank(self.train_path,
                                     self.train_src_path,
-                                    self.train_tgt_path)
+                                    self.train_tgt_path,
+                                    if_single=if_single)
         self._sentence_rank(self.dev_path,
                                     self.dev_src_path,
-                                    self.dev_tgt_path)
+                                    self.dev_tgt_path,
+                                    if_single=if_single)
         self._sentence_rank(self.test_path,
                                     self.test_src_path,
-                                    self.test_tgt_path)
+                                    self.test_tgt_path,
+                                    if_single=if_single)
 
 

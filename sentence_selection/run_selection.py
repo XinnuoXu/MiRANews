@@ -43,6 +43,6 @@ if __name__ == '__main__':
         selector_obj = SelectLead(args, high_freq_src, high_freq_tgt)
     if args.mode == 'rank':
         selector_obj = SelectRank(args, high_freq_src, high_freq_tgt)
-    if args.mode == 'full':
+    if args.mode == 'full' or args.mode == 'single':
         selector_obj = NoSelect(args, high_freq_src, high_freq_tgt)
     selector_obj.run()
