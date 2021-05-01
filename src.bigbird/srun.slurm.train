@@ -1,0 +1,33 @@
+#!/bin/bash
+# Slurm job options (name, compute nodes, job time)
+#SBATCH --job-name=multi_multi
+#SBATCH --time=20:00:0
+#SBATCH --partition=gpu-cascade
+#SBATCH --nodes=2
+#SBATCH --exclusive
+#SBATCH --qos=gpu
+#SBATCH --gres=gpu:2
+#SBATCH --mem=300G
+
+# Replace [budget code] below with your project code (e.g. t01)
+#SBATCH --account=ec156
+
+#module load gcc
+module load openmpi nccl
+module load nvidia/cuda-10.2
+module load mpt
+source ~/.bashrc
+conda activate multi_multi
+
+export NCCL_DEBUG=INFO
+export NPROC_PER_NODE=2
+export HDF5_USE_FILE_LOCKING='FALSE'
+export PARENT=`/bin/hostname -s`
+export MPORT=13000
+export CHILDREN=`scontrol show hostnames $SLURM_JOB_NODELIST | grep -v $PARENT`
+export HOSTLIST="$PARENT $CHILDREN"
+echo $HOSTLIST
+export WORLD_SIZE=$SLURM_NTASKS
+
+#srun --ntasks=4 --tasks-per-node=2 ./train.sh
+srun ./train.sh
