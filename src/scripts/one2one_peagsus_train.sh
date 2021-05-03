@@ -5,8 +5,13 @@ OUTPUT_DIR=../saved_checkpoints/single_trunk_peagsus/
 MAX_SORCE_LEN=1024
 
 /bin/hostname -s
-python3 run_summarization.py \
-	--model_name_or_path 'google/pegasus-multi_news' \
+python3 -m torch.distributed.launch \
+	--nproc_per_node=$NPROC_PER_NODE \
+	--nnodes=$SLURM_JOB_NUM_NODES \
+	--node_rank=$SLURM_PROCID \
+	--master_addr="$PARENT" --master_port="$MPORT" \
+	run_summarization.py \
+	--model_name_or_path google/pegasus-multi_news \
         --do_train \
         --train_path ${INPUT_DIR} \
         --text_column text \
@@ -34,4 +39,4 @@ python3 run_summarization.py \
 	--evaluation_strategy=no \
 	--save_steps=3000 \
 	--logging_steps=50 \
-	--local_files_only false \
+	--local_files_only true \
