@@ -12,17 +12,18 @@ class OneToOne(object):
 
         root_dir = self.args.root_dir
         output_dir = self.args.output_dir
+        dataset_name = self.args.dataset_name
         self.train_path = root_dir + '/train.json'
-        self.train_src_path = output_dir+'/multi_train_src.jsonl'
-        self.train_tgt_path = output_dir+'/multi_train_tgt.jsonl'
+        self.train_src_path = output_dir+'/'+dataset_name+'_train_src.jsonl'
+        self.train_tgt_path = output_dir+'/'+dataset_name+'_train_tgt.jsonl'
 
         self.dev_path = root_dir + '/dev.json'
-        self.dev_src_path = output_dir+'/multi_dev_src.jsonl'
-        self.dev_tgt_path = output_dir+'/multi_dev_tgt.jsonl'
+        self.dev_src_path = output_dir+'/'+dataset_name+'_dev_src.jsonl'
+        self.dev_tgt_path = output_dir+'/'+dataset_name+'_dev_tgt.jsonl'
 
         self.test_path = root_dir + '/test.json'
-        self.test_src_path = output_dir+'/multi_test_src.jsonl'
-        self.test_tgt_path = output_dir+'/multi_test_tgt.jsonl'
+        self.test_src_path = output_dir+'/'+dataset_name+'_test_src.jsonl'
+        self.test_tgt_path = output_dir+'/'+dataset_name+'_test_tgt.jsonl'
 
         self.high_freq_src = high_freq_src
         self.high_freq_tgt = high_freq_tgt

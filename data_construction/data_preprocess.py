@@ -5,6 +5,8 @@ from processor.selection_lead import SelectLead
 from processor.selection_rank import SelectRank
 from processor.selection_full import NoSelect
 from processor.process_one2one import OneToOne
+from processor.text_to_json import PreproTrainJson
+
 import argparse
 import torch
 import sys
@@ -19,6 +21,7 @@ def str2bool(v):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument("-dataset_name", default='multi')
     parser.add_argument("-input_file", default='/scratch/xxu/multi-multi/multi_multi_clean.jsonl')
     parser.add_argument("-root_dir", default='/scratch/xxu/multi-multi/raw_data/')
     parser.add_argument("-output_dir", default='/scratch/xxu/multi-multi/raw_data/')
@@ -40,6 +43,11 @@ if __name__ == '__main__':
     parser.add_argument("-sep_tok", default='</s>')
     parser.add_argument('-paraphrase_threshold', default=0.9, type=float)
     parser.add_argument('-coherent_threshold', default=0.6, type=float)
+
+    parser.add_argument("-save_path", default='/scratch/xxu/multi-multi/json/')
+    parser.add_argument("-shard_size", default=2000, type=int)
+    parser.add_argument("-test_shard_size", default=500, type=int)
+
     args = parser.parse_args()
 
     high_freq_src, high_freq_tgt = preprocess_high_freq(args.root_dir+'/train.json')
@@ -51,4 +59,9 @@ if __name__ == '__main__':
         processor_obj = NoSelect(args, high_freq_src, high_freq_tgt)
     if args.mode == 'one_to_one':
         processor_obj = OneToOne(args, high_freq_src, high_freq_tgt)
+    json_obj = PreproTrainJson(args)
+
     processor_obj.run()
+    json_obj.preprocess()
+
+
