@@ -1,0 +1,406 @@
+ERROR: Unable to locate a modulefile for 'nccl'
+r2i7n0 r2i7n2
+r2i7n0
+r2i7n2
+05/03/2021 10:21:57 - WARNING - __main__ -   Process rank: 0, device: cuda:0, n_gpu: 1distributed training: True, 16-bits training: False
+05/03/2021 10:21:57 - WARNING - __main__ -   Process rank: 1, device: cuda:1, n_gpu: 1distributed training: True, 16-bits training: False
+05/03/2021 10:21:57 - INFO - __main__ -   Training/evaluation parameters Seq2SeqTrainingArguments(output_dir='../saved_checkpoints/single_trunk_bart/', overwrite_output_dir=True, do_train=True, do_eval=True, do_predict=False, evaluation_strategy=<IntervalStrategy.NO: 'no'>, prediction_loss_only=False, per_device_train_batch_size=1, per_device_eval_batch_size=1, per_gpu_train_batch_size=None, per_gpu_eval_batch_size=None, gradient_accumulation_steps=32, eval_accumulation_steps=None, learning_rate=0.0001, weight_decay=0.01, adam_beta1=0.9, adam_beta2=0.999, adam_epsilon=1e-08, max_grad_norm=0.1, num_train_epochs=15.0, max_steps=-1, lr_scheduler_type=<SchedulerType.POLYNOMIAL: 'polynomial'>, warmup_ratio=0.0, warmup_steps=1000, logging_dir='runs/May03_10-21-55_r2i7n2', logging_strategy=<IntervalStrategy.STEPS: 'steps'>, logging_first_step=False, logging_steps=50, save_strategy=<IntervalStrategy.STEPS: 'steps'>, save_steps=3000, save_total_limit=None, no_cuda=False, seed=42, fp16=False, fp16_opt_level='O1', fp16_backend='auto', fp16_full_eval=False, local_rank=0, tpu_num_cores=None, tpu_metrics_debug=False, debug=False, dataloader_drop_last=False, eval_steps=50, dataloader_num_workers=0, past_index=-1, run_name='../saved_checkpoints/single_trunk_bart/', disable_tqdm=False, remove_unused_columns=True, label_names=None, load_best_model_at_end=False, metric_for_best_model=None, greater_is_better=None, ignore_data_skip=False, sharded_ddp=[], deepspeed=None, label_smoothing_factor=0.1, adafactor=False, group_by_length=True, length_column_name='length', report_to=['tensorboard'], ddp_find_unused_parameters=None, dataloader_pin_memory=True, skip_memory_metrics=False, mp_parameters='', sortish_sampler=False, predict_with_generate=True)
+loading configuration file https://huggingface.co/facebook/bart-large/resolve/main/config.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/3f12fb71b844fcb7d591fdd4e55027da90d7b5dd6aa5430ad00ec6d76585f26c.01119ad5ed0734de7152ef51ba44fccefe008001bca9a6ddebeec1caf28f6bb8
+Model config BartConfig {
+  "activation_dropout": 0.1,
+  "activation_function": "gelu",
+  "add_bias_logits": false,
+  "add_final_layer_norm": false,
+  "architectures": [
+    "BartModel",
+    "BartForConditionalGeneration",
+    "BartForSequenceClassification"
+  ],
+  "attention_dropout": 0.1,
+  "bos_token_id": 0,
+  "classif_dropout": 0.1,
+  "classifier_dropout": 0.0,
+  "d_model": 1024,
+  "decoder_attention_heads": 16,
+  "decoder_ffn_dim": 4096,
+  "decoder_layerdrop": 0.0,
+  "decoder_layers": 12,
+  "decoder_start_token_id": 2,
+  "dropout": 0.1,
+  "early_stopping": true,
+  "encoder_attention_heads": 16,
+  "encoder_ffn_dim": 4096,
+  "encoder_layerdrop": 0.0,
+  "encoder_layers": 12,
+  "eos_token_id": 2,
+  "forced_eos_token_id": 2,
+  "gradient_checkpointing": false,
+  "id2label": {
+    "0": "LABEL_0",
+    "1": "LABEL_1",
+    "2": "LABEL_2"
+  },
+  "init_std": 0.02,
+  "is_encoder_decoder": true,
+  "label2id": {
+    "LABEL_0": 0,
+    "LABEL_1": 1,
+    "LABEL_2": 2
+  },
+  "max_position_embeddings": 1024,
+  "model_type": "bart",
+  "no_repeat_ngram_size": 3,
+  "normalize_before": false,
+  "num_beams": 4,
+  "num_hidden_layers": 12,
+  "pad_token_id": 1,
+  "scale_embedding": false,
+  "task_specific_params": {
+    "summarization": {
+      "length_penalty": 1.0,
+      "max_length": 128,
+      "min_length": 12,
+      "num_beams": 4
+    },
+    "summarization_cnn": {
+      "length_penalty": 2.0,
+      "max_length": 142,
+      "min_length": 56,
+      "num_beams": 4
+    },
+    "summarization_xsum": {
+      "length_penalty": 1.0,
+      "max_length": 62,
+      "min_length": 11,
+      "num_beams": 6
+    }
+  },
+  "transformers_version": "4.5.0.dev0",
+  "use_cache": true,
+  "vocab_size": 50265
+}
+
+loading weights file https://huggingface.co/facebook/bart-large/resolve/main/pytorch_model.bin from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/d065edfe6954baf0b989a2063b26eb07e8c4d0b19354b5c74af9a51f5518df6e.6ca4df1a6ec59aa763989ceec10dff41dde19f0f0824b9f5d3fcd35a8abffdb2
+05/03/2021 10:21:57 - WARNING - __main__ -   Process rank: 0, device: cuda:0, n_gpu: 1distributed training: True, 16-bits training: False
+05/03/2021 10:21:57 - WARNING - __main__ -   Process rank: 1, device: cuda:1, n_gpu: 1distributed training: True, 16-bits training: False
+05/03/2021 10:21:57 - INFO - __main__ -   Training/evaluation parameters Seq2SeqTrainingArguments(output_dir='../saved_checkpoints/single_trunk_bart/', overwrite_output_dir=True, do_train=True, do_eval=True, do_predict=False, evaluation_strategy=<IntervalStrategy.NO: 'no'>, prediction_loss_only=False, per_device_train_batch_size=1, per_device_eval_batch_size=1, per_gpu_train_batch_size=None, per_gpu_eval_batch_size=None, gradient_accumulation_steps=32, eval_accumulation_steps=None, learning_rate=0.0001, weight_decay=0.01, adam_beta1=0.9, adam_beta2=0.999, adam_epsilon=1e-08, max_grad_norm=0.1, num_train_epochs=15.0, max_steps=-1, lr_scheduler_type=<SchedulerType.POLYNOMIAL: 'polynomial'>, warmup_ratio=0.0, warmup_steps=1000, logging_dir='runs/May03_10-21-55_r2i7n0', logging_strategy=<IntervalStrategy.STEPS: 'steps'>, logging_first_step=False, logging_steps=50, save_strategy=<IntervalStrategy.STEPS: 'steps'>, save_steps=3000, save_total_limit=None, no_cuda=False, seed=42, fp16=False, fp16_opt_level='O1', fp16_backend='auto', fp16_full_eval=False, local_rank=0, tpu_num_cores=None, tpu_metrics_debug=False, debug=False, dataloader_drop_last=False, eval_steps=50, dataloader_num_workers=0, past_index=-1, run_name='../saved_checkpoints/single_trunk_bart/', disable_tqdm=False, remove_unused_columns=True, label_names=None, load_best_model_at_end=False, metric_for_best_model=None, greater_is_better=None, ignore_data_skip=False, sharded_ddp=[], deepspeed=None, label_smoothing_factor=0.1, adafactor=False, group_by_length=True, length_column_name='length', report_to=['tensorboard'], ddp_find_unused_parameters=None, dataloader_pin_memory=True, skip_memory_metrics=False, mp_parameters='', sortish_sampler=False, predict_with_generate=True)
+loading configuration file https://huggingface.co/facebook/bart-large/resolve/main/config.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/3f12fb71b844fcb7d591fdd4e55027da90d7b5dd6aa5430ad00ec6d76585f26c.01119ad5ed0734de7152ef51ba44fccefe008001bca9a6ddebeec1caf28f6bb8
+Model config BartConfig {
+  "activation_dropout": 0.1,
+  "activation_function": "gelu",
+  "add_bias_logits": false,
+  "add_final_layer_norm": false,
+  "architectures": [
+    "BartModel",
+    "BartForConditionalGeneration",
+    "BartForSequenceClassification"
+  ],
+  "attention_dropout": 0.1,
+  "bos_token_id": 0,
+  "classif_dropout": 0.1,
+  "classifier_dropout": 0.0,
+  "d_model": 1024,
+  "decoder_attention_heads": 16,
+  "decoder_ffn_dim": 4096,
+  "decoder_layerdrop": 0.0,
+  "decoder_layers": 12,
+  "decoder_start_token_id": 2,
+  "dropout": 0.1,
+  "early_stopping": true,
+  "encoder_attention_heads": 16,
+  "encoder_ffn_dim": 4096,
+  "encoder_layerdrop": 0.0,
+  "encoder_layers": 12,
+  "eos_token_id": 2,
+  "forced_eos_token_id": 2,
+  "gradient_checkpointing": false,
+  "id2label": {
+    "0": "LABEL_0",
+    "1": "LABEL_1",
+    "2": "LABEL_2"
+  },
+  "init_std": 0.02,
+  "is_encoder_decoder": true,
+  "label2id": {
+    "LABEL_0": 0,
+    "LABEL_1": 1,
+    "LABEL_2": 2
+  },
+  "max_position_embeddings": 1024,
+  "model_type": "bart",
+  "no_repeat_ngram_size": 3,
+  "normalize_before": false,
+  "num_beams": 4,
+  "num_hidden_layers": 12,
+  "pad_token_id": 1,
+  "scale_embedding": false,
+  "task_specific_params": {
+    "summarization": {
+      "length_penalty": 1.0,
+      "max_length": 128,
+      "min_length": 12,
+      "num_beams": 4
+    },
+    "summarization_cnn": {
+      "length_penalty": 2.0,
+      "max_length": 142,
+      "min_length": 56,
+      "num_beams": 4
+    },
+    "summarization_xsum": {
+      "length_penalty": 1.0,
+      "max_length": 62,
+      "min_length": 11,
+      "num_beams": 6
+    }
+  },
+  "transformers_version": "4.5.0.dev0",
+  "use_cache": true,
+  "vocab_size": 50265
+}
+
+loading weights file https://huggingface.co/facebook/bart-large/resolve/main/pytorch_model.bin from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/d065edfe6954baf0b989a2063b26eb07e8c4d0b19354b5c74af9a51f5518df6e.6ca4df1a6ec59aa763989ceec10dff41dde19f0f0824b9f5d3fcd35a8abffdb2
+All model checkpoint weights were used when initializing BartForConditionalGeneration.
+
+All the weights of BartForConditionalGeneration were initialized from the model checkpoint at facebook/bart-large.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use BartForConditionalGeneration for predictions without further training.
+All model checkpoint weights were used when initializing BartForConditionalGeneration.
+
+loading configuration file https://huggingface.co/facebook/bart-large/resolve/main/config.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/3f12fb71b844fcb7d591fdd4e55027da90d7b5dd6aa5430ad00ec6d76585f26c.01119ad5ed0734de7152ef51ba44fccefe008001bca9a6ddebeec1caf28f6bb8
+All the weights of BartForConditionalGeneration were initialized from the model checkpoint at facebook/bart-large.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use BartForConditionalGeneration for predictions without further training.
+Model config BartConfig {
+  "activation_dropout": 0.1,
+  "activation_function": "gelu",
+  "add_bias_logits": false,
+  "add_final_layer_norm": false,
+  "architectures": [
+    "BartModel",
+    "BartForConditionalGeneration",
+    "BartForSequenceClassification"
+  ],
+  "attention_dropout": 0.1,
+  "bos_token_id": 0,
+  "classif_dropout": 0.1,
+  "classifier_dropout": 0.0,
+  "d_model": 1024,
+  "decoder_attention_heads": 16,
+  "decoder_ffn_dim": 4096,
+  "decoder_layerdrop": 0.0,
+  "decoder_layers": 12,
+  "decoder_start_token_id": 2,
+  "dropout": 0.1,
+  "early_stopping": true,
+  "encoder_attention_heads": 16,
+  "encoder_ffn_dim": 4096,
+  "encoder_layerdrop": 0.0,
+  "encoder_layers": 12,
+  "eos_token_id": 2,
+  "forced_eos_token_id": 2,
+  "gradient_checkpointing": false,
+  "id2label": {
+    "0": "LABEL_0",
+    "1": "LABEL_1",
+    "2": "LABEL_2"
+  },
+  "init_std": 0.02,
+  "is_encoder_decoder": true,
+  "label2id": {
+    "LABEL_0": 0,
+    "LABEL_1": 1,
+    "LABEL_2": 2
+  },
+  "max_position_embeddings": 1024,
+loading configuration file https://huggingface.co/facebook/bart-large/resolve/main/config.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/3f12fb71b844fcb7d591fdd4e55027da90d7b5dd6aa5430ad00ec6d76585f26c.01119ad5ed0734de7152ef51ba44fccefe008001bca9a6ddebeec1caf28f6bb8
+  "model_type": "bart",
+  "no_repeat_ngram_size": 3,
+  "normalize_before": false,
+  "num_beams": 4,
+  "num_hidden_layers": 12,
+  "pad_token_id": 1,
+  "scale_embedding": false,
+  "task_specific_params": {
+    "summarization": {
+      "length_penalty": 1.0,
+      "max_length": 128,
+      "min_length": 12,
+      "num_beams": 4
+    },
+    "summarization_cnn": {
+      "length_penalty": 2.0,
+      "max_length": 142,
+      "min_length": 56,
+      "num_beams": 4
+    },
+    "summarization_xsum": {
+      "length_penalty": 1.0,
+      "max_length": 62,
+      "min_length": 11,
+      "num_beams": 6
+    }
+  },
+  "transformers_version": "4.5.0.dev0",
+  "use_cache": true,
+  "vocab_size": 50265
+}
+
+Model config BartConfig {
+  "activation_dropout": 0.1,
+  "activation_function": "gelu",
+  "add_bias_logits": false,
+  "add_final_layer_norm": false,
+  "architectures": [
+    "BartModel",
+    "BartForConditionalGeneration",
+    "BartForSequenceClassification"
+  ],
+  "attention_dropout": 0.1,
+  "bos_token_id": 0,
+  "classif_dropout": 0.1,
+  "classifier_dropout": 0.0,
+  "d_model": 1024,
+  "decoder_attention_heads": 16,
+  "decoder_ffn_dim": 4096,
+  "decoder_layerdrop": 0.0,
+  "decoder_layers": 12,
+  "decoder_start_token_id": 2,
+  "dropout": 0.1,
+  "early_stopping": true,
+  "encoder_attention_heads": 16,
+  "encoder_ffn_dim": 4096,
+  "encoder_layerdrop": 0.0,
+  "encoder_layers": 12,
+  "eos_token_id": 2,
+  "forced_eos_token_id": 2,
+  "gradient_checkpointing": false,
+  "id2label": {
+    "0": "LABEL_0",
+    "1": "LABEL_1",
+    "2": "LABEL_2"
+  },
+  "init_std": 0.02,
+  "is_encoder_decoder": true,
+  "label2id": {
+    "LABEL_0": 0,
+    "LABEL_1": 1,
+    "LABEL_2": 2
+  },
+  "max_position_embeddings": 1024,
+Can't load following files from cache: ['added_tokens_file', 'special_tokens_map_file'] and cannot check if these files are necessary for the tokenizer to operate.
+  "model_type": "bart",
+  "no_repeat_ngram_size": 3,
+  "normalize_before": false,
+  "num_beams": 4,
+  "num_hidden_layers": 12,
+  "pad_token_id": 1,
+  "scale_embedding": false,
+  "task_specific_params": {
+    "summarization": {
+      "length_penalty": 1.0,
+      "max_length": 128,
+      "min_length": 12,
+      "num_beams": 4
+    },
+    "summarization_cnn": {
+      "length_penalty": 2.0,
+      "max_length": 142,
+      "min_length": 56,
+      "num_beams": 4
+    },
+    "summarization_xsum": {
+      "length_penalty": 1.0,
+      "max_length": 62,
+      "min_length": 11,
+      "num_beams": 6
+    }
+  },
+  "transformers_version": "4.5.0.dev0",
+  "use_cache": true,
+  "vocab_size": 50265
+}
+
+loading file https://huggingface.co/facebook/bart-large/resolve/main/vocab.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/0d6fc8b2ef1860c1f8f0baff4b021e3426cc7d11b153f98e563b799603ee2f25.647b4548b6d9ea817e82e7a9231a320231a1c9ea24053cc9e758f3fe68216f05
+Can't load following files from cache: ['added_tokens_file', 'special_tokens_map_file'] and cannot check if these files are necessary for the tokenizer to operate.
+loading file https://huggingface.co/facebook/bart-large/resolve/main/merges.txt from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/6e75e35f0bdd15870c98387e13b93a8e100237eb33ad99c36277a0562bd6d850.5d12962c5ee615a4c803841266e9c3be9a691a924f72d395d3a6c6c81157788b
+loading file https://huggingface.co/facebook/bart-large/resolve/main/vocab.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/0d6fc8b2ef1860c1f8f0baff4b021e3426cc7d11b153f98e563b799603ee2f25.647b4548b6d9ea817e82e7a9231a320231a1c9ea24053cc9e758f3fe68216f05
+loading file https://huggingface.co/facebook/bart-large/resolve/main/tokenizer.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/d94f53c8851dcda40774f97280e634b94b721a58e71bcc152b5f51d0d49a046a.fc9576039592f026ad76a1c231b89aee8668488c671dfbe6616bab2ed298d730
+loading file https://huggingface.co/facebook/bart-large/resolve/main/merges.txt from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/6e75e35f0bdd15870c98387e13b93a8e100237eb33ad99c36277a0562bd6d850.5d12962c5ee615a4c803841266e9c3be9a691a924f72d395d3a6c6c81157788b
+loading file https://huggingface.co/facebook/bart-large/resolve/main/tokenizer_config.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/1abf196c889c24daca2909359ca2090e5fcbfa21a9ea36d763f70adbafb500d7.67d01b18f2079bd75eac0b2f2e7235768c7f26bd728e7a855a1c5acae01a91a8
+loading file https://huggingface.co/facebook/bart-large/resolve/main/tokenizer.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/d94f53c8851dcda40774f97280e634b94b721a58e71bcc152b5f51d0d49a046a.fc9576039592f026ad76a1c231b89aee8668488c671dfbe6616bab2ed298d730
+loading file https://huggingface.co/facebook/bart-large/resolve/main/tokenizer_config.json from cache at /lustre/home/ec156/xx6/.cache/huggingface/transformers/1abf196c889c24daca2909359ca2090e5fcbfa21a9ea36d763f70adbafb500d7.67d01b18f2079bd75eac0b2f2e7235768c7f26bd728e7a855a1c5acae01a91a8
+05/03/2021 10:22:21 - WARNING - datasets.builder -   Using custom data configuration default-adbd6590e20b8b03
+05/03/2021 10:22:21 - WARNING - datasets.builder -   Reusing dataset json (/lustre/home/ec156/xx6/.cache/huggingface/datasets/json/default-adbd6590e20b8b03/0.0.0/83d5b3a2f62630efc6b5315f00f20209b4ad91a00ac586597caee3a4da0bef02)
+05/03/2021 10:22:33 - WARNING - datasets.builder -   Using custom data configuration default-adbd6590e20b8b03
+05/03/2021 10:22:33 - WARNING - datasets.builder -   Reusing dataset json (/lustre/home/ec156/xx6/.cache/huggingface/datasets/json/default-adbd6590e20b8b03/0.0.0/83d5b3a2f62630efc6b5315f00f20209b4ad91a00ac586597caee3a4da0bef02)
+  0%|          | 0/121 [00:00<?, ?ba/s]  1%|          | 1/121 [00:00<01:16,  1.56ba/s]  2%|▏         | 2/121 [00:01<01:06,  1.78ba/s]  2%|▏         | 3/121 [00:01<00:59,  1.99ba/s]  3%|▎         | 4/121 [00:01<00:54,  2.15ba/s]  4%|▍         | 5/121 [00:02<00:51,  2.27ba/s]  5%|▍         | 6/121 [00:02<00:48,  2.36ba/s]  6%|▌         | 7/121 [00:02<00:47,  2.42ba/s]  7%|▋         | 8/121 [00:03<00:48,  2.33ba/s]  7%|▋         | 9/121 [00:03<00:46,  2.40ba/s]  8%|▊         | 10/121 [00:04<00:45,  2.45ba/s]  9%|▉         | 11/121 [00:04<00:44,  2.48ba/s] 10%|▉         | 12/121 [00:04<00:43,  2.52ba/s] 11%|█         | 13/121 [00:05<00:42,  2.53ba/s] 12%|█▏        | 14/121 [00:05<00:41,  2.55ba/s] 12%|█▏        | 15/121 [00:06<00:41,  2.56ba/s] 13%|█▎        | 16/121 [00:06<00:41,  2.56ba/s] 14%|█▍        | 17/121 [00:06<00:41,  2.49ba/s]  0%|          | 0/121 [00:00<?, ?ba/s] 15%|█▍        | 18/121 [00:07<00:43,  2.36ba/s]  1%|          | 1/121 [0005/03/2021 10:22:39 - WARNING - datasets.builder -   Using custom data configuration default-adbd6590e20b8b03
+05/03/2021 10:22:39 - WARNING - datasets.builder -   Using custom data configuration default-adbd6590e20b8b03
+05/03/2021 10:22:39 - WARNING - datasets.builder -   Reusing dataset json (/lustre/home/ec156/xx6/.cache/huggingface/datasets/json/default-adbd6590e20b8b03/0.0.0/83d5b3a2f62630efc6b5315f00f20209b4ad91a00ac586597caee3a4da0bef02)
+05/03/2021 10:22:39 - WARNING - datasets.builder -   Reusing dataset json (/lustre/home/ec156/xx6/.cache/huggingface/datasets/json/default-adbd6590e20b8b03/0.0.0/83d5b3a2f62630efc6b5315f00f20209b4ad91a00ac586597caee3a4da0bef02)
+:00<01:25,  1.41ba/s] 16%|█▌        | 19/121 [00:07<00:42,  2.39ba/s]  2%|▏         | 2/121 [00:01<01:19,  1.49ba/s] 17%|█▋        | 20/121 [00:08<00:44,  2.26ba/s]  2%|▏         | 3/121 [00:01<01:11,  1.64ba/s] 17%|█▋        | 21/121 [00:08<00:44,  2.23ba/s] 18%|█▊        | 22/121 [00:09<00:44,  2.22ba/s]  3%|▎         | 4/121 [00:02<01:05,  1.78ba/s]  4%|▍         | 5/121 [00:02<01:01,  1.89ba/s] 19%|█▉        | 23/121 [00:09<00:44,  2.20ba/s]  5%|▍         | 6/121 [00:03<00:59,  1.93ba/s] 20%|█▉        | 24/121 [00:10<00:44,  2.16ba/s]  6%|▌         | 7/121 [00:03<00:57,  1.99ba/s] 21%|██        | 25/121 [00:10<00:47,  2.03ba/s] 21%|██▏       | 26/121 [00:11<00:46,  2.04ba/s]  7%|▋         | 8/121 [00:04<01:01,  1.83ba/s] 22%|██▏       | 27/121 [00:11<00:46,  2.03ba/s]  7%|▋         | 9/121 [00:04<00:57,  1.93ba/s]  8%|▊         | 10/121 [00:05<00:55,  2.00ba/s] 23%|██▎       | 28/121 [00:12<00:45,  2.05ba/s]  9%|▉         | 11/121 [00:05<00:54,  2.03ba/s] 24%|██▍       | 29/121 [00:12<00:44,  2.05ba/s] 10%|▉         | 12/121 [00:06<00:53,  2.05ba/s] 25%|██▍       | 30/121 [00:13<00:44,  2.03ba/s] 11%|█         | 13/121 [00:06<00:54,  1.99ba/s] 26%|██▌       | 31/121 [00:13<00:45,  1.96ba/s] 12%|█▏        | 14/121 [00:07<00:54,  1.97ba/s] 26%|██▋       | 32/121 [00:14<00:45,  1.96ba/s] 12%|█▏        | 15/121 [00:07<00:54,  1.94ba/s] 27%|██▋       | 33/121 [00:14<00:50,  1.76ba/s] 13%|█▎        | 16/121 [00:08<00:55,  1.90ba/s] 28%|██▊       | 34/121 [00:15<00:44,  1.94ba/s] 29%|██▉       | 35/121 [00:15<00:43,  1.96ba/s] 14%|█▍        | 17/121 [00:08<00:56,  1.84ba/s] 15%|█▍        | 18/121 [00:09<00:53,  1.94ba/s] 30%|██▉       | 36/121 [00:16<00:42,  1.99ba/s] 16%|█▌        | 19/121 [00:09<00:50,  2.00ba/s] 31%|███       | 37/121 [00:16<00:41,  2.03ba/s] 17%|█▋        | 20/121 [00:10<00:50,  1.99ba/s] 31%|███▏     0%|          | 0/121 [00:00<?, ?ba/s]  0%|          | 0/121 [00:00<?, ?ba/s]  1%|          | 1/121 [00:00<01:07,  1.79ba/s]  1%|          | 1/121 [00:00<01:14,  1.62ba/s]  2%|▏         | 2/121 [00:01<01:07,  1.78ba/s]  2%|▏         | 2/121 [00:01<01:04,  1.85ba/s]  2%|▏         | 3/121 [00:01<01:01,  1.91ba/s]  2%|▏         | 3/121 [00:01<00:59,  1.97ba/s]  3%|▎         | 4/121 [00:01<00:58,  1.99ba/s]  3%|▎         | 4/121 [00:01<00:57,  2.04ba/s]  4%|▍         | 5/121 [00:02<00:56,  2.07ba/s]  4%|▍         | 5/121 [00:02<00:55,  2.10ba/s]  5%|▍         | 6/121 [00:02<00:54,  2.12ba/s]  5%|▍         | 6/121 [00:02<00:54,  2.09ba/s]  6%|▌         | 7/121 [00:03<00:53,  2.12ba/s]  6%|▌         | 7/121 [00:03<00:53,  2.14ba/s]  7%|▋         | 8/121 [00:03<00:56,  2.00ba/s]  7%|▋         | 8/121 [00:03<00:56,  2.01ba/s]  7%|▋         | 9/121 [00:04<00:54,  2.07ba/s]  7%|▋         | 9/121 [00:04<00:54,  2.06ba/s]  8%|▊         | 10/121 [00:04<00:53,  2.07ba   | 38/121 [00:17<00:41,  1.99ba/s] 17%|█▋        | 21/121 [00:10<00:50,  1.99ba/s] 32%|███▏      | 39/121 [00:17<00:40,  2.00ba/s] 18%|█▊        | 22/121 [00:11<00:49,  1.99ba/s] 33%|███▎      | 40/121 [00:18<00:40,  2.01ba/s] 19%|█▉        | 23/121 [00:11<00:48,  2.02ba/s] 34%|███▍      | 41/121 [00:18<00:41,  1.93ba/s] 20%|█▉        | 24/121 [00:12<00:49,  1.97ba/s] 35%|███▍      | 42/121 [00:19<00:40,  1.94ba/s] 36%|███▌      | 43/121 [00:19<00:40,  1.95ba/s] 21%|██        | 25/121 [00:12<00:50,  1.89ba/s] 21%|██▏       | 26/121 [00:13<00:48,  1.97ba/s] 36%|███▋      | 44/121 [00:20<00:38,  2.00ba/s] 22%|██▏       | 27/121 [00:13<00:46,  2.02ba/s] 37%|███▋      | 45/121 [00:20<00:37,  2.05ba/s] 23%|██▎       | 28/121 [00:14<00:45,  2.06ba/s] 38%|███▊      | 46/121 [00:21<00:36,  2.08ba/s] 39%|███▉      | 47/121 [00:21<00:35,  2.09ba/s] 24%|██▍       | 29/121 [00:14<00:44, /s]  8%|▊         | 10/121 [00:04<00:53,  2.08ba/s]  9%|▉         | 11/121 [00:05<00:52,  2.11ba/s]  9%|▉         | 11/121 [00:05<00:52,  2.10ba/s] 10%|▉         | 12/121 [00:05<00:50,  2.14ba/s] 10%|▉         | 12/121 [00:05<00:51,  2.13ba/s] 11%|█         | 13/121 [00:06<00:49,  2.18ba/s] 11%|█         | 13/121 [00:06<00:49,  2.18ba/s] 12%|█▏        | 14/121 [00:06<00:48,  2.18ba/s] 12%|█▏        | 14/121 [00:06<00:49,  2.18ba/s] 12%|█▏        | 15/121 [00:07<00:48,  2.19ba/s] 12%|█▏        | 15/121 [00:07<00:48,  2.18ba/s] 13%|█▎        | 16/121 [00:07<00:48,  2.18ba/s] 13%|█▎        | 16/121 [00:07<00:48,  2.18ba/s] 14%|█▍        | 17/121 [00:08<00:48,  2.13ba/s] 14%|█▍        | 17/121 [00:08<00:48,  2.12ba/s] 15%|█▍        | 18/121 [00:08<00:47,  2.17ba/s] 15%|█▍        | 18/121 [00:08<00:47,  2.17ba/s] 16%|█▌        | 19/121 [00:08<00:46,  2.21ba/s] 16%|█▌        | 19/121 [00:08<00:46,  2.20ba/s] 17%|█▋        | 20/121 [00:09<00:46,  2.18ba/s] 17%|█▋        | 20/121 [00:09<00:46,  2.18ba/s] 17%|█▋        | 21/121 [00:09<00:45,  2.19ba/s] 17%|█▋        | 21/121 [00:09<00:45,  2.19ba/s] 18%|█▊        | 22/121 [00:10<00:45,  2.18ba/s] 18%|█▊        | 22/121 [00:10<00:45,  2.17ba/s] 19%|█▉        | 23/121 [00:10<00:45,  2.17ba/s] 19%|█▉        | 23/121 [00:10<00:45,  2.17ba/s] 20%|█▉        | 24/121 [00:11<00:44,  2.19ba/s] 20%|█▉        | 24/121 [00:11<00:44,  2.19ba/s] 21%|██        | 25/121 [00:11<00:45,  2.12ba/s] 21%|██        | 25/121 [00:11<00:45,  2.11ba/s] 21%|██▏       | 26/121 [00:12<00:44,  2.14ba/s] 21%|██▏       | 26/121 [00:12<00:44,  2.13ba/s] 22%|██▏       | 27/121 [00:12<00:43,  2.17ba/s] 22%|██▏       | 27/121 [00:12<00:43,  2.17ba/s] 23%|██▎       | 28/121 [00:13<00:42,  2.17ba/s] 23%|██▎       | 28/121 [00:13<00:42,  2.17ba/s] 24%|██▍       | 29/121 [00:13<00:42,  2.16ba/s] 24%|██▍       | 29/121  2.07ba/s] 40%|███▉      | 48/121 [00:22<00:34,  2.13ba/s] 25%|██▍       | 30/121 [00:15<00:42,  2.12ba/s] 40%|████      | 49/121 [00:22<00:33,  2.16ba/s] 26%|██▌       | 31/121 [00:15<00:42,  2.14ba/s] 26%|██▋       | 32/121 [00:16<00:40,  2.18ba/s] 41%|████▏     | 50/121 [00:23<00:34,  2.08ba/s] 42%|████▏     | 51/121 [00:23<00:33,  2.08ba/s] 27%|██▋       | 33/121 [00:16<00:43,  2.01ba/s] 28%|██▊       | 34/121 [00:17<00:42,  2.06ba/s] 43%|████▎     | 52/121 [00:24<00:33,  2.06ba/s] 29%|██▉       | 35/121 [00:17<00:41,  2.09ba/s] 44%|████▍     | 53/121 [00:24<00:33,  2.03ba/s] 30%|██▉       | 36/121 [00:18<00:41,  2.04ba/s] 45%|████▍     | 54/121 [00:25<00:33,  2.03ba/s] 31%|███       | 37/121 [00:18<00:41,  2.02ba/s] 45%|████▌     | 55/121 [00:25<00:32,  2.02ba/s] 31%|███▏      | 38/121 [00:19<00:41,  1.99ba/s] 46%|████▋     | 56/121 [00:26<00:32,  2.01ba/s] 47%|████▋     | 57/121 [00:26<00:30,  2.08ba/s] 32%|███▏      | 39/121 [00:19<00:40,  2.05ba/s] 33%|███▎      | 40/121 [00:20<00:38,  2.12ba/s] 48%|████▊     | 58/121 [00:27<00:31,  1.99ba/s] 49%|████▉     | 59/121 [00:27<00:30,  2.03ba/s] 34%|███▍      | 41/121 [00:20<00:41,  1.95ba/s] 50%|████▉     | 60/121 [00:28<00:29,  2.08ba/s] 35%|███▍      | 42/121 [00:21<00:38,  2.04ba/s] 50%|█████     | 61/121 [00:28<00:28,  2.10ba/s] 36%|███▌      | 43/121 [00:21<00:37,  2.08ba/s] 51%|█████     | 62/121 [00:28<00:27,  2.13ba/s] 36%|███▋      | 44/121 [00:21<00:36,  2.11ba/s] 52%|█████▏    | 63/121 [00:29<00:26,  2.17ba/s] 37%|███▋      | 45/121 [00:22<00:35,  2.15ba/s] 53%|█████▎    | 64/121 [00:29<00:26,  2.18ba/s] 38%|███▊      | 46/121 [00:22<00:34,  2.17ba/s] 54%|█████▎    | 65/121 [00:30<00:25,  2.18ba/s] 39%|███▉   [00:13<00:42,  2.16ba/s] 25%|██▍       | 30/121 [00:13<00:41,  2.17ba/s] 25%|██▍       | 30/121 [00:13<00:41,  2.17ba/s] 26%|██▌       | 31/121 [00:14<00:42,  2.13ba/s] 26%|██▌       | 31/121 [00:14<00:42,  2.13ba/s] 26%|██▋       | 32/121 [00:14<00:40,  2.17ba/s] 26%|██▋       | 32/121 [00:14<00:40,  2.17ba/s] 27%|██▋       | 33/121 [00:15<00:42,  2.09ba/s] 27%|██▋       | 33/121 [00:15<00:42,  2.07ba/s] 28%|██▊       | 34/121 [00:15<00:40,  2.16ba/s] 28%|██▊       | 34/121 [00:15<00:40,  2.15ba/s] 29%|██▉       | 35/121 [00:16<00:39,  2.15ba/s] 29%|██▉       | 35/121 [00:16<00:39,  2.15ba/s] 30%|██▉       | 36/121 [00:16<00:39,  2.18ba/s] 30%|██▉       | 36/121 [00:16<00:39,  2.17ba/s] 31%|███       | 37/121 [00:17<00:38,  2.17ba/s] 31%|███       | 37/121 [00:17<00:38,  2.17ba/s] 31%|███▏      | 38/121 [00:17<00:38,  2.14ba/s] 31%|███▏      | 38/121 [00:17<00:38,  2.14ba/s] 32%|   | 47/121 [00:23<00:33,  2.18ba/s] 40%|███▉      | 48/121 [00:23<00:33,  2.19ba/s] 55%|█████▍    | 66/121 [00:30<00:26,  2.04ba/s] 40%|████      | 49/121 [00:24<00:34,  2.12ba/s] 55%|█████▌    | 67/121 [00:31<00:26,  2.05ba/s] 56%|█████▌    | 68/121 [00:31<00:25,  2.05ba/s] 41%|████▏     | 50/121 [00:24<00:36,  1.95ba/s] 57%|█████▋    | 69/121 [00:32<00:25,  2.03ba/s] 42%|████▏     | 51/121 [00:25<00:35,  2.00ba/s] 43%|████▎     | 52/121 [00:25<00:33,  2.05ba/s] 58%|█████▊    | 70/121 [00:32<00:24,  2.07ba/s] 44%|████▍     | 53/121 [00:26<00:33,  2.06ba/s] 59%|█████▊    | 71/121 [00:33<00:24,  2.07ba/s] 45%|████▍     | 54/121 [00:26<00:31,  2.10ba/s] 60%|█████▉    | 72/121 [00:33<00:23,  2.10ba/s] 45%|████▌     | 55/121 [00:27<00:31,  2.13ba/s] 60%|██████    | 73/121 [00:34<00:22,  2.13ba/s] 46%|████▋     | 56/1███▏      | 39/121 [00:18<00:38,  2.15ba/s] 32%|███▏      | 39/121 [00:18<00:38,  2.15ba/s] 33%|███▎      | 40/121 [00:18<00:37,  2.18ba/s] 33%|███▎      | 40/121 [00:18<00:37,  2.17ba/s] 34%|███▍      | 41/121 [00:19<00:37,  2.13ba/s] 34%|███▍      | 41/121 [00:19<00:37,  2.11ba/s] 35%|███▍      | 42/121 [00:19<00:36,  2.14ba/s] 35%|███▍      | 42/121 [00:19<00:36,  2.14ba/s] 36%|███▌      | 43/121 [00:20<00:36,  2.14ba/s] 36%|███▌      | 43/121 [00:20<00:36,  2.15ba/s] 36%|███▋      | 44/121 [00:20<00:35,  2.16ba/s] 36%|███▋      | 44/121 [00:20<00:35,  2.15ba/s] 37%|███▋      | 45/121 [00:20<00:34,  2.17ba/s] 37%|███▋      | 45/121 [00:20<00:34,  2.17ba/s] 38%|███▊      | 46/121 [00:21<00:34,  2.18ba/s] 38%|███▊      | 46/121 [00:21<00:34,  2.18ba/s] 39%|███▉      | 47/121 [00:21<00:34,  2.16ba/s] 39%|███▉      | 47/121 [00:21<00:34,  2.15ba/s] 40%|███▉      | 48/121 [00:22<00:33,  2.17ba/s] 40%|███▉      | 48/121 [00:22<00:33,  2.17ba/s] 40%|████      | 49/121 [00:22<00:33,  2.17ba/s] 40%|████      | 49/121 [00:22<00:33,  2.16ba/s] 41%|████▏     | 50/121 [00:23<00:33,  2.13ba/s] 41%|████▏     | 50/121 [00:23<00:33,  2.11ba/s] 42%|████▏     | 51/121 [00:23<00:32,  2.17ba/s] 42%|████▏     | 51/121 [00:23<00:32,  2.17ba/s] 43%|████▎     | 52/121 [00:24<00:31,  2.18ba/s] 43%|████▎     | 52/121 [00:24<00:31,  2.19ba/s] 44%|████▍     | 53/121 [00:24<00:31,  2.18ba/s] 44%|████▍     | 53/121 [00:24<00:31,  2.18ba/s] 45%|████▍     | 54/121 [00:25<00:30,  2.19ba/s] 45%|████▍     | 54/121 [00:25<00:30,  2.19ba/s] 45%|████▌     | 55/121 [00:25<00:29,  2.20ba/s] 45%|████▌     | 55/121 [00:25<00:30,  2.20ba/s] 46%|████▋     | 56/121 [00:25<00:29,  2.23ba/s] 46%|████▋     | 56/1221 [00:27<00:30,  2.15ba/s] 61%|██████    | 74/121 [00:34<00:23,  2.03ba/s] 47%|████▋     | 57/121 [00:28<00:30,  2.08ba/s] 62%|██████▏   | 75/121 [00:35<00:22,  2.04ba/s] 63%|██████▎   | 76/121 [00:35<00:22,  2.03ba/s] 48%|████▊     | 58/121 [00:28<00:32,  1.95ba/s] 49%|████▉     | 59/121 [00:29<00:30,  2.00ba/s] 64%|██████▎   | 77/121 [00:36<00:21,  2.03ba/s] 50%|████▉     | 60/121 [00:29<00:30,  2.03ba/s] 64%|██████▍   | 78/121 [00:36<00:21,  2.04ba/s] 65%|██████▌   | 79/121 [00:37<00:20,  2.04ba/s] 50%|█████     | 61/121 [00:30<00:29,  2.01ba/s] 51%|█████     | 62/121 [00:30<00:28,  2.06ba/s] 66%|██████▌   | 80/121 [00:37<00:19,  2.06ba/s] 67%|██████▋   | 81/121 [00:38<00:18,  2.12ba/s] 52%|█████▏    | 63/121 [00:31<00:27,  2.08ba/s] 53%|█████▎    | 64/121 [00:31<00:27,  2.07ba/s] 68%|██████▊   | 82/121 [00:38<00:18,  2.08ba/s] 54%|█████▎    | 65/121 [00:32<00:26,  2.11ba/s] 69%|██████▊   | 83/121 [00:39<00:19,  1.99ba/s] 69%|██████▉   | 84/121 [00:39<00:18,  2.00ba/s] 55%|█████▍    | 66/121 [00:32<00:28,  1.94ba/s] 70%|███████   | 85/121 [00:40<00:17,  2.05ba/s] 55%|█████▌    | 67/121 [00:33<00:26,  2.03ba/s] 56%|█████▌    | 68/121 [00:33<00:25,  2.07ba/s] 71%|███████   | 86/121 [00:40<00:16,  2.08ba/s] 57%|█████▋    | 69/121 [00:34<00:25,  2.06ba/s] 72%|███████▏  | 87/121 [00:41<00:16,  2.06ba/s] 73%|███████▎  | 88/121 [00:41<00:16,  2.04ba/s] 58%|█████▊    | 70/121 [00:34<00:25,  2.03ba/s] 74%|███████▎  | 89/121 [00:42<00:15,  2.07ba/s] 59%|█████▊    | 71/121 [00:35<00:24,  2.05ba/s] 60%|█████▉    | 72/121 [00:35<00:23,  2.10ba/s] 74%|███████▍  | 90/121 [00:1 [00:25<00:29,  2.23ba/s] 47%|████▋     | 57/121 [00:26<00:28,  2.25ba/s] 47%|████▋     | 57/121 [00:26<00:28,  2.24ba/s] 48%|████▊     | 58/121 [00:26<00:29,  2.17ba/s] 48%|████▊     | 58/121 [00:26<00:29,  2.17ba/s] 49%|████▉     | 59/121 [00:27<00:28,  2.19ba/s] 49%|████▉     | 59/121 [00:27<00:28,  2.18ba/s] 50%|████▉     | 60/121 [00:27<00:28,  2.17ba/s] 50%|████▉     | 60/121 [00:27<00:28,  2.17ba/s] 50%|█████     | 61/121 [00:28<00:27,  2.18ba/s] 50%|█████     | 61/121 [00:28<00:27,  2.17ba/s] 51%|█████     | 62/121 [00:28<00:26,  2.22ba/s] 51%|█████     | 62/121 [00:28<00:26,  2.21ba/s] 52%|█████▏    | 63/121 [00:29<00:25,  2.26ba/s] 52%|█████▏    | 63/121 [00:29<00:25,  2.25ba/s] 53%|█████▎    | 64/121 [00:29<00:25,  2.25ba/s] 53%|█████▎    | 64/121 [00:29<00:25,  2.25ba/s] 54%|█████▎    | 65/121 [00:30<00:25,  2.23ba/s] 54%|█████▎    | 65/121 [00:30<00:25,  2.23ba/s] 55%|█████▍    | 66/121 [00:30<00:26,  2.10ba/s] 55%|█████▍    | 66/121 [00:30<00:26,  2.09ba/s] 55%|█████▌    | 67/121 [00:31<00:25,  2.14ba/s] 55%|█████▌    | 67/121 [00:31<00:25,  2.14ba/s] 56%|█████▌    | 68/121 [00:31<00:24,  2.17ba/s] 56%|█████▌    | 68/121 [00:31<00:24,  2.16ba/s] 57%|█████▋    | 69/121 [00:31<00:24,  2.16ba/s] 57%|█████▋    | 69/121 [00:31<00:24,  2.16ba/s] 58%|█████▊    | 70/121 [00:32<00:23,  2.15ba/s] 58%|█████▊    | 70/121 [00:32<00:23,  2.15ba/s] 59%|█████▊    | 71/121 [00:32<00:23,  2.14ba/s] 59%|█████▊    | 71/121 [00:32<00:23,  2.14ba/s] 60%|█████▉    | 72/121 [00:33<00:22,  2.15ba/s] 60%|█████▉    | 72/121 [00:33<00:22,  2.15ba/s] 60%|██████    | 73/121 [00:33<00:22,  2.16ba/s] 60%|██████    | 73/42<00:14,  2.10ba/s] 60%|██████    | 73/121 [00:36<00:22,  2.11ba/s] 75%|███████▌  | 91/121 [00:43<00:15,  1.99ba/s] 76%|███████▌  | 92/121 [00:43<00:14,  2.02ba/s] 61%|██████    | 74/121 [00:36<00:24,  1.96ba/s] 77%|███████▋  | 93/121 [00:44<00:13,  2.04ba/s] 62%|██████▏   | 75/121 [00:37<00:22,  2.03ba/s] 78%|███████▊  | 94/121 [00:44<00:12,  2.08ba/s] 63%|██████▎   | 76/121 [00:37<00:21,  2.07ba/s] 64%|██████▎   | 77/121 [00:37<00:20,  2.11ba/s] 79%|███████▊  | 95/121 [00:44<00:12,  2.10ba/s] 64%|██████▍   | 78/121 [00:38<00:20,  2.10ba/s] 79%|███████▉  | 96/121 [00:45<00:11,  2.10ba/s] 80%|████████  | 97/121 [00:45<00:11,  2.08ba/s] 65%|██████▌   | 79/121 [00:38<00:20,  2.06ba/s] 66%|██████▌   | 80/121 [00:39<00:19,  2.08ba/s] 81%|████████  | 98/121 [00:46<0121 [00:33<00:22,  2.16ba/s] 61%|██████    | 74/121 [00:34<00:22,  2.07ba/s] 61%|██████    | 74/121 [00:34<00:22,  2.07ba/s] 62%|██████▏   | 75/121 [00:34<00:21,  2.13ba/s] 62%|██████▏   | 75/121 [00:34<00:21,  2.12ba/s] 63%|██████▎   | 76/121 [00:35<00:21,  2.14ba/s] 63%|██████▎   | 76/121 [00:35<00:21,  2.14ba/s] 64%|██████▎   | 77/121 [00:35<00:20,  2.15ba/s] 64%|██████▎   | 77/121 [00:35<00:20,  2.14ba/s] 64%|██████▍   | 78/121 [00:36<00:20,  2.12ba/s] 64%|██████▍   | 78/121 [00:36<00:20,  2.12ba/s] 65%|██████▌   | 79/121 [00:36<00:19,  2.14ba/s] 65%|██████▌   | 79/121 [00:36<00:19,  2.14ba/s] 66%|██████▌   | 80/121 [00:37<00:18,  2.16ba/s] 66%|██████▌   | 80/121 [00:37<00:19,  2.15ba/s] 67%|██████▋   | 81/121 [00:37<00:18,  2.17ba/s] 67%|██████▋   | 81/121 [00:37<00:18,  20:11,  2.07ba/s] 67%|██████▋   | 81/121 [00:39<00:18,  2.11ba/s] 82%|████████▏ | 99/121 [00:46<00:11,  1.99ba/s] 68%|██████▊   | 82/121 [00:40<00:19,  2.04ba/s] 83%|████████▎ | 100/121 [00:47<00:10,  2.01ba/s] 83%|████████▎ | 101/121 [00:47<00:09,  2.03ba/s] 69%|██████▊   | 83/121 [00:40<00:19,  1.97ba/s] 69%|██████▉   | 84/121 [00:41<00:18,  2.04ba/s] 84%|████████▍ | 102/121 [00:48<00:09,  2.07ba/s] 70%|███████   | 85/121 [00:41<00:17,  2.08ba/s] 85%|████████▌ | 103/121 [00:48<00:08,  2.10ba/s] 71%|███████   | 86/121 [00:42<00:16,  2.09ba/s] 86%|████████▌ | 104/121 [00:49<00:08,  2.10ba/s] 87%|████████▋ | 105/121 [00:49<00:07,  2.15ba/s] 72%|███████▏  | 87/121 [00:42<00:15,  2.13ba/s] 73%|███████▎  | 88/121 [00:43<00:15,  2.15ba/s] 88%|██████�.17ba/s] 68%|██████▊   | 82/121 [00:38<00:17,  2.18ba/s] 68%|██████▊   | 82/121 [00:38<00:18,  2.17ba/s] 69%|██████▊   | 83/121 [00:38<00:18,  2.10ba/s] 69%|██████▊   | 83/121 [00:38<00:18,  2.10ba/s] 69%|██████▉   | 84/121 [00:39<00:17,  2.09ba/s] 69%|██████▉   | 84/121 [00:39<00:17,  2.09ba/s] 70%|███████   | 85/121 [00:39<00:16,  2.15ba/s] 70%|███████   | 85/121 [00:39<00:16,  2.15ba/s] 71%|███████   | 86/121 [00:39<00:16,  2.15ba/s] 71%|███████   | 86/121 [00:39<00:16,  2.15ba/s] 72%|███████▏  | 87/121 [00:40<00:15,  2.15ba/s] 72%|███████▏  | 87/121 [00:40<00:15,  2.15ba/s] 73%|███████▎  | 88/121 [00:40<00:15,  2.14ba/s] 73%|███████▎  | 88/121 [00:40<00:15,  2.13ba/s] 74%|███████▎  | 89/121 [00:41<00:14,  2.16ba/s] 74%|███████▎  | 89/121 [00:41<00:14,  2.16b��█▊ | 106/121 [00:50<00:06,  2.16ba/s] 74%|███████▎  | 89/121 [00:43<00:14,  2.19ba/s] 88%|████████▊ | 107/121 [00:50<00:06,  2.04ba/s] 74%|███████▍  | 90/121 [00:44<00:14,  2.11ba/s] 89%|████████▉ | 108/121 [00:51<00:06,  2.05ba/s] 90%|█████████ | 109/121 [00:51<00:05,  2.06ba/s] 75%|███████▌  | 91/121 [00:44<00:15,  1.97ba/s] 91%|█████████ | 110/121 [00:52<00:05,  2.05ba/s] 76%|███████▌  | 92/121 [00:45<00:14,  2.00ba/s] 92%|█████████▏| 111/121 [00:52<00:04,  2.10ba/s] 77%|███████▋  | 93/121 [00:45<00:13,  2.06ba/s] 93%|█████████▎| 112/121 [00:53<00:04,  2.15ba/s] 78%|███████▊  | 94/121 [00:46<00:12,  2.13ba/s] 79%|███████▊  | 95/121 [00:46<00:12,  2.16ba/s] 93%|█████████▎| 113/121 [00:53<00:03,  2.17ba/s] 94%|█████████▍| 114/121 [00:54<00:03,  2.19ba/s] 79%|███████▉  | 96/121 [00:47<00:11,  2.17ba/s] 80%|████████  | 97/121 [00:47<00:10,  2.18ba/s] 95%|█████████▌| 115/121 [00:54<00:02,  2.17ba/s] 81%|████████  | 98/121 [00:47<00:10,  2.20ba/s] 96%|█████████▌| 116/121 [00:55<00:02,  2.09ba/s] 97%|█████████▋| 117/121 [00:55<00:01,  2.15ba/s] 82%|████████▏ | 99/121 [00:48<00:10,  2.01ba/s] 98%|█████████▊| 118/121 [00:55<00:01,  2.13ba/s] 83%|████████▎ | 100/121 [00:48<00:10,  2.08ba/s] 83%|████████▎ | 101/121 [00:49<00:09,  2.12ba/s] 98%|█████████▊| 119/121 [00:56<00:00,  2.08ba/s] 99%|█████████▉| 120/121 [00:56<00:00,  2.14ba/s] 84%|████████▍ | 102/121 [00:49<00:08,  2.15ba/s]100%|██████████| 121/121 [00:57<00:00,  2.26ba/s]100%|██████████| 121/121 [00:57<00:00,  2.11ba/s]
+a/s] 74%|███████▍  | 90/121 [00:41<00:14,  2.19ba/s] 74%|███████▍  | 90/121 [00:41<00:14,  2.18ba/s] 75%|███████▌  | 91/121 [00:42<00:14,  2.07ba/s] 75%|███████▌  | 91/121 [00:42<00:14,  2.06ba/s] 76%|███████▌  | 92/121 [00:42<00:13,  2.12ba/s] 76%|███████▌  | 92/121 [00:42<00:13,  2.12ba/s] 77%|███████▋  | 93/121 [00:43<00:13,  2.14ba/s] 77%|███████▋  | 93/121 [00:43<00:13,  2.14ba/s] 78%|███████▊  | 94/121 [00:43<00:12,  2.16ba/s] 78%|███████▊  | 94/121 [00:43<00:12,  2.16ba/s] 79%|███████▊  | 95/121 [00:44<00:11,  2.20ba/s] 79%|███████▊  | 95/121 [00:44<00:11,  2.20ba/s] 79%|███████▉  | 96/121 [00:44<00:11,  2.23ba/s] 79%|███████▉  | 96/121 [00:44<00:11,  2.22ba/s] 80%|████████  | 97/121 [00:44<00:10,  2.24ba/s] 80%|████████  | 97/121 [00: 85%|████████▌ | 103/121 [00:50<00:08,  2.19ba/s]  0%|          | 0/14 [00:00<?, ?ba/s] 86%|████████▌ | 104/121 [00:50<00:07,  2.27ba/s] 87%|████████▋ | 105/121 [00:51<00:07,  2.28ba/s]  7%|▋         | 1/14 [00:00<00:08,  1.54ba/s] 88%|████████▊ | 106/121 [00:51<00:06,  2.17ba/s] 14%|█▍        | 2/14 [00:01<00:07,  1.68ba/s] 21%|██▏       | 3/14 [00:01<00:06,  1.75ba/s] 88%|████████▊ | 107/121 [00:52<00:06,  2.06ba/s] 89%|████████▉ | 108/121 [00:52<00:06,  2.09ba/s] 29%|██▊       | 4/14 [00:02<00:05,  1.83ba/s] 90%|█████████ | 109/121 [00:53<00:05,  2.10ba/s] 36%|███▌      | 5/14 [00:02<00:04,  1.92ba/s] 43%|████▎     | 6/14 [00:03<00:04,  1.99ba/s] 91%|█████████ | 110/121 [00:53<00:05,  2.10ba/s] 50%|█████     | 7/14 [00:03<00:03,  2.05ba/s] 92%|█████████▏| 111/121 [00:54<00:04,  2.15b44<00:10,  2.24ba/s] 81%|████████  | 98/121 [00:45<00:10,  2.21ba/s] 81%|████████  | 98/121 [00:45<00:10,  2.22ba/s] 82%|████████▏ | 99/121 [00:45<00:10,  2.15ba/s] 82%|████████▏ | 99/121 [00:45<00:10,  2.14ba/s] 83%|████████▎ | 100/121 [00:46<00:09,  2.15ba/s] 83%|████████▎ | 100/121 [00:46<00:09,  2.15ba/s] 83%|████████▎ | 101/121 [00:46<00:09,  2.16ba/s] 83%|████████▎ | 101/121 [00:46<00:09,  2.16ba/s] 84%|████████▍ | 102/121 [00:47<00:08,  2.18ba/s] 84%|████████▍ | 102/121 [00:47<00:08,  2.18ba/s] 85%|████████▌ | 103/121 [00:47<00:08,  2.19ba/s] 85%|████████▌ | 103/121 [00:47<00:08,  2.19ba/s] 86%|████████▌ | 104/121 [00:48<00:07,  2.17ba/s] 86%|████████▌ | 104/121 [00:48<00:07,  2.16ba/s] 87%|████████▋ | 105/121 [00:48<00:07,  2a/s] 93%|█████████▎| 112/121 [00:54<00:04,  2.16ba/s] 57%|█████▋    | 8/14 [00:03<00:02,  2.08ba/s] 64%|██████▍   | 9/14 [00:04<00:02,  2.13ba/s] 93%|█████████▎| 113/121 [00:54<00:03,  2.16ba/s] 71%|███████▏  | 10/14 [00:04<00:01,  2.15ba/s] 94%|█████████▍| 114/121 [00:55<00:03,  2.17ba/s] 95%|█████████▌| 115/121 [00:55<00:02,  2.18ba/s] 79%|███████▊  | 11/14 [00:05<00:01,  2.02ba/s] 96%|█████████▌| 116/121 [00:56<00:02,  2.07ba/s] 86%|████████▌ | 12/14 [00:05<00:00,  2.09ba/s] 97%|█████████▋| 117/121 [00:56<00:01,  2.13ba/s] 93%|█████████▎| 13/14 [00:06<00:00,  2.14ba/s]100%|██████████| 14/14 [00:06<00:00,  2.49ba/s]100%|██████████| 14/14 [00:06<00:00,  2.14ba/s]
+.18ba/s] 87%|████████▋ | 105/121 [00:48<00:07,  2.18ba/s] 88%|████████▊ | 106/121 [00:49<00:07,  2.14ba/s] 88%|████████▊ | 106/121 [00:49<00:07,  2.14ba/s] 88%|████████▊ | 107/121 [00:49<00:06,  2.07ba/s] 88%|████████▊ | 107/121 [00:49<00:06,  2.06ba/s] 89%|████████▉ | 108/121 [00:50<00:06,  2.11ba/s] 89%|████████▉ | 108/121 [00:50<00:06,  2.11ba/s] 90%|█████████ | 109/121 [00:50<00:05,  2.15ba/s] 90%|█████████ | 109/121 [00:50<00:05,  2.15ba/s] 91%|█████████ | 110/121 [00:51<00:05,  2.11ba/s] 91%|█████████ | 110/121 [00:51<00:05,  2.11ba/s] 92%|█████████▏| 111/121 [00:51<00:04,  2.09ba/s] 92%|█████████▏| 111/121 [00:51<00:04,  2.09ba/s] 93%|█████████▎| 112/121 [00:52<00:04,  2.07ba/s] 93%|█████████▎| 112/121 [00:52<00:04 98%|█████████▊| 118/121 [00:57<00:01,  2.24ba/s] 98%|█████████▊| 119/121 [00:57<00:00,  2.30ba/s] 99%|█████████▉| 120/121 [00:58<00:00,  2.36ba/s]100%|██████████| 121/121 [00:58<00:00,  2.59ba/s]100%|██████████| 121/121 [00:58<00:00,  2.07ba/s]
+,  2.07ba/s] 93%|█████████▎| 113/121 [00:52<00:03,  2.05ba/s] 93%|█████████▎| 113/121 [00:52<00:03,  2.05ba/s] 94%|█████████▍| 114/121 [00:53<00:03,  2.10ba/s] 94%|█████████▍| 114/121 [00:53<00:03,  2.10ba/s] 95%|█████████▌| 115/121 [00:53<00:02,  2.16ba/s] 95%|█████████▌| 115/121 [00:53<00:02,  2.16ba/s] 96%|█████████▌| 116/121 [00:53<00:02,  2.10ba/s] 96%|█████████▌| 116/121 [00:53<00:02,  2.10ba/s] 97%|█████████▋| 117/121 [00:54<00:01,  2.17ba/s] 97%|█████████▋| 117/121 [00:54<00:01,  2.16ba/s] 98%|█████████▊| 118/121 [00:54<00:01,  2.23ba/s] 98%|█████████▊| 118/121 [00:54<00:01,  2.23ba/s] 98%|█████████▊| 119/121 [00:55<00:00,  2.26ba/s] 98%|█████████▊| 119/121 [00:55<00:00,  2.26ba/s] 99%|█████████▉| 120/121 [00:55<00:00,  2.27ba/s] 99%|█████████▉| 120/121 [00:55<00:00,  2.26ba/s]100%|██████████| 121/121 [00:55<00:00,  2.46ba/s]100%|██████████| 121/121 [00:55<00:00,  2.16ba/s]
+100%|██████████| 121/121 [00:55<00:00,  2.47ba/s]100%|██████████| 121/121 [00:55<00:00,  2.16ba/s]
+  0%|          | 0/14 [00:00<?, ?ba/s]  7%|▋         | 1/14 [00:00<00:05,  2.38ba/s] 14%|█▍        | 2/14 [00:00<00:04,  2.41ba/s] 21%|██▏       | 3/14 [00:01<00:04,  2.34ba/s] 29%|██▊       | 4/14 [00:01<00:04,  2.36ba/s] 36%|███▌      | 5/14 [00:02<00:03,  2.38ba/s] 43%|████▎     | 6/14 [00:02<00:03,  2.41ba/s] 50%|█████     | 7/14 [00:02<00:02,  2.46ba/s] 57%|█████▋    | 8/14 [00:03<00:02,  2.48ba/s] 64%|██████▍   | 9/14 [00:03<00:02,  2.50ba/s] 71%|███████▏  | 10/14 [00:04<00:01,  2.52ba/s] 79%|███████▊  | 11/14 [00:04<00:01,  2.40ba/s] 86%|████████▌ | 12/14 [00:04<00:00,  2.45ba/s] 93%|█████████▎| 13/14 [00:05<00:00,  2.46ba/s]100%|██████████| 14/14 [00:05<00:00,  3.17ba/s]100%|██████████| 14/14 [00:05<00:00,  2.58ba/s]
+  0%|          | 0/14 [00:00<?, ?ba/s]  0%|          | 0/14 [00:00<?, ?ba/s]  7%|▋         | 1/14 [00:00<00:06,  2.03ba/s]  7%|▋         | 1/14 [00:00<00:06,  1.99ba/s] 14%|█▍        | 2/14 [00:00<00:05,  2.10ba/s] 14%|█▍        | 2/14 [00:00<00:05,  2.07ba/s] 21%|██▏       | 3/14 [00:01<00:05,  2.06ba/s] 21%|██▏       | 3/14 [00:01<00:05,  2.04ba/s] 29%|██▊       | 4/14 [00:01<00:04,  2.08ba/s] 29%|██▊       | 4/14 [00:01<00:04,  2.06ba/s] 36%|███▌      | 5/14 [00:02<00:04,  2.12ba/s] 36%|███▌      | 5/14 [00:02<00:04,  2.11ba/s] 43%|████▎     | 6/14 [00:02<00:03,  2.17ba/s] 43%|████▎     | 6/14 [00:02<00:03,  2.16ba/s] 50%|█████     | 7/14 [00:03<00:03,  2.19ba/s] 50%|█████     | 7/14 [00:03<00:03,  2.19ba/s] 57%|█████▋    | 8/14 [00:03<00:02,  2.22ba/s] 57%|█████▋    | 8/14 [00:03<00:02,  2.20ba/s] 64%|██████▍   | 9/14 [00:04<00:02,  2.20ba/s] 64%|██████▍   | 9/14 [00:04<00:02,  2.20ba/s] 71%|███████▏  | 10/14 [00:04<00:01,  2.23ba/s] 71%|███████▏  | 10/14 [00:04<00:01,  2.24ba/s] 79%|███████▊  | 11/14 [00:05<00:01,  2.15ba/s] 79%|███████▊  | 11/14 [00:05<00:01,  2.13ba/s] 86%|████████▌ | 12/14 [00:05<00:00,  2.20ba/s] 86%|████████▌ | 12/14 [00:05<00:00,  2.19ba/s] 93%|█████████▎| 13/14 [00:05<00:00,  2.20ba/s] 93%|█████████▎| 13/14 [00:05<00:00,  2.17ba/s]100%|██████████| 14/14 [00:06<00:00,  2.79ba/s]100%|██████████| 14/14 [00:06<00:00,  2.29ba/s]
+100%|██████████| 14/14 [00:06<00:00,  2.80ba/s]100%|██████████| 14/14 [00:06<00:00,  2.29ba/s]
+r2i7n0:70359:70359 [0] NCCL INFO Bootstrap : Using [0]ib0:10.148.1.197<0> [1]ib0:1:10.149.1.197<0>
+r2i7n0:70359:70359 [0] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+r2i7n0:70359:70359 [0] NCCL INFO NET/IB : Using [0]mlx5_1:1/IB [1]mlx5_3:1/IB [2]mlx5_0:1/IB [3]mlx5_2:1/IB ; OOB ib0:10.148.1.197<0>
+NCCL version 2.4.8+cuda10.2
+r2i7n0:70360:70360 [1] NCCL INFO Bootstrap : Using [0]ib0:10.148.1.197<0> [1]ib0:1:10.149.1.197<0>
+r2i7n0:70360:70360 [1] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+r2i7n2:9537:9537 [1] NCCL INFO Bootstrap : Using [0]ib0:10.148.1.199<0> [1]ib0:1:10.149.1.199<0>
+r2i7n2:9536:9536 [0] NCCL INFO Bootstrap : Using [0]ib0:10.148.1.199<0> [1]ib0:1:10.149.1.199<0>
+r2i7n2:9536:9536 [0] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+r2i7n2:9537:9537 [1] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so).
+r2i7n0:70360:70360 [1] NCCL INFO NET/IB : Using [0]mlx5_1:1/IB [1]mlx5_3:1/IB [2]mlx5_0:1/IB [3]mlx5_2:1/IB ; OOB ib0:10.148.1.197<0>
+r2i7n0:70359:71368 [0] NCCL INFO Setting affinity for GPU 0 to 0fffff00,000fffff
+r2i7n0:70360:71373 [1] NCCL INFO Setting affinity for GPU 1 to 0fffff00,000fffff
+r2i7n2:9536:9536 [0] NCCL INFO NET/IB : Using [0]mlx5_1:1/IB [1]mlx5_3:1/IB [2]mlx5_0:1/IB [3]mlx5_2:1/IB ; OOB ib0:10.148.1.199<0>
+r2i7n2:9537:9537 [1] NCCL INFO NET/IB : Using [0]mlx5_1:1/IB [1]mlx5_3:1/IB [2]mlx5_0:1/IB [3]mlx5_2:1/IB ; OOB ib0:10.148.1.199<0>
+r2i7n2:9537:10552 [1] NCCL INFO Setting affinity for GPU 1 to 0fffff00,000fffff
+r2i7n2:9536:10550 [0] NCCL INFO Setting affinity for GPU 0 to 0fffff00,000fffff
+r2i7n2:9536:10550 [0] NCCL INFO CUDA Dev 0[0], IB NIC distance :  NODE SYS PIX SYS
+r2i7n2:9537:10552 [1] NCCL INFO CUDA Dev 1[1], IB NIC distance :  NODE SYS PIX SYS
+r2i7n0:70360:71373 [1] NCCL INFO CUDA Dev 1[1], IB NIC distance :  NODE SYS PIX SYS
+r2i7n0:70359:71368 [0] NCCL INFO CUDA Dev 0[0], IB NIC distance :  NODE SYS PIX SYS
+r2i7n0:70359:71368 [0] NCCL INFO Channel 00 :    0   1   2   3
+r2i7n0:70359:71368 [0] NCCL INFO Channel 01 :    0   1   2   3
+r2i7n0:70359:71368 [0] NCCL INFO Ring 00 : 3 -> 0 [receive] via NET/IB/2
+r2i7n2:9536:10550 [0] NCCL INFO Ring 00 : 1 -> 2 [receive] via NET/IB/2
+r2i7n2:9536:10550 [0] NCCL INFO Ring 00 : 2[0] -> 3[1] via P2P/IPC
+r2i7n0:70359:71368 [0] NCCL INFO Ring 00 : 0[0] -> 1[1] via P2P/IPC
+r2i7n2:9537:10552 [1] NCCL INFO Ring 00 : 3 -> 0 [send] via NET/IB/2
+r2i7n0:70360:71373 [1] NCCL INFO Ring 00 : 1 -> 2 [send] via NET/IB/2
+r2i7n0:70359:71368 [0] NCCL INFO Ring 01 : 3 -> 0 [receive] via NET/IB/2
+r2i7n2:9536:10550 [0] NCCL INFO Ring 01 : 1 -> 2 [receive] via NET/IB/2
+r2i7n2:9537:10552 [1] NCCL INFO Ring 01 : 3 -> 0 [send] via NET/IB/2
+r2i7n0:70360:71373 [1] NCCL INFO Ring 01 : 1 -> 2 [send] via NET/IB/2
+r2i7n0:70359:71368 [0] NCCL INFO Ring 01 : 0[0] -> 1[1] via P2P/IPC
+r2i7n2:9536:10550 [0] NCCL INFO Ring 01 : 2[0] -> 3[1] via P2P/IPC
+r2i7n2:9537:10552 [1] NCCL INFO comm 0x14d16c0022e0 rank 3 nranks 4 cudaDev 1 nvmlDev 1 - Init COMPLETE
+r2i7n0:70359:71368 [0] NCCL INFO Using 256 threads, Min Comp Cap 7, Trees disabled
+r2i7n0:70360:71373 [1] NCCL INFO comm 0x1543cc0022e0 rank 1 nranks 4 cudaDev 1 nvmlDev 1 - Init COMPLETE
+r2i7n0:70359:71368 [0] NCCL INFO comm 0x14b8a00022e0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 - Init COMPLETE
+r2i7n0:70359:70359 [0] NCCL INFO Launch mode Parallel
+r2i7n2:9536:10550 [0] NCCL INFO comm 0x1513880022e0 rank 2 nranks 4 cudaDev 0 nvmlDev 0 - Init COMPLETE
+***** Running training *****
+  Num examples = 120756
+  Num Epochs = 15
+  Instantaneous batch size per device = 1
+  Total train batch size (w. parallel, distributed & accumulation) = 128
+  Gradient Accumulation steps = 32
+  Total optimization steps = 14145
+***** Running training *****
+  Num examples = 120756
+  Num Epochs = 15
+  Instantaneous batch size per device = 1
+  Total train batch size (w. parallel, distributed & accumulation) = 128
+  Gradient Accumulation steps = 32
+  Total optimization steps = 14145
+  0%|          | 0/14145 [00:00<?, ?it/s]  0%|          | 1/14145 [00:05<21:03:59,  5.36s/it]  0%|          | 2/14145 [00:09<19:50:31,  5.05s/it]  0%|          | 3/14145 [00:14<18:59:35,  4.83s/it]  0%|          | 4/14145 [00:18<18:16:55,  4.65s/it]  0%|          | 5/14145 [00:22<17:53:53,  4.56s/it]  0%|          | 6/14145 [00:26<17:34:37,  4.48s/it]  0%|          | 7/14145 [00:30<17:02:48,  4.34s/it]  0%|          | 8/14145 [00:35<17:10:21,  4.37s/it]  0%|          | 9/14145 [00:39<16:43:16,  4.26s/it]  0%|          | 10/14145 [00:43<16:54:19,  4.31s/it]  0%|          | 11/14145 [00:47<16:32:50,  4.21s/it]  0%|          | 12/14145 [00:52<16:55:36,  4.31s/it]  0%|          | 13/14145 [00:56<16:45:52,  4.27s/it]  0%|          | 14/14145 [01:00<16:56:32,  4.32s/it]  0%|          | 15/14145 [01:05<17:12:44,  4.39s/it]  0%|          | 16/14145 [01:09<16:59:17,  4.33s/it]  0%|          | 17/14145 [01:14<17:10:25,  4.38s/it]  0%|          | 18/14145 [01:18<16:45:49,  4.27s/it]  0%|          | 1  0%|          | 0/14145 [00:00<?, ?it/s]  0%|          | 1/14145 [00:05<20:20:32,  5.18s/it]  0%|          | 2/14145 [00:09<19:19:28,  4.92s/it]  0%|          | 3/14145 [00:13<18:37:52,  4.74s/it]  0%|          | 4/14145 [00:18<18:01:43,  4.59s/it]  0%|          | 5/14145 [00:22<17:43:15,  4.51s/it]  0%|          | 6/14145 [00:26<17:27:11,  4.44s/it]  0%|          | 7/14145 [00:30<16:57:34,  4.32s/it]  0%|          | 8/14145 [00:35<17:06:43,  4.36s/it]  0%|          | 9/14145 [00:39<16:40:43,  4.25s/it]  0%|          | 10/14145 [00:43<16:52:31,  4.30s/it]  0%|          | 11/14145 [00:47<16:32:20,  4.21s/it]  0%|          | 12/14145 [00:52<16:54:30,  4.31s/it]  0%|          | 13/14145 [00:56<16:45:50,  4.27s/it]  0%|          | 14/14145 [01:00<16:56:30,  4.32s/it]  0%|          | 15/14145 [01:05<17:11:59,  4.38s/it]  0%|          | 16/14145 [01:09<16:59:30,  4.33s/it]  0%|          | 17/14145 [01:13<17:09:48,  4.37s/it]  0%|          | 18/14145 [01:17<16:46:13,  4.27s/it]  0%|          | 19/14145 [01:22<17:00:15,  4.33s/it]  0%|          | 20/14145 [01:26<16:47:36,  4.28s/it]  0%|          | 21/14145 [01:30<16:54:26,  4.31s/it]  0%|          | 22/14145 [01:35<17:02:36,  4.34s/it]  0%|          | 23/14145 [01:39<17:02:06,  4.34s/it]  0%|          | 24/14145 [01:44<17:11:45,  4.38s/it]  0%|          | 25/14145 [01:48<16:54:50,  4.31s/it]  0%|          | 26/14145 [01:52<17:01:16,  4.34s/it]  0%|          | 27/14145 [01:56<16:53:42,  4.31s/it]  0%|          | 28/14145 [02:01<17:13:37,  4.39s/it]  0%|          | 29/14145 [02:05<17:03:05,  4.35s/it]  0%|          | 30/14145 [02:10<17:04:03,  4.35s/it]  0%|          | 31/14145 [02:14<16:57:45,  4.33s/it]  0%|          | 32/14145 [02:18<16:40:31,  4.25s/it]  0%|          | 33/14145 [02:23<16:56:02,  4.32s/it]  0%|          | 34/14145 [02:27<16:46:26,  4.28s/it]  0%|          | 35/14145 [02:31<16:51:21,  4.30s/it]  0%|          | 36/14145 [02:35<16:40:15,  4.25s/it]  0%|          | 37/14145 [02:40<17:00:14,  4.34s/it]  0%|          |9/14145 [01:22<16:59:58,  4.33s/it]  0%|          | 20/14145 [01:26<16:47:24,  4.28s/it]  0%|          | 21/14145 [01:31<16:54:17,  4.31s/it]  0%|          | 22/14145 [01:35<17:02:31,  4.34s/it]  0%|          | 23/14145 [01:39<17:02:01,  4.34s/it]  0%|          | 24/14145 [01:44<17:11:42,  4.38s/it]  0%|          | 25/14145 [01:48<16:54:47,  4.31s/it]  0%|          | 26/14145 [01:52<17:01:15,  4.34s/it]  0%|          | 27/14145 [01:57<16:52:55,  4.30s/it]  0%|          | 28/14145 [02:01<17:13:50,  4.39s/it]  0%|          | 29/14145 [02:06<17:03:15,  4.35s/it]  0%|          | 30/14145 [02:10<17:04:09,  4.35s/it]  0%|          | 31/14145 [02:14<16:57:04,  4.32s/it]  0%|          | 32/14145 [02:18<16:39:59,  4.25s/it]  0%|          | 33/14145 [02:23<16:55:44,  4.32s/it]  0%|          | 34/14145 [02:27<16:46:53,  4.28s/it]  0%|          | 35/14145 [02:31<16:50:55,  4.30s/it]  0%|          | 36/14145 [02:35<16:39:57,  4.25s/it]  0%|          | 37/14145 [02:40<17:01:40,  4.35s/it]  0%|          |{'loss': 3.7363, 'learning_rate': 5e-06, 'epoch': 0.05}
+{'loss': 3.7925, 'learning_rate': 5e-06, 'epoch': 0.05}
+ 38/14145 [02:44<16:59:52,  4.34s/it]  0%|          | 39/14145 [02:49<16:54:08,  4.31s/it]  0%|          | 40/14145 [02:53<16:59:36,  4.34s/it]  0%|          | 41/14145 [02:57<16:48:48,  4.29s/it]  0%|          | 42/14145 [03:02<17:05:23,  4.36s/it]  0%|          | 43/14145 [03:06<16:53:37,  4.31s/it]  0%|          | 44/14145 [03:10<17:05:45,  4.36s/it]  0%|          | 45/14145 [03:15<16:57:45,  4.33s/it]  0%|          | 46/14145 [03:19<17:08:46,  4.38s/it]  0%|          | 47/14145 [03:23<17:09:59,  4.38s/it]  0%|          | 48/14145 [03:28<16:57:47,  4.33s/it]  0%|          | 49/14145 [03:32<17:01:42,  4.35s/it]  0%|          | 50/14145 [03:36<16:59:23,  4.34s/it]                                                       0%|          | 50/14145 [03:36<16:59:23,  4.34s/it]  0%|          | 51/14145 [03:41<17:01:42,  4.35s/it]  0%|          | 52/14145 [03:45<16:53:36,  4.32s/it]  0%|          | 53/14145 [03:49<16:59:28,  4.34s/it]  0%|          | 54/14145 [03:54<16:49:04,  4.30s/it]  0%|         38/14145 [02:44<16:58:53,  4.33s/it]  0%|          | 39/14145 [02:48<16:54:09,  4.31s/it]  0%|          | 40/14145 [02:53<16:59:38,  4.34s/it]  0%|          | 41/14145 [02:57<16:48:50,  4.29s/it]  0%|          | 42/14145 [03:01<17:05:24,  4.36s/it]  0%|          | 43/14145 [03:06<16:53:37,  4.31s/it]  0%|          | 44/14145 [03:10<17:05:44,  4.36s/it]  0%|          | 45/14145 [03:14<16:57:45,  4.33s/it]  0%|          | 46/14145 [03:19<17:08:00,  4.37s/it]  0%|          | 47/14145 [03:23<17:09:30,  4.38s/it]  0%|          | 48/14145 [03:27<16:57:27,  4.33s/it]  0%|          | 49/14145 [03:32<17:01:27,  4.35s/it]  0%|          | 50/14145 [03:36<16:59:12,  4.34s/it]                                                       0%|          | 50/14145 [03:36<16:59:12,  4.34s/it]  0%|          | 51/14145 [03:41<17:01:35,  4.35s/it]  0%|          | 52/14145 [03:45<16:54:19,  4.32s/it]  0%|          | 53/14145 [03:49<16:59:59,  4.34s/it]  0%|          | 54/14145 [03:53<16:49:26,  4.30s/it]  0%|          | 55/14145 [03:58<17:01:26,  4.35s/it]  0%|          | 56/14145 [04:02<17:01:23,  4.35s/it]  0%|          | 57/14145 [04:07<17:04:57,  4.37s/it]  0%|          | 58/14145 [04:11<17:00:30,  4.35s/it]  0%|          | 59/14145 [04:15<16:51:30,  4.31s/it]  0%|          | 60/14145 [04:20<17:01:11,  4.35s/it]  0%|          | 61/14145 [04:24<16:47:26,  4.29s/it]  0%|          | 62/14145 [04:28<17:01:53,  4.35s/it]  0%|          | 63/14145 [04:33<17:02:40,  4.36s/it]  0%|          | 64/14145 [04:37<17:01:55,  4.35s/it]  0%|          | 65/14145 [04:41<17:03:52,  4.36s/it]  0%|          | 66/14145 [04:45<16:34:40,  4.24s/it]  0%|          | 67/14145 [04:50<16:46:15,  4.29s/it]  0%|          | 68/14145 [04:54<16:37:07,  4.25s/it]  0%|          | 69/14145 [04:58<16:49:55,  4.30s/it]  0%|          | 70/14145 [05:03<16:42:57,  4.28s/it]  1%|          | 71/14145 [05:07<16:46:26,  4.29s/it]  1%|          | 72/14145 [05:11<16:53:26,  4.32s/it]  1%|          | 73/14145 [05:16<17:00:00,  4.35s/it]  1%|        | 55/14145 [03:58<17:01:41,  4.35s/it]  0%|          | 56/14145 [04:02<17:01:33,  4.35s/it]  0%|          | 57/14145 [04:07<17:05:05,  4.37s/it]  0%|          | 58/14145 [04:11<17:00:34,  4.35s/it]  0%|          | 59/14145 [04:15<16:51:34,  4.31s/it]  0%|          | 60/14145 [04:20<17:01:14,  4.35s/it]  0%|          | 61/14145 [04:24<16:47:27,  4.29s/it]  0%|          | 62/14145 [04:28<17:01:53,  4.35s/it]  0%|          | 63/14145 [04:33<17:02:37,  4.36s/it]  0%|          | 64/14145 [04:37<17:01:07,  4.35s/it]  0%|          | 65/14145 [04:41<17:03:20,  4.36s/it]  0%|          | 66/14145 [04:45<16:34:17,  4.24s/it]  0%|          | 67/14145 [04:50<16:46:00,  4.29s/it]  0%|          | 68/14145 [04:54<16:36:57,  4.25s/it]  0%|          | 69/14145 [04:58<16:50:36,  4.31s/it]  0%|          | 70/14145 [05:02<16:43:23,  4.28s/it]  1%|          | 71/14145 [05:07<16:46:47,  4.29s/it]  1%|          | 72/14145 [05:11<16:53:40,  4.32s/it]  1%|          | 73/14145 [05:16<17:00:10,  4.35s/it]  1%|          | 74/14145 [05:20<17:14:21,  4.41s/it]  1%|          | 75/14145 [05:24<16:51:34,  4.31s/it]  1%|          | 76/14145 [05:29<17:01:10,  4.36s/it]  1%|          | 77/14145 [05:33<16:48:58,  4.30s/it]  1%|          | 78/14145 [05:37<16:57:05,  4.34s/it]  1%|          | 79/14145 [05:41<16:43:26,  4.28s/it]  1%|          | 80/14145 [05:46<16:46:11,  4.29s/it]  1%|          | 81/14145 [05:50<16:53:27,  4.32s/it]  1%|          | 82/14145 [05:54<16:50:12,  4.31s/it]  1%|          | 83/14145 [05:59<17:00:04,  4.35s/it]  1%|          | 84/14145 [06:03<16:51:22,  4.32s/it]  1%|          | 85/14145 [06:08<17:09:32,  4.39s/it]  1%|          | 86/14145 [06:12<16:52:03,  4.32s/it]  1%|          | 87/14145 [06:16<17:11:07,  4.40s/it]  1%|          | 88/14145 [06:21<17:13:49,  4.41s/it]  1%|          | 89/14145 [06:25<17:16:48,  4.43s/it]  1%|          | 90/14145 [06:30<17:03:26,  4.37s/it]  1%|          | 91/14145 [06:34<16:45:08,  4.29s/it]  1%|          | 92/14145 [06:38<17:05:22,  4.38s/it]  1%|        | 74/14145 [05:20<17:14:13,  4.41s/it]  1%|          | 75/14145 [05:24<16:51:29,  4.31s/it]  1%|          | 76/14145 [05:29<17:01:07,  4.35s/it]  1%|          | 77/14145 [05:33<16:48:56,  4.30s/it]  1%|          | 78/14145 [05:37<16:57:03,  4.34s/it]  1%|          | 79/14145 [05:42<16:43:21,  4.28s/it]  1%|          | 80/14145 [05:46<16:46:07,  4.29s/it]  1%|          | 81/14145 [05:50<16:53:28,  4.32s/it]  1%|          | 82/14145 [05:55<16:50:13,  4.31s/it]  1%|          | 83/14145 [05:59<17:00:05,  4.35s/it]  1%|          | 84/14145 [06:03<16:51:23,  4.32s/it]  1%|          | 85/14145 [06:08<17:09:33,  4.39s/it]  1%|          | 86/14145 [06:12<16:52:03,  4.32s/it]  1%|          | 87/14145 [06:17<17:11:08,  4.40s/it]  1%|          | 88/14145 [06:21<17:13:50,  4.41s/it]  1%|          | 89/14145 [06:26<17:16:48,  4.43s/it]  1%|          | 90/14145 [06:30<17:03:26,  4.37s/it]  1%|          | 91/14145 [06:34<16:45:07,  4.29s/it]  1%|          | 92/14145 [06:38<17:05:27,  4.38s/it]  1%|    {'loss': 3.1825, 'learning_rate': 1e-05, 'epoch': 0.11}
+{'loss': 3.1456, 'learning_rate': 1e-05, 'epoch': 0.11}
+      | 93/14145 [06:43<16:50:41,  4.32s/it]  1%|          | 94/14145 [06:47<17:03:50,  4.37s/it]  1%|          | 95/14145 [06:51<17:00:30,  4.36s/it]  1%|          | 96/14145 [06:56<17:08:47,  4.39s/it]  1%|          | 97/14145 [07:00<17:03:28,  4.37s/it]  1%|          | 98/14145 [07:04<16:52:30,  4.32s/it]  1%|          | 99/14145 [07:09<16:59:25,  4.35s/it]  1%|          | 100/14145 [07:13<16:50:54,  4.32s/it]                                                        1%|          | 100/14145 [07:13<16:50:54,  4.32s/it]  1%|          | 101/14145 [07:18<17:00:50,  4.36s/it]  1%|          | 102/14145 [07:22<16:45:42,  4.30s/it]  1%|          | 103/14145 [07:26<17:01:49,  4.37s/it]  1%|          | 104/14145 [07:31<16:57:34,  4.35s/it]  1%|          | 105/14145 [07:35<17:05:08,  4.38s/it]  1%|          | 106/14145 [07:39<17:08:05,  4.39s/it]  1%|          | 107/14145 [07:44<17:05:33,  4.38s/it]  1%|          | 108/14145 [07:48<17:10:50,  4.41s/it]  1%|          | 109/14145 [07:52<16:48:06,  4.31      | 93/14145 [06:42<16:50:38,  4.32s/it]  1%|          | 94/14145 [06:47<17:03:02,  4.37s/it]  1%|          | 95/14145 [06:51<16:59:58,  4.36s/it]  1%|          | 96/14145 [06:56<17:10:02,  4.40s/it]  1%|          | 97/14145 [07:00<17:04:18,  4.37s/it]  1%|          | 98/14145 [07:04<16:52:20,  4.32s/it]  1%|          | 99/14145 [07:09<16:59:18,  4.35s/it]  1%|          | 100/14145 [07:13<16:50:48,  4.32s/it]                                                        1%|          | 100/14145 [07:13<16:50:48,  4.32s/it]  1%|          | 101/14145 [07:17<17:00:47,  4.36s/it]  1%|          | 102/14145 [07:22<16:45:39,  4.30s/it]  1%|          | 103/14145 [07:26<17:01:47,  4.37s/it]  1%|          | 104/14145 [07:30<16:57:32,  4.35s/it]  1%|          | 105/14145 [07:35<17:05:05,  4.38s/it]  1%|          | 106/14145 [07:39<17:08:04,  4.39s/it]  1%|          | 107/14145 [07:44<17:05:33,  4.38s/it]  1%|          | 108/14145 [07:48<17:10:50,  4.41s/it]  1%|          | 109/14145 [07:52<16:48:06,  4.31s/it]  1%|          | 110/14145 [07:57<17:04:25,  4.38s/it]  1%|          | 111/14145 [08:01<16:59:49,  4.36s/it]  1%|          | 112/14145 [08:06<17:06:56,  4.39s/it]  1%|          | 113/14145 [08:10<17:04:35,  4.38s/it]  1%|          | 114/14145 [08:14<16:55:11,  4.34s/it]  1%|          | 115/14145 [08:19<17:08:42,  4.40s/it]  1%|          | 116/14145 [08:23<16:57:06,  4.35s/it]  1%|          | 117/14145 [08:27<16:59:33,  4.36s/it]  1%|          | 118/14145 [08:32<16:45:29,  4.30s/it]  1%|          | 119/14145 [08:36<17:03:21,  4.38s/it]  1%|          | 120/14145 [08:40<16:59:12,  4.36s/it]  1%|          | 121/14145 [08:45<16:57:46,  4.35s/it]  1%|          | 122/14145 [08:49<17:01:37,  4.37s/it]  1%|          | 123/14145 [08:54<16:59:26,  4.36s/it]  1%|          | 124/14145 [08:58<17:01:03,  4.37s/it]  1%|          | 125/14145 [09:02<16:54:59,  4.34s/it]  1%|          | 126/14145 [09:07<17:07:40,  4.40s/it]  1%|          | 127/14145 [09:11<16:56:54,  4.35s/it]  1%|          | 128/14145 [s/it]  1%|          | 110/14145 [07:57<17:04:25,  4.38s/it]  1%|          | 111/14145 [08:01<16:59:49,  4.36s/it]  1%|          | 112/14145 [08:05<17:06:56,  4.39s/it]  1%|          | 113/14145 [08:10<17:04:34,  4.38s/it]  1%|          | 114/14145 [08:14<16:55:11,  4.34s/it]  1%|          | 115/14145 [08:19<17:08:42,  4.40s/it]  1%|          | 116/14145 [08:23<16:57:57,  4.35s/it]  1%|          | 117/14145 [08:27<16:59:18,  4.36s/it]  1%|          | 118/14145 [08:31<16:46:04,  4.30s/it]  1%|          | 119/14145 [08:36<17:03:38,  4.38s/it]  1%|          | 120/14145 [08:40<16:59:32,  4.36s/it]  1%|          | 121/14145 [08:45<16:58:00,  4.36s/it]  1%|          | 122/14145 [08:49<17:01:47,  4.37s/it]  1%|          | 123/14145 [08:53<16:58:47,  4.36s/it]  1%|          | 124/14145 [08:58<17:00:35,  4.37s/it]  1%|          | 125/14145 [09:02<16:54:40,  4.34s/it]  1%|          | 126/14145 [09:07<17:07:27,  4.40s/it]  1%|          | 127/14145 [09:11<16:56:45,  4.35s/it]  1%|          | 128/14145 [
