@@ -72,6 +72,8 @@ class OneToOne(object):
                 continue
             main_docs.append(main_doc)
             summs.append(summary)
+            if len(main_docs) == self.args.max_docs_in_cluster:
+                break
         return main_docs, summs
 
     def process(self, path, src_path, tgt_path):
