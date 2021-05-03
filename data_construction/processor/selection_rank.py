@@ -1,7 +1,7 @@
 #coding=utf8
 
 from transformers import BartTokenizer, BertTokenizer, BertModel
-from util import trunc_string
+from processor.util import trunc_string
 import torch.nn as nn
 import json
 import torch
@@ -43,7 +43,6 @@ class SelectRank():
 
         main_docs = []; summs = []; left_docs = []
         sup_doc_num = len(pair_obj)-1
-        max_sup_len = self.args.max_len_sup / sup_doc_num
         for pid in pair_obj:
             pair = pair_obj[pid]
             document = '\t'.join(pair['[DOCUMENT]'])

@@ -1,9 +1,10 @@
 #coding=utf8
 
-from util import preprocess_high_freq
-from selection_lead import SelectLead
-from selection_rank import SelectRank
-from selection_full import NoSelect
+from processor.util import preprocess_high_freq
+from processor.selection_lead import SelectLead
+from processor.selection_rank import SelectRank
+from processor.selection_full import NoSelect
+from processor.process_one2one import OneToOne
 import argparse
 import torch
 import sys
@@ -20,14 +21,17 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-input_file", default='/scratch/xxu/multi-multi/multi_multi_clean.jsonl')
     parser.add_argument("-root_dir", default='/scratch/xxu/multi-multi/raw_data/')
+    parser.add_argument("-output_dir", default='/scratch/xxu/multi-multi/raw_data/')
+    parser.add_argument("-tokenizer_model_path", default='')
     parser.add_argument("-device", default='cuda')
     parser.add_argument("-mode", default='lead')
     parser.add_argument("-batch_size", default=128, type=int)
     parser.add_argument("-max_len_doc", default=500, type=int)
-    parser.add_argument("-max_len_paragraph", default=200, type=int)
+    parser.add_argument("-min_doc_sent_num", default=3, type=int)
+    parser.add_argument("-max_len_paragraph", default=200, type=int) #for hier-transformer
     parser.add_argument('-max_len_sup', default=500, type=int)
     parser.add_argument('-max_len_summ', default=200, type=int)
-    parser.add_argument('-min_length', default=3, type=int)
+    parser.add_argument("-min_summ_sent_num", default=1, type=int)
     parser.add_argument('-max_docs_in_cluster', default=5, type=int)
     parser.add_argument('-max_paragraph_in_cluster', default=50, type=int)
     parser.add_argument('-min_sentence_length', default=3, type=int)
@@ -40,9 +44,11 @@ if __name__ == '__main__':
 
     high_freq_src, high_freq_tgt = preprocess_high_freq(args.root_dir+'/train.json')
     if args.mode == 'lead':
-        selector_obj = SelectLead(args, high_freq_src, high_freq_tgt)
+        processor_obj = SelectLead(args, high_freq_src, high_freq_tgt)
     if args.mode == 'rank':
-        selector_obj = SelectRank(args, high_freq_src, high_freq_tgt)
+        processor_obj = SelectRank(args, high_freq_src, high_freq_tgt)
     if args.mode == 'full' or args.mode == 'single':
-        selector_obj = NoSelect(args, high_freq_src, high_freq_tgt)
-    selector_obj.run()
+        processor_obj = NoSelect(args, high_freq_src, high_freq_tgt)
+    if args.mode == 'one_to_one':
+        processor_obj = OneToOne(args, high_freq_src, high_freq_tgt)
+    processor_obj.run()

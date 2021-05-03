@@ -3,6 +3,7 @@
 import json
 
 def split_paragraph(doc, max_length, min_sentence_length, high_freq_sent, tokenizer=None):
+    # For Hier-Transformer
     sents = doc.lower().split('\t')
     new_doc = []; length = 0; paragraph = []
     for i, line in enumerate(sents):
@@ -36,7 +37,9 @@ def trunc_string(doc, max_length, min_sentence_length, high_freq_sent, tokenizer
         if line.find('newser') > -1:
             continue
         flist = line.split()
-        if len(flist) <= min_sentence_length:
+        if len(flist) < min_sentence_length:
+            continue
+        if len(flist) > max_length:
             continue
         if tokenizer is not None:
             inputs = tokenizer(line)
@@ -44,7 +47,7 @@ def trunc_string(doc, max_length, min_sentence_length, high_freq_sent, tokenizer
         else:
             length += len(flist)
         if length > max_length:
-            left_over = sents[i+1:]
+            left_over = sents[i:]
             break
         new_doc.append(line)
     return '\t'.join(new_doc), '\t'.join(left_over)
