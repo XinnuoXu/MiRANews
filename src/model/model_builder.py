@@ -11,19 +11,22 @@ class Seq2SeqModel(object):
         self.training_args = training_args
         self.logger = logger
 
-        if model_args.model_name_or_path == 'facebook/bart-large':
-            self.model = AutoModelForSeq2SeqLM.from_pretrained(
-                model_args.model_name_or_path,
-                from_tf=bool(".ckpt" in model_args.model_name_or_path),
-                cache_dir=model_args.cache_dir,
-                revision=model_args.model_revision,
-                use_auth_token=True if model_args.use_auth_token else None,
-                local_files_only=model_args.local_files_only)
-            if self.model.config.decoder_start_token_id is None:
-                raise ValueError("Make sure that `config.decoder_start_token_id` is correctly defined")
+        if model_args.model_name_or_path == 'allenai/led-base-16384':
+            gradient_checkpointing = True
+        else:
+            gradient_checkpointing = False
 
-        elif model_args.model_name_or_path == 'allenai/led-base-16384':
-            self.model = LEDForConditionalGeneration.from_pretrained(model_args.model_name_or_path)
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(
+            model_args.model_name_or_path,
+            gradient_checkpointing=gradient_checkpointing,
+            from_tf=bool(".ckpt" in model_args.model_name_or_path),
+            cache_dir=model_args.cache_dir,
+            revision=model_args.model_revision,
+            use_auth_token=True if model_args.use_auth_token else None,
+            local_files_only=model_args.local_files_only)
+
+        if self.model.config.decoder_start_token_id is None:
+            raise ValueError("Make sure that `config.decoder_start_token_id` is correctly defined")
 
         if self.training_args.label_smoothing_factor > 0 \
             and not hasattr(self.model, "prepare_decoder_input_ids_from_labels"):

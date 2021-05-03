@@ -35,6 +35,8 @@ class DataLoader(object):
         self.overwrite_cache = data_args.overwrite_cache
         self.max_source_length = data_args.max_source_length
         self.max_target_length = data_args.max_target_length
+        self.batch_size = training_args.per_device_train_batch_size
+        self.model_name = model_args.model_name_or_path
 
         self.dataset = None
         self.train_dataset = None
@@ -66,6 +68,19 @@ class DataLoader(object):
             ]
 
         model_inputs["labels"] = labels["input_ids"]
+
+        if self.model_name == "allenai/led-base-16384":
+            # create 0 global_attention_mask lists
+            model_inputs["global_attention_mask"] = len(model_inputs["input_ids"]) * [
+                [0 for _ in range(len(model_inputs["input_ids"][0]))]]
+            # since above lists are references, the following line changes the 0 index for all samples
+            model_inputs["global_attention_mask"][0][0] = 1
+            #model_inputs.set_format(type="torch",
+            #    columns=["input_ids", "attention_mask", "global_attention_mask", "labels"],)
+        #else:
+            #model_inputs.set_format(type="torch",
+                #columns=["input_ids", "attention_mask", "labels"],)
+
         return model_inputs
 
 
@@ -92,6 +107,7 @@ class DataLoader(object):
             self.train_dataset = train_dataset.map(
                 self._preprocess_function,
                 batched=True,
+                batch_size=self.batch_size,
                 num_proc=self.preprocessing_num_workers,
                 remove_columns=column_names,
                 load_from_cache_file=not self.overwrite_cache,)
@@ -109,6 +125,7 @@ class DataLoader(object):
             self.eval_dataset = eval_dataset.map(
                 self._preprocess_function,
                 batched=True,
+                batch_size=self.batch_size,
                 num_proc=self.preprocessing_num_workers,
                 remove_columns=column_names,
                 load_from_cache_file=not self.overwrite_cache,)
@@ -125,8 +142,9 @@ class DataLoader(object):
                 if max_test_samples is not None:
                     test_dataset = test_dataset.select(range(max_test_samples))
                 test_dataset = test_dataset.map(
-                    preprocess_function,
+                    self._preprocess_function,
                     batched=True,
+                    batch_size=self.batch_size,
                     num_proc=self.preprocessing_num_workers,
                     remove_columns=column_names,
                     load_from_cache_file=not self.overwrite_cache,)
