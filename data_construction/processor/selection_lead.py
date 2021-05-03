@@ -1,7 +1,7 @@
 #coding=utf8
 
 from transformers import BartTokenizer
-from util import trunc_string
+from processor.util import trunc_string
 import json
 
 class SelectLead():

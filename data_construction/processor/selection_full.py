@@ -1,6 +1,6 @@
 #coding=utf8
 
-from util import trunc_string, split_paragraph
+from processor.util import trunc_string, split_paragraph
 import torch.nn as nn
 import json
 import torch
