@@ -1,4 +1,5 @@
 NeuralAmr*
+*/slurm-*.out
 ldc*
 available_models/
 amrtotext_*
