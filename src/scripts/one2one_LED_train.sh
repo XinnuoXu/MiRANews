@@ -41,3 +41,4 @@ python3 -m torch.distributed.launch \
 	--logging_steps=50 \
 	--local_files_only true \
 	--fp16 true \
+	--pad_to_max_length true \

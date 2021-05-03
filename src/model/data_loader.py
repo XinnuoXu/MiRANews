@@ -64,7 +64,7 @@ class DataLoader(object):
         # padding in the loss.
         if padding == "max_length" and ignore_pad_token_for_loss:
             labels["input_ids"] = [
-                [(l if l != tokenizer.pad_token_id else -100) for l in label] for label in labels["input_ids"]
+                [(l if l != self.tokenizer.pad_token_id else -100) for l in label] for label in labels["input_ids"]
             ]
 
         model_inputs["labels"] = labels["input_ids"]
