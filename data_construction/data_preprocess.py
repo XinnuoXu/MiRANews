@@ -1,10 +1,10 @@
 #coding=utf8
 
 from processor.util import preprocess_high_freq
-from processor.selection_lead import SelectLead
 from processor.selection_rank import SelectRank
 from processor.selection_full import NoSelect
 from processor.process_one2one import OneToOne
+from processor.process_multi2one_lead import MultiToOneLead
 from processor.text_to_json import PreproTrainJson
 
 import argparse
@@ -26,6 +26,7 @@ if __name__ == '__main__':
     parser.add_argument("-root_dir", default='/scratch/xxu/multi-multi/raw_data/')
     parser.add_argument("-output_dir", default='/scratch/xxu/multi-multi/raw_data/')
     parser.add_argument("-tokenizer_model_path", default='')
+    parser.add_argument("-potential_model_path", default='')
     parser.add_argument("-device", default='cuda')
     parser.add_argument("-mode", default='lead')
     parser.add_argument("-batch_size", default=128, type=int)
@@ -51,14 +52,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     high_freq_src, high_freq_tgt = preprocess_high_freq(args.root_dir+'/train.json')
-    if args.mode == 'lead':
-        processor_obj = SelectLead(args, high_freq_src, high_freq_tgt)
     if args.mode == 'rank':
         processor_obj = SelectRank(args, high_freq_src, high_freq_tgt)
-    if args.mode == 'full' or args.mode == 'single':
+    if args.mode == 'full':
         processor_obj = NoSelect(args, high_freq_src, high_freq_tgt)
     if args.mode == 'one_to_one':
         processor_obj = OneToOne(args, high_freq_src, high_freq_tgt)
+    if args.mode == 'multi_to_one_lead':
+        processor_obj = MultiToOneLead(args, high_freq_src, high_freq_tgt)
     json_obj = PreproTrainJson(args)
 
     processor_obj.run()

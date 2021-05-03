@@ -1,32 +1,55 @@
 #coding=utf8
 
-from transformers import BartTokenizer
+from transformers import AutoTokenizer
 from processor.util import trunc_string
 import json
 
-class SelectLead():
+class MultiToOneLead(object):
     def __init__(self, args, high_freq_src, high_freq_tgt):
         self.args = args
 
         root_dir = self.args.root_dir
+        output_dir = self.args.output_dir
+        dataset_name = self.args.dataset_name
         self.train_path = root_dir + '/train.json'
-        self.train_src_path = root_dir+'/multi_train_src.jsonl'
-        self.train_tgt_path = root_dir+'/multi_train_tgt.jsonl'
+        self.train_src_path = output_dir+'/'+dataset_name+'_train_src.jsonl'
+        self.train_tgt_path = output_dir+'/'+dataset_name+'_train_tgt.jsonl'
 
         self.dev_path = root_dir + '/dev.json'
-        self.dev_src_path = root_dir+'/multi_dev_src.jsonl'
-        self.dev_tgt_path = root_dir+'/multi_dev_tgt.jsonl'
+        self.dev_src_path = output_dir+'/'+dataset_name+'_dev_src.jsonl'
+        self.dev_tgt_path = output_dir+'/'+dataset_name+'_dev_tgt.jsonl'
 
         self.test_path = root_dir + '/test.json'
-        self.test_src_path = root_dir+'/multi_test_src.jsonl'
-        self.test_tgt_path = root_dir+'/multi_test_tgt.jsonl'
+        self.test_src_path = output_dir+'/'+dataset_name+'_test_src.jsonl'
+        self.test_tgt_path = output_dir+'/'+dataset_name+'_test_tgt.jsonl'
 
         self.high_freq_src = high_freq_src
         self.high_freq_tgt = high_freq_tgt
 
-        self.tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
+        if self.args.tokenizer_model_path == '':
+            self.tokenizer = None
+        else:
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                    self.args.tokenizer_model_path,
+                    do_lower_case=True,
+                    use_fast=True,
+                    revision="main",
+                    use_auth_token=False,
+                    local_files_only=False)
 
-    def _multi_in_single_out(self, path, src_path, tgt_path):
+        tmp_tokenizer = AutoTokenizer.from_pretrained(
+                    self.args.potential_model_path,
+                    do_lower_case=True,
+                    use_fast=True,
+                    revision="main",
+                    use_auth_token=False,
+                    local_files_only=False)
+
+        self.cls_tok = tmp_tokenizer.cls_token
+        self.sep_tok = tmp_tokenizer.sep_token
+
+
+    def process(self, path, src_path, tgt_path):
         fpout_src = open(src_path, 'w')
         fpout_tgt = open(tgt_path, 'w')
         with open(path) as f:
@@ -42,7 +65,10 @@ class SelectLead():
 
                 docs = []; summs = []; sups = []
                 sup_doc_num = len(pair_obj)-1
-                max_sup_len = self.args.max_len_sup / sup_doc_num
+                if self.args.max_len_sup == -1:
+                    max_sup_len = self.args.max_len_doc
+                else:
+                    max_sup_len = self.args.max_len_sup / sup_doc_num
                 for pid in pair_obj:
                     pair = pair_obj[pid]
                     document = '\t'.join(pair['[DOCUMENT]'])
@@ -65,14 +91,24 @@ class SelectLead():
                                             self.args.max_len_summ,
                                             self.args.min_sentence_length,
                                             self.high_freq_tgt)
-                    if len(document.split()) > self.args.min_length and len(summary.split()) > self.args.min_length:
-                        docs.append(document)
-                        summs.append(summary)
-                        sups.append(sup_document)
+
+                    if len(document.split('\t')) < self.args.min_doc_sent_num:
+                        continue
+                    if len(summary.split('\t')) < self.args.min_summ_sent_num:
+                        continue
+                    document = ' '.join(document.split('\t'))
+                    summary = ' '.join(summary.split('\t'))
+                    sup_document = ' '.join(sup_document.split('\t'))
+                    docs.append(document)
+                    summs.append(summary)
+                    sups.append(sup_document)
+
                     if len(docs) == self.args.max_docs_in_cluster:
                         break
+
                 if len(docs) < 2:
                     continue
+
                 for i in range(len(docs)):
                     src, tgt = self._prepare_sup_docs(docs, summs, sups, i)
                     fpout_src.write(src+'\n')
@@ -82,22 +118,22 @@ class SelectLead():
             fpout_tgt.close()
 
     def _prepare_sup_docs(self, docs, summs, sup_docs, idx):
-        sups = []
+        new_docs = [docs[idx]]
         for i in range(len(docs)):
             if i == idx:
                 continue
-            sups.append(self.args.sep_tok+' '+sup_docs[i])
-        return self.args.cls_tok + ' ' + docs[idx] + '\t' + '\t'.join(sups), summs[idx]
+            new_docs.append(sup_docs[i])
+        return self.cls_tok + ' ' + (' '+self.sep_tok+' ').join(new_docs), summs[idx]
 
     def run(self):
-        self._multi_in_single_out(self.train_path,
-                                    self.train_src_path,
-                                    self.train_tgt_path)
-        self._multi_in_single_out(self.dev_path,
-                                    self.dev_src_path,
-                                    self.dev_tgt_path)
-        self._multi_in_single_out(self.test_path,
-                                    self.test_src_path,
-                                    self.test_tgt_path)
+        self.process(self.train_path,
+                        self.train_src_path,
+                        self.train_tgt_path)
+        self.process(self.dev_path,
+                        self.dev_src_path,
+                        self.dev_tgt_path)
+        self.process(self.test_path,
+                        self.test_src_path,
+                        self.test_tgt_path)
 
 
