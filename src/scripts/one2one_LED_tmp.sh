@@ -1,6 +1,7 @@
 #!/bin/bash
 
-INPUT_DIR=../data/json_single_trunk_5000/multi
+#INPUT_DIR=../data/json_single_trunk_5000/multi
+INPUT_DIR=/scratch/xxu/multi-multi/json_single_trunk_5000/multi
 OUTPUT_DIR=../saved_checkpoints/single_trunk_LED/
 MAX_SORCE_LEN=8000
 
@@ -35,3 +36,5 @@ python3 run_summarization.py \
 	--save_steps=3000 \
 	--logging_steps=50 \
 	--local_files_only false \
+	--fp16 true \
+	--pad_to_max_length true \
