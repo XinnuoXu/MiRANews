@@ -13,12 +13,15 @@ class Seq2SeqModel(object):
 
         if model_args.model_name_or_path == 'allenai/led-base-16384':
             gradient_checkpointing = True
+            use_cache = False
         else:
             gradient_checkpointing = False
+            use_cache = True
 
         self.model = AutoModelForSeq2SeqLM.from_pretrained(
             model_args.model_name_or_path,
             gradient_checkpointing=gradient_checkpointing,
+            use_cache=use_cache,
             from_tf=bool(".ckpt" in model_args.model_name_or_path),
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,

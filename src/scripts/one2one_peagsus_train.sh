@@ -2,7 +2,7 @@
 
 INPUT_DIR=../data/json_single_trunk_1000/multi
 OUTPUT_DIR=../saved_checkpoints/single_trunk_peagsus/
-MAX_SORCE_LEN=1024
+MAX_SORCE_LEN=800
 
 /bin/hostname -s
 python3 -m torch.distributed.launch \
@@ -11,7 +11,7 @@ python3 -m torch.distributed.launch \
 	--node_rank=$SLURM_PROCID \
 	--master_addr="$PARENT" --master_port="$MPORT" \
 	run_summarization.py \
-	--model_name_or_path google/pegasus-multi_news \
+	--model_name_or_path google/pegasus-large \
         --do_train \
         --train_path ${INPUT_DIR} \
         --text_column text \

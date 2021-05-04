@@ -6,7 +6,7 @@ MAX_SORCE_LEN=1024
 
 /bin/hostname -s
 python3 run_summarization.py \
-	--model_name_or_path 'google/pegasus-multi_news' \
+	--model_name_or_path 'google/pegasus-large' \
         --do_train \
         --train_path ${INPUT_DIR} \
         --text_column text \
