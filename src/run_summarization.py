@@ -68,6 +68,10 @@ class ModelArguments:
         default=0.0,
         metadata={"help": "attention_dropout."},
     )
+    partial_attn: bool = field(
+        default=False,
+        metadata={"help": "Whether attend only or the main doc."},
+    )
 
 
 @dataclass

@@ -1,8 +1,7 @@
 #!/bin/bash
 
 INPUT_DIR=../data/json_single_trunk_1000/multi
-#OUTPUT_DIR=../saved_checkpoints/single_trunk_bart/
-OUTPUT_DIR=../saved_checkpoints/test/
+OUTPUT_DIR=../saved_checkpoints/single_trunk_bart/
 MAX_SORCE_LEN=1024
 
 /bin/hostname -s

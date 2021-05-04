@@ -3,6 +3,7 @@ import glob
 import random
 
 from datasets import load_dataset, load_metric
+from model.PartialSrcAttnModels import partial_attn_data_processor
 
 from transformers import (
     AutoTokenizer,
@@ -37,6 +38,7 @@ class DataLoader(object):
         self.max_target_length = data_args.max_target_length
         self.batch_size = training_args.per_device_train_batch_size
         self.model_name = model_args.model_name_or_path
+        self.partial_attn = model_args.partial_attn
 
         self.dataset = None
         self.train_dataset = None
@@ -66,7 +68,6 @@ class DataLoader(object):
             labels["input_ids"] = [
                 [(l if l != self.tokenizer.pad_token_id else -100) for l in label] for label in labels["input_ids"]
             ]
-
         model_inputs["labels"] = labels["input_ids"]
 
         if self.model_name == "allenai/led-base-16384":
@@ -75,11 +76,9 @@ class DataLoader(object):
                 [0 for _ in range(len(model_inputs["input_ids"][0]))]]
             # since above lists are references, the following line changes the 0 index for all samples
             model_inputs["global_attention_mask"][0][0] = 1
-            #model_inputs.set_format(type="torch",
-            #    columns=["input_ids", "attention_mask", "global_attention_mask", "labels"],)
-        #else:
-            #model_inputs.set_format(type="torch",
-                #columns=["input_ids", "attention_mask", "labels"],)
+
+        if self.partial_attn:
+            model_inputs["main_attn_mask"] = partial_attn_data_processor(inputs, self.tokenizer, self.max_source_length)
 
         return model_inputs
 
