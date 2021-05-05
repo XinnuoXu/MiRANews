@@ -7,6 +7,7 @@ from transformers import (
 
 from model.PartialSrcAttnModels import (
     BartPartialAttnForConditionalGeneration,
+    LEDPartialAttnForConditionalGeneration,
 )
 
 class Seq2SeqModel(object):
@@ -60,6 +61,16 @@ class Seq2SeqModel(object):
                                     local_files_only):
         if model_name == 'facebook/bart-large':
             model = BartPartialAttnForConditionalGeneration.from_pretrained(
+                        model_name,
+                        gradient_checkpointing=gradient_checkpointing,
+                        use_cache=use_cache,
+                        from_tf=bool(".ckpt" in model_name),
+                        cache_dir=cache_dir,
+                        revision=model_revision,
+                        use_auth_token=True if use_auth_token else None,
+                        local_files_only=local_files_only)
+        elif model_name == 'allenai/led-base-16384':
+            model = LEDPartialAttnForConditionalGeneration.from_pretrained(
                         model_name,
                         gradient_checkpointing=gradient_checkpointing,
                         use_cache=use_cache,
