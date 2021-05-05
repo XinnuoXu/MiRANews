@@ -2,7 +2,7 @@
 
 from processor.util import preprocess_high_freq
 from processor.selection_rank import SelectRank
-from processor.selection_full import NoSelect
+from processor.process_hier_one2one import HierOneToOne
 from processor.process_one2one import OneToOne
 from processor.process_multi2one_lead import MultiToOneLead
 from processor.text_to_json import PreproTrainJson
@@ -54,15 +54,16 @@ if __name__ == '__main__':
     high_freq_src, high_freq_tgt = preprocess_high_freq(args.root_dir+'/train.json')
     if args.mode == 'rank':
         processor_obj = SelectRank(args, high_freq_src, high_freq_tgt)
-    if args.mode == 'full':
-        processor_obj = NoSelect(args, high_freq_src, high_freq_tgt)
+    if args.mode == 'hier_one_to_one':
+        processor_obj = HierOneToOne(args, high_freq_src, high_freq_tgt)
     if args.mode == 'one_to_one':
         processor_obj = OneToOne(args, high_freq_src, high_freq_tgt)
     if args.mode == 'multi_to_one_lead':
         processor_obj = MultiToOneLead(args, high_freq_src, high_freq_tgt)
-    json_obj = PreproTrainJson(args)
-
     processor_obj.run()
-    json_obj.preprocess()
+
+    if args.mode not in ['hier_one_to_one']:
+        json_obj = PreproTrainJson(args)
+        json_obj.preprocess()
 
 

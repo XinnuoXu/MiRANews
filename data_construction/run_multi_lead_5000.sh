@@ -13,7 +13,7 @@ python data_preprocess.py \
 	-output_dir ${OUTPUT_DIR} \
 	-save_path ${JSON_PATH} \
 	-mode multi_to_one_lead \
-	-max_len_sup -1 \
-	-max_len_doc 3000 
+	-max_len_sup 2500 \
+	-max_len_doc 2500 
 	
 #-tokenizer_model_path 'allenai/led-base-16384' \

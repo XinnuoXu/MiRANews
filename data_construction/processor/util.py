@@ -12,7 +12,9 @@ def split_paragraph(doc, max_length, min_sentence_length, high_freq_sent, tokeni
         if line.find('newser') > -1:
             continue
         flist = line.split()
-        if len(flist) <= min_sentence_length or len(flist) > max_length:
+        if len(flist) < min_sentence_length:
+            continue
+        if len(flist) > max_length:
             continue
         if tokenizer is not None:
             inputs = tokenizer(line)
