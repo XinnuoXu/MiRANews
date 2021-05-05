@@ -1,7 +1,9 @@
 #!/bin/bash
 
-RAW_PATH=/scratch/xxu/multi-multi/raw_data/multi_
+RAW_PATH=/scratch/xxu/multi-multi/data_multi_hier/multi_
 JSON_PATH=/scratch/xxu/multi-multi/json/multi
+
+rm ${JSON_PATH}/*
 
 python preprocess.py \
 	-mode pretrain_to_json \

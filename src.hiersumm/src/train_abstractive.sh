@@ -13,9 +13,9 @@ python train_abstractive.py \
 	-report_every 50 \
 	-trunc_tgt_ntoken 400 \
 	-trunc_src_nblock 24 \
-	-visible_gpus 0,1,2,3 \
-	-gpu_ranks 0,1,2,3 \
-	-world_size 4 \
+	-visible_gpus 0,1,2 \
+	-gpu_ranks 0,1,2 \
+	-world_size 3 \
 	-accum_count 4 \
 	-dec_dropout 0.1 \
 	-enc_dropout 0.1 \
