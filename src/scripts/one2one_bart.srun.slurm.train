@@ -13,7 +13,7 @@
 #SBATCH --account=ec156
 
 #module load gcc
-module load openmpi nccl
+module load openmpi
 module load nvidia/cuda-10.2
 module load mpt
 source ~/.bashrc

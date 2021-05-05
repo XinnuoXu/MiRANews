@@ -1,11 +1,16 @@
 #!/bin/bash
 
 INPUT_DIR=../data/json_multi_lead_1000/multi
-OUTPUT_DIR=../saved_checkpoints/multi_lead_bart/
+OUTPUT_DIR=../saved_checkpoints/multi_lead_partial_bart/
 MAX_SORCE_LEN=1024
 
 /bin/hostname -s
-python3 run_summarization.py \
+python3 -m torch.distributed.launch \
+	--nproc_per_node=$NPROC_PER_NODE \
+	--nnodes=$SLURM_JOB_NUM_NODES \
+	--node_rank=$SLURM_PROCID \
+	--master_addr="$PARENT" --master_port="$MPORT" \
+	run_summarization.py \
 	--model_name_or_path facebook/bart-large \
         --do_train \
         --train_path ${INPUT_DIR} \
@@ -34,7 +39,5 @@ python3 run_summarization.py \
 	--evaluation_strategy=no \
 	--save_steps=3000 \
 	--logging_steps=50 \
-	--fp16 true \
+	--local_files_only true \
 	--partial_attn true \
-	
-#--local_files_only true \

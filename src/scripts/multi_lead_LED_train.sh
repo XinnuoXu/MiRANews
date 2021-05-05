@@ -2,7 +2,7 @@
 
 INPUT_DIR=../data/json_multi_lead_5000/multi
 OUTPUT_DIR=../saved_checkpoints/multi_lead_LED/
-MAX_SORCE_LEN=16000
+MAX_SORCE_LEN=8000
 
 /bin/hostname -s
 python3 -m torch.distributed.launch \
@@ -29,9 +29,9 @@ python3 -m torch.distributed.launch \
 	--attention_dropout=0.1 \
 	--dropout=0.1 \
 	--warmup_steps=1000 \
-	--gradient_accumulation_steps=32 \
-        --per_device_train_batch_size=1 \
-        --per_device_eval_batch_size=1 \
+	--gradient_accumulation_steps=16 \
+        --per_device_train_batch_size=2 \
+        --per_device_eval_batch_size=2 \
         --overwrite_output_dir \
         --predict_with_generate \
         --do_eval \
