@@ -2,7 +2,7 @@
 
 import json
 
-def split_paragraph(doc, max_length, min_sentence_length, high_freq_sent, tokenizer=None):
+def split_paragraph(doc, max_length, max_num_paragraph, min_sentence_length, high_freq_sent, tokenizer=None):
     # For Hier-Transformer
     sents = doc.lower().split('\t')
     new_doc = []; length = 0; paragraph = []
@@ -25,6 +25,8 @@ def split_paragraph(doc, max_length, min_sentence_length, high_freq_sent, tokeni
             new_doc.append(paragraph)
             paragraph = []
             length = 0
+            if len(new_doc) > max_num_paragraph:
+                break
         paragraph.append(line)
     if len(paragraph) > 0:
         new_doc.append(paragraph)

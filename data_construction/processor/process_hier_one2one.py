@@ -59,6 +59,7 @@ class HierOneToOne():
                 summary = '\t'.join(pair['[SUMMARY]'])
             main_doc = split_paragraph(document, 
                                     self.args.max_len_paragraph, 
+                                    self.args.max_num_paragraph,
                                     self.args.min_sentence_length,
                                     self.high_freq_src,
                                     tokenizer=self.tokenizer)

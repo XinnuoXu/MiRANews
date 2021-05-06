@@ -34,6 +34,7 @@ if __name__ == '__main__':
     parser.add_argument("-max_len_doc", default=500, type=int)
     parser.add_argument("-min_doc_sent_num", default=3, type=int)
     parser.add_argument("-max_len_paragraph", default=200, type=int) #for hier-transformer
+    parser.add_argument("-max_num_paragraph", default=24, type=int) #for hier-transformer
     parser.add_argument('-max_len_sup', default=500, type=int)
     parser.add_argument('-max_len_summ', default=200, type=int)
     parser.add_argument("-min_summ_sent_num", default=1, type=int)

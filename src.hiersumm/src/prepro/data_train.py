@@ -43,8 +43,9 @@ class TrainData():
         checked_src_idxs = []
         for i, item in enumerate(src_subtoken_idxs):
             if len(item) > self.args.max_src_ntokens_per_sent:
-                continue
-            checked_src_idxs.append(item)
+                checked_src_idxs.append(item[:self.args.max_src_ntokens_per_sent])
+            else:
+                checked_src_idxs.append(item)
         return checked_src_idxs, tgt_subtoken_idxs, tgt_txt
 
 
