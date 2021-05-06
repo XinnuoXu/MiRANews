@@ -40,3 +40,4 @@ python3 -m torch.distributed.launch \
 	--save_steps=3000 \
 	--logging_steps=50 \
 	--local_files_only true \
+	--sortish_sampler true \
