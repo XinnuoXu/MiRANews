@@ -11,8 +11,8 @@ python train_abstractive.py \
 	-train_steps 50000 \
 	-save_checkpoint_steps 2000 \
 	-report_every 50 \
-	-trunc_tgt_ntoken 400 \
-	-trunc_src_nblock 24 \
+	-trunc_tgt_ntoken 256 \
+	-trunc_src_nblock 20 \
 	-visible_gpus 0,1,2 \
 	-gpu_ranks 0,1,2 \
 	-world_size 3 \
