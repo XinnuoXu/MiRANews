@@ -23,7 +23,7 @@ export NCCL_DEBUG=INFO
 export NPROC_PER_NODE=2
 export HDF5_USE_FILE_LOCKING='FALSE'
 export PARENT=`/bin/hostname -s`
-export MPORT=13000
+export MPORT=11000
 export CHILDREN=`scontrol show hostnames $SLURM_JOB_NODELIST | grep -v $PARENT`
 export HOSTLIST="$PARENT $CHILDREN"
 echo $HOSTLIST

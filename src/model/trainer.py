@@ -1,7 +1,7 @@
 import sys, os
 import numpy as np
 from transformers import Seq2SeqTrainer
-from model.postprocess import compute_metrics
+from model.postprocess import PostProcessFuns
 
 class Trainer(object):
     def __init__(self, model, training_args, model_args, data_args,
@@ -22,14 +22,17 @@ class Trainer(object):
         self.test_shards = test_shards
         self.logger = logger
 
+        self.tokenizer = tokenizer
+        self.postproces_obj = PostProcessFuns(self.tokenizer, data_args)
+
         self.trainer = Seq2SeqTrainer(
             model=model,
             args=training_args,
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,
-            tokenizer=tokenizer,
+            tokenizer=self.tokenizer,
             data_collator=data_collator,
-            compute_metrics=compute_metrics if self.predict_with_generate else None,)
+            compute_metrics=self.postproces_obj.compute_metrics if self.predict_with_generate else None,)
 
     def train(self, last_checkpoint):
         if last_checkpoint is not None:
