@@ -54,8 +54,6 @@ class AbstractiveBatch(object):
         return self.batch_size
 
 
-
-
 def load_dataset(args, corpus_type, shuffle):
     """
     Dataset generator. Don't do extra stuff here, like printing,
@@ -141,7 +139,6 @@ class AbstracticeIterator(object):
         self.prime_sort_key = lambda x: len(x[1])
         self._iterations_this_epoch = 0
 
-
         self.symbols = symbols
 
     def data(self):
@@ -158,9 +155,9 @@ class AbstracticeIterator(object):
         eop_id = self.symbols['EOP']
         eoq_id = self.symbols['EOQ']
         src, tgt, tgt_str = ex['src'], ex['tgt'], ex['tgt_str']
+
         if (not self.args.hier):
-            src = sum([p + [eop_id] for p in src], [])[:-1][:self.args.trunc_src_ntoken] + [
-                eos_id]
+            src = sum([p + [eop_id] for p in src], [])[:-1][:self.args.trunc_src_ntoken] + [eos_id]
             return src, tgt, tgt_str
 
         return src[:self.args.trunc_src_nblock], tgt, tgt_str

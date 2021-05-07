@@ -1,6 +1,6 @@
 DATA_PATH=/scratch/xxu/multi-multi/data/multi
 VOCAB_PATH=./multi.model
-MODEL_PATH=/scratch/xxu/multi-multi/model.hiersumm
+MODEL_PATH=/scratch/xxu/multi-multi/model.hiersumm.partial
 LOG_PATH=../log/
 
 python train_abstractive.py \
@@ -25,4 +25,5 @@ python train_abstractive.py \
 	-log_file ${LOG_PATH} \
 	-inter_layers 6,7 \
 	-inter_heads 8 \
-	-hier
+	-hier \
+	-attn_main

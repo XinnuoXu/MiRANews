@@ -179,7 +179,6 @@ class TransformerDecoder(nn.Module):
         if (not memory_masks is None):
             src_len = memory_masks.size(-1)
             src_pad_mask = memory_masks.expand(src_batch, tgt_len, src_len)
-
         else:
             src_pad_mask = src_words.data.eq(padding_idx).unsqueeze(1) \
                 .expand(src_batch, tgt_len, src_len)

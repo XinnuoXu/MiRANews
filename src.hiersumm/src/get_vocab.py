@@ -48,6 +48,6 @@ if __name__ == '__main__':
     inputfile = './tmp.input'
     model_prefix = 'multi'
     vocab_size = 10000
-    user_syms = ['<S>', '<T>', '</S>', '<P>', '<PAD>', '<Q>', '<SUPP_START>']
+    user_syms = ['<S>', '<T>', '</S>', '<P>', '<PAD>', '<Q>', '<SUPP_START>', '<supp_start>']
     preprocess(oringinal_data, inputfile)
     train_vocab(inputfile, model_prefix, vocab_size, user_syms)

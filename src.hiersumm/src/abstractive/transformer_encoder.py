@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch
 
 from abstractive.attn import MultiHeadedAttention, MultiHeadedPooling
-from abstractive.neural import PositionwiseFeedForward, PositionalEncoding, sequence_mask
+from abstractive.neural import PositionwiseFeedForward, PositionalEncoding, sequence_mask, main_document_mask
 
 
 class TransformerEncoderLayer(nn.Module):
@@ -71,9 +71,13 @@ class TransformerPoolingLayer(nn.Module):
 
 
 class TransformerInterEncoder(nn.Module):
-    def __init__(self, num_layers, d_model, heads, d_ff,
-                 dropout, embeddings, inter_layers, inter_heads, device):
+    def __init__(self, num_layers, d_model, 
+                 heads, d_ff, dropout, 
+                 embeddings, inter_layers, 
+                 inter_heads, main_doc_label_idx,
+                 device):
         super(TransformerInterEncoder, self).__init__()
+
         inter_layers = [int(i) for i in inter_layers]
         self.device = device
         self.d_model = d_model
@@ -81,6 +85,7 @@ class TransformerInterEncoder(nn.Module):
         self.embeddings = embeddings
         self.pos_emb = PositionalEncoding(dropout, int(self.embeddings.embedding_dim / 2))
         self.dropout = nn.Dropout(dropout)
+        self.main_doc_label_idx = main_doc_label_idx
 
         self.transformer_layers = nn.ModuleList(
             [TransformerInterLayer(d_model, inter_heads, d_ff, dropout) if i in inter_layers else TransformerEncoderLayer(
@@ -93,10 +98,8 @@ class TransformerInterEncoder(nn.Module):
     def forward(self, src):
         """ See :obj:`EncoderBase.forward()`"""
         batch_size, n_blocks, n_tokens = src.size()
-        # src = src.view(batch_size * n_blocks, n_tokens)
         emb = self.embeddings(src)
         padding_idx = self.embeddings.padding_idx
-        #mask_local = 1 - src.data.eq(padding_idx).view(batch_size * n_blocks, n_tokens)
         mask_local = ~ src.data.eq(padding_idx).view(batch_size * n_blocks, n_tokens)
         mask_block = torch.sum(mask_local.view(batch_size, n_blocks, n_tokens), -1) > 0
 
@@ -113,11 +116,11 @@ class TransformerInterEncoder(nn.Module):
 
         for i in range(self.num_layers):
             if (self.transformer_types[i] == 'local'):
-                #word_vec = self.transformer_layers[i](word_vec, word_vec, 1 - mask_local)  # all_sents * max_tokens * dim
-                word_vec = self.transformer_layers[i](word_vec, word_vec, ~mask_local)  # all_sents * max_tokens * dim
+                # all_sents * max_tokens * dim
+                word_vec = self.transformer_layers[i](word_vec, word_vec, ~mask_local)
             elif (self.transformer_types[i] == 'inter'):
-                #word_vec = self.transformer_layers[i](word_vec, 1 - mask_local, 1 - mask_block, batch_size, n_blocks)  # all_sents * max_tokens * dim
-                word_vec = self.transformer_layers[i](word_vec, ~mask_local, ~mask_block, batch_size, n_blocks)  # all_sents * max_tokens * dim
+                # all_sents * max_tokens * dim
+                word_vec = self.transformer_layers[i](word_vec, ~mask_local, ~mask_block, batch_size, n_blocks)  
 
         word_vec = self.layer_norm(word_vec)
         mask_hier = mask_local[:, :, None].float()
@@ -127,17 +130,23 @@ class TransformerInterEncoder(nn.Module):
         mask_hier = mask_hier.view(batch_size, n_blocks * n_tokens, -1)
         mask_hier = mask_hier.transpose(0, 1).contiguous()
 
-        #unpadded = [torch.masked_select(src_features[:, i], mask_hier[:, i].byte()).view([-1, src_features.size(-1)])
+        src = src.view(batch_size, n_blocks * n_tokens).unsqueeze(2).transpose(0, 1)
+        unpadded_src = [torch.masked_select(src[:, i], mask_hier[:, i].bool()).view([-1, src.size(-1)])
+                        for i in range(src.size(1))]
+        max_l = max([p.size(0) for p in unpadded_src])
+        mask_main = main_document_mask(self.main_doc_label_idx, max_l, unpadded_src).to(self.device)
+        mask_main = ~mask_main[:, None, :]
+
         unpadded = [torch.masked_select(src_features[:, i], mask_hier[:, i].bool()).view([-1, src_features.size(-1)])
                     for i in range(src_features.size(1))]
         max_l = max([p.size(0) for p in unpadded])
         mask_hier = sequence_mask(torch.tensor([p.size(0) for p in unpadded]), max_l).to(self.device)
-        #mask_hier = 1 - mask_hier[:, None, :]
-        mask_hier = ~ mask_hier[:, None, :]
+        mask_hier = ~mask_hier[:, None, :]
 
         unpadded = torch.stack(
             [torch.cat([p, torch.zeros(max_l - p.size(0), src_features.size(-1)).to(self.device)]) for p in unpadded], 1)
-        return unpadded, mask_hier
+
+        return unpadded, mask_hier, mask_main
 
 
 class TransformerInterLayer(nn.Module):

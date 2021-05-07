@@ -3,7 +3,7 @@
 RAW_PATH=/scratch/xxu/multi-multi/data_multi_hier/multi_
 JSON_PATH=/scratch/xxu/multi-multi/json/multi
 
-rm ${JSON_PATH}/*
+rm ${JSON_PATH}*
 
 python preprocess.py \
 	-mode pretrain_to_json \

@@ -24,6 +24,16 @@ def tile(x, count, dim=0):
         x = x.permute(perm).contiguous()
     return x
 
+def main_document_mask(label_idx, max_len, src):
+    lengths = []
+    for ex in src:
+        idx = torch.nonzero(ex == label_idx)
+        if len(idx) > 0:
+            lengths.append(idx[0][0])
+        else:
+            lengths.append(ex.size(0))
+    return sequence_mask(torch.tensor(lengths), max_len=max_len)
+
 def sequence_mask(lengths, max_len=None):
     """
     Creates a boolean mask from sequence lengths.

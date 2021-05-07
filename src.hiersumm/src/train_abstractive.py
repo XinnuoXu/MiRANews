@@ -101,29 +101,30 @@ def train(args,device_id):
 
     if args.train_from != '':
         logger.info('Loading checkpoint from %s' % args.train_from)
-        checkpoint = torch.load(args.train_from,
-                                map_location=lambda storage, loc: storage)
+        checkpoint = torch.load(args.train_from, map_location=lambda storage, loc: storage)
         opt = vars(checkpoint['opt'])
         for k in opt.keys():
             if (k in model_flags):
                 setattr(args, k, opt[k])
-
     else:
         checkpoint = None
 
     spm = sentencepiece.SentencePieceProcessor()
     spm.Load(args.vocab_path)
     word_padding_idx = spm.PieceToId('<PAD>')
+    main_doc_label_idx = spm.PieceToId('<SUPP_START>')
     symbols = {'BOS': spm.PieceToId('<S>'), 'EOS': spm.PieceToId('</S>'), 'PAD': word_padding_idx,
                'EOT': spm.PieceToId('<T>'), 'EOP': spm.PieceToId('<P>'), 'EOQ': spm.PieceToId('<Q>')}
     print(symbols)
     vocab_size = len(spm)
 
     def train_iter_fct():
-        return data_loader.AbstractiveDataloader(args, load_dataset(args, 'train', shuffle=True), symbols, args.batch_size, device,
-                                                 shuffle=True, is_test=False)
+        return data_loader.AbstractiveDataloader(args, 
+                    load_dataset(args, 'train', shuffle=True), 
+                    symbols, args.batch_size, device,
+                    shuffle=True, is_test=False)
 
-    model = Summarizer(args, word_padding_idx, vocab_size, device, checkpoint)
+    model = Summarizer(args, word_padding_idx, main_doc_label_idx, vocab_size, device, checkpoint)
     optim = model_builder.build_optim(args, model, checkpoint)
     logger.info(model)
     trainer = build_trainer(args, device_id, model, symbols, vocab_size, optim)
@@ -175,15 +176,6 @@ def wait_and_validate(args, device_id):
             else:
                 time.sleep(300)
 
-    #
-    # while not os.path.exists(file_path):
-    #     time.sleep(1)
-    #
-    # if os.path.isfile(file_path):
-    # # read file
-    # else:
-    #     raise ValueError("%s isn't a file!" % file_path)
-
 
 def validate(args, device_id, pt, step):
     device = "cpu" if args.visible_gpus == '-1' else "cuda"
@@ -209,7 +201,7 @@ def validate(args, device_id, pt, step):
                'EOT': spm.PieceToId('<T>'), 'EOP': spm.PieceToId('<P>'), 'EOQ': spm.PieceToId('<Q>')}
 
     vocab_size = len(spm)
-    model = Summarizer(args, word_padding_idx, vocab_size, device, checkpoint)
+    model = Summarizer(args, word_padding_idx, main_doc_label_idx, vocab_size, device, checkpoint)
     model.eval()
 
     valid_iter = data_loader.AbstractiveDataloader(args, load_dataset(args, 'dev', shuffle=False), symbols,
@@ -245,7 +237,7 @@ def test(args, pt, step):
 
     vocab_size = len(spm)
     vocab = spm
-    model = Summarizer(args, word_padding_idx, vocab_size, device, checkpoint)
+    model = Summarizer(args, word_padding_idx, main_doc_label_idx, vocab_size, device, checkpoint)
     model.eval()
 
     test_iter = data_loader.AbstractiveDataloader(args, load_dataset(args, args.dataset, shuffle=False), symbols,
@@ -340,6 +332,7 @@ if __name__ == '__main__':
     parser.add_argument('-heads', default=8, type=int)
     parser.add_argument('-ff_size', default=1024, type=int)
     parser.add_argument("-hier", type=str2bool, nargs='?',const=True,default=True)
+    parser.add_argument("-attn_main", type=str2bool, nargs='?',const=True,default=False)
 
 
     parser.add_argument('-batch_size', default=10000, type=int)
