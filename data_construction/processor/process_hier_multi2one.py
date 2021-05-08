@@ -2,6 +2,7 @@
 
 from processor.util import trunc_string, split_paragraph
 import torch.nn as nn
+import copy
 import json
 import torch
 from transformers import AutoTokenizer
@@ -81,8 +82,8 @@ class HierMultiToOne():
 
     def _rank_one_example(self, main_docs, idx):
         merge_docs = []
-        main_docs[idx][-1][-1] += ' <SUPP_START>'
-        merge_docs.extend(main_docs[idx])
+        merge_docs.extend(copy.deepcopy(main_docs[idx]))
+        merge_docs[-1][-1] += ' <SUPP_START>'
         for i in range(len(main_docs)):
             if i == idx:
                 continue

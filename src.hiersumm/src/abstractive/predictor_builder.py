@@ -235,7 +235,7 @@ class Translator(object):
         # Encoder forward.
         src = batch.src
 
-        src_features, mask_hier = self.model.encoder(src)
+        src_features, mask_hier, mask_main = self.model.encoder(src)
         dec_states = self.model.decoder.init_decoder_state(src, src_features, with_cache=True)
 
         device = src_features.device
@@ -245,6 +245,7 @@ class Translator(object):
             lambda state, dim: tile(state, beam_size, dim=dim))
         src_features = tile(src_features, beam_size, dim=1)
         mask_hier = tile(mask_hier, beam_size, dim=0)
+        mask_main = tile(mask_main, beam_size, dim=0)
         batch_offset = torch.arange(
             batch_size, dtype=torch.long, device=device)
         beam_offset = torch.arange(
@@ -279,9 +280,14 @@ class Translator(object):
             decoder_input = alive_seq[:, -1].view(1, -1)
 
             if (self.args.hier):
-                dec_out, dec_states = self.model.decoder(decoder_input, src_features, dec_states,
-                                                         memory_masks=mask_hier,
-                                                         step=step)
+                if self.args.attn_main:
+                    dec_out, dec_states = self.model.decoder(decoder_input, src_features, dec_states,
+                                                             memory_masks=mask_main,
+                                                             step=step)
+                else:
+                    dec_out, dec_states = self.model.decoder(decoder_input, src_features, dec_states,
+                                                             memory_masks=mask_hier,
+                                                             step=step)
             else:
                 dec_out, dec_states = self.model.decoder(decoder_input, src_features, dec_states,
                                                          step=step)
@@ -364,6 +370,7 @@ class Translator(object):
             select_indices = batch_index.view(-1)
             src_features = src_features.index_select(1, select_indices)
             mask_hier = mask_hier.index_select(0, select_indices)
+            mask_main = mask_main.index_select(0, select_indices)
             dec_states.map_batch_fn(
                 lambda state, dim: state.index_select(dim, select_indices))
 

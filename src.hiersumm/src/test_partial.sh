@@ -12,8 +12,8 @@ python train_abstractive.py \
 	-seed 666 \
 	-trunc_tgt_ntoken 400 \
 	-trunc_src_nblock 40 \
-	-visible_gpus 0 \
-	-gpu_ranks 0 \
+	-visible_gpus 1 \
+	-gpu_ranks 1 \
 	-vocab_path ${VOCAB_PATH} \
 	-model_path ${MODEL_PATH} \
 	-log_file ${LOG_PATH} \
@@ -27,3 +27,4 @@ python train_abstractive.py \
 	-alpha 0.4 \
 	-enc_dropout 0.1 \
 	-max_length 400
+	

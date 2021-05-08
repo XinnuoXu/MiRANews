@@ -1,7 +1,7 @@
 #coding=utf8
 
 from processor.util import preprocess_high_freq
-from processor.selection_rank import SelectRank
+from processor.process_unsupervised_select import UnsupervisedSelect
 from processor.process_hier_one2one import HierOneToOne
 from processor.process_hier_multi2one import HierMultiToOne
 from processor.process_one2one import OneToOne
@@ -54,8 +54,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     high_freq_src, high_freq_tgt = preprocess_high_freq(args.root_dir+'/train.json')
-    if args.mode == 'rank':
-        processor_obj = SelectRank(args, high_freq_src, high_freq_tgt)
+    if args.mode == 'unsupervised_select':
+        processor_obj = UnsupervisedSelect(args, high_freq_src, high_freq_tgt)
     if args.mode == 'hier_one_to_one':
         processor_obj = HierOneToOne(args, high_freq_src, high_freq_tgt)
     if args.mode == 'hier_multi_to_one':

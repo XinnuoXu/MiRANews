@@ -123,7 +123,7 @@ class MultiToOneLead(object):
             if i == idx:
                 continue
             new_docs.append(sup_docs[i])
-        return self.cls_tok + ' ' + (' '+self.sep_tok+' ').join(new_docs), summs[idx]
+        return (' '+self.sep_tok+' ').join(new_docs), summs[idx]
 
     def run(self):
         self.process(self.train_path,
