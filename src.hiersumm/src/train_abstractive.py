@@ -197,6 +197,7 @@ def validate(args, device_id, pt, step):
     spm = sentencepiece.SentencePieceProcessor()
     spm.Load(args.vocab_path)
     word_padding_idx = spm.PieceToId('<PAD>')
+    main_doc_label_idx = spm.PieceToId('<SUPP_START>')
     symbols = {'BOS': spm.PieceToId('<S>'), 'EOS': spm.PieceToId('</S>'), 'PAD': word_padding_idx,
                'EOT': spm.PieceToId('<T>'), 'EOP': spm.PieceToId('<P>'), 'EOQ': spm.PieceToId('<Q>')}
 
@@ -232,6 +233,7 @@ def test(args, pt, step):
     spm = sentencepiece.SentencePieceProcessor()
     spm.Load(args.vocab_path)
     word_padding_idx = spm.PieceToId('<PAD>')
+    main_doc_label_idx = spm.PieceToId('<SUPP_START>')
     symbols = {'BOS': spm.PieceToId('<S>'), 'EOS': spm.PieceToId('</S>'), 'PAD': word_padding_idx,
                'EOT': spm.PieceToId('<T>'), 'EOP': spm.PieceToId('<P>'), 'EOQ': spm.PieceToId('<Q>')}
 
