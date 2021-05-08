@@ -11,4 +11,5 @@ pip install tensorboardX
 pip install pyrouge
 conda install pytorch-lightning -c conda-forge
 pip install google-auth==1.6.3
+pip install py-rouge
 ```
