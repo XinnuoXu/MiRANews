@@ -17,6 +17,7 @@ ldc2017t10/train*
 111*
 .rouge*
 *tmp_*
+*tmp
 *output*
 *.model
 *.txt
