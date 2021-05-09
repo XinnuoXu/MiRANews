@@ -176,15 +176,18 @@ class UnsupervisedSelect():
             line = f.read().strip()
             json_obj = json.loads(line)
             for line in json_obj:
-                main_docs, left_docs, summs = self._read_one_line(line)
-                if len(main_docs) < 2:
+                try:
+                    main_docs, left_docs, summs = self._read_one_line(line)
+                    if len(main_docs) < 2:
+                        continue
+                    main_doc_embs, left_doc_embs = self._get_embeddings(main_docs, left_docs)
+                    for i in range(len(main_docs)):
+                        src = self._rank_one_example(main_docs, left_docs, main_doc_embs, left_doc_embs, i)
+                        tgt = summs[i].replace('\t', ' ')
+                        fpout_src.write(src+'\n')
+                        fpout_tgt.write(tgt+'\n')
+                except:
                     continue
-                main_doc_embs, left_doc_embs = self._get_embeddings(main_docs, left_docs)
-                for i in range(len(main_docs)):
-                    src = self._rank_one_example(main_docs, left_docs, main_doc_embs, left_doc_embs, i)
-                    tgt = summs[i].replace('\t', ' ')
-                    fpout_src.write(src+'\n')
-                    fpout_tgt.write(tgt+'\n')
             fpout_src.close()
             fpout_tgt.close()
 

@@ -8,6 +8,7 @@ from processor.process_hier_multi2one import HierMultiToOne
 from processor.process_one2one import OneToOne
 from processor.process_multi2one_lead import MultiToOneLead
 from processor.text_to_json import PreproTrainJson
+from processor.rouge_select import RougeSelectGT
 
 import argparse
 import torch
@@ -52,6 +53,13 @@ if __name__ == '__main__':
     parser.add_argument("-shard_size", default=2000, type=int)
     parser.add_argument("-test_shard_size", default=500, type=int)
 
+    parser.add_argument("-top_k_per_sentence", default=5, type=int)
+    parser.add_argument("-thred_num", default=30, type=int)
+
+    parser.add_argument("-gt_input", default='')
+    parser.add_argument("-gt_output_src", default='')
+    parser.add_argument("-gt_output_tgt", default='')
+
     args = parser.parse_args()
 
     high_freq_src, high_freq_tgt = preprocess_high_freq(args.root_dir+'/train.json')
@@ -67,9 +75,19 @@ if __name__ == '__main__':
         processor_obj = MultiToOneLead(args, high_freq_src, high_freq_tgt)
     if args.mode == 'unsupervised_select':
         processor_obj = UnsupervisedSelect(args, high_freq_src, high_freq_tgt)
-    processor_obj.run()
+    if args.mode == 'rouge_gt':
+        processor_obj = RougeSelectGT(args, high_freq_src, high_freq_tgt)
 
-    if args.mode not in ['hier_one_to_one', 'hier_multi_to_one']:
+    # Process
+    if args.mode == 'rouge_gt':
+        processor_obj.process()
+    else:
+        processor_obj.run()
+    
+    # PostProcess
+    if args.mode not in ['hier_one_to_one', 
+                         'hier_multi_to_one',
+                         'rouge_gt']:
         json_obj = PreproTrainJson(args)
         json_obj.preprocess()
 

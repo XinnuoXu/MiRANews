@@ -180,6 +180,8 @@ class HierUnsupervisedSelect():
                                     self.args.min_sentence_length,
                                     self.high_freq_src,
                                     tokenizer=self.tokenizer)
+                    if len(main_para) <= 0:
+                        continue
                     main_para[-1][-1] += ' <SUPP_START>'
                     sup_para = split_paragraph(sup_d,
                                     self.args.max_len_paragraph,

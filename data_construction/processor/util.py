@@ -2,7 +2,12 @@
 
 import json
 
-def split_paragraph(doc, max_length, max_num_paragraph, min_sentence_length, high_freq_sent, tokenizer=None):
+def split_paragraph(doc, max_length, 
+                    max_num_paragraph, 
+                    min_sentence_length, 
+                    high_freq_sent, 
+                    max_sentence_length=300,
+                    tokenizer=None):
     # For Hier-Transformer
     sents = doc.lower().split('\t')
     new_doc = []; length = 0; paragraph = []
@@ -14,8 +19,8 @@ def split_paragraph(doc, max_length, max_num_paragraph, min_sentence_length, hig
         flist = line.split()
         if len(flist) < min_sentence_length:
             continue
-        if len(flist) > max_length:
-            continue
+        if len(flist) > max_sentence_length:
+            flist = flist[:max_sentence_length]
         if tokenizer is not None:
             inputs = tokenizer(line)
             length += len(inputs['input_ids'])
