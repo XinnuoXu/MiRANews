@@ -7,7 +7,7 @@ import multiprocessing
 INPUT_BASE='/scratch/xxu/multi-multi/raw_data/'
 OUTPUT_BASE='/scratch/xxu/multi-multi/supervised_content_labels/'
 TMP_DIR = './tmp/'
-THRED_NUMBER = 20
+THRED_NUMBER = 30
 
 def split_file(filename):
     os.system('rm '+TMP_DIR+'/*')

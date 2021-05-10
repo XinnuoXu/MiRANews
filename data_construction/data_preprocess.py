@@ -7,6 +7,8 @@ from processor.process_hier_one2one import HierOneToOne
 from processor.process_hier_multi2one import HierMultiToOne
 from processor.process_one2one import OneToOne
 from processor.process_multi2one_lead import MultiToOneLead
+from processor.process_from_gold_selection import GoldSelect
+from processor.process_hier_from_gold_selection import HierGoldSelect
 from processor.text_to_json import PreproTrainJson
 from processor.rouge_select import RougeSelectGT
 
@@ -27,6 +29,7 @@ if __name__ == '__main__':
     parser.add_argument("-dataset_name", default='multi')
     parser.add_argument("-input_file", default='/scratch/xxu/multi-multi/multi_multi_clean.jsonl')
     parser.add_argument("-root_dir", default='/scratch/xxu/multi-multi/raw_data/')
+    parser.add_argument("-black_list_dir", default='/scratch/xxu/multi-multi/raw_data/')
     parser.add_argument("-output_dir", default='/scratch/xxu/multi-multi/raw_data/')
     parser.add_argument("-tokenizer_model_path", default='')
     parser.add_argument("-potential_model_path", default='')
@@ -62,19 +65,23 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    high_freq_src, high_freq_tgt = preprocess_high_freq(args.root_dir+'/train.json')
+    high_freq_src, high_freq_tgt = preprocess_high_freq(args.black_list_dir+'/train.json')
     if args.mode == 'hier_one_to_one':
         processor_obj = HierOneToOne(args, high_freq_src, high_freq_tgt)
     if args.mode == 'hier_multi_to_one':
         processor_obj = HierMultiToOne(args, high_freq_src, high_freq_tgt)
     if args.mode == 'hier_unsupervised_select':
         processor_obj = HierUnsupervisedSelect(args, high_freq_src, high_freq_tgt)
+    if args.mode == 'hier_gold_select':
+        processor_obj = HierGoldSelect(args, high_freq_src, high_freq_tgt)
     if args.mode == 'one_to_one':
         processor_obj = OneToOne(args, high_freq_src, high_freq_tgt)
     if args.mode == 'multi_to_one_lead':
         processor_obj = MultiToOneLead(args, high_freq_src, high_freq_tgt)
     if args.mode == 'unsupervised_select':
         processor_obj = UnsupervisedSelect(args, high_freq_src, high_freq_tgt)
+    if args.mode == 'gold_select':
+        processor_obj = GoldSelect(args, high_freq_src, high_freq_tgt)
     if args.mode == 'rouge_gt':
         processor_obj = RougeSelectGT(args, high_freq_src, high_freq_tgt)
 
@@ -87,6 +94,8 @@ if __name__ == '__main__':
     # PostProcess
     if args.mode not in ['hier_one_to_one', 
                          'hier_multi_to_one',
+                         'hier_unsupervised_select',
+                         'hier_gold_select',
                          'rouge_gt']:
         json_obj = PreproTrainJson(args)
         json_obj.preprocess()
