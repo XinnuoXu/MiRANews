@@ -42,10 +42,10 @@ class HierGoldSelect(object):
                     use_auth_token=False,
                     local_files_only=False)
 
-    def _get_selected_sentences(self, sentences, labels):
+    def _get_selected_sentences(self, sentences, labels, doc_ids):
         selected_sentences = []
         for i, sentence in enumerate(sentences):
-            if labels[i] == 1:
+            if labels[i] == 1 and doc_ids[i] != 0:
                 selected_sentences.append(sentence)
         return selected_sentences
 
@@ -63,7 +63,7 @@ class HierGoldSelect(object):
             sentences = json_obj['docs']
             doc_ids = json_obj['doc_ids']
             labels = json_obj['labels']
-            selected_sentences = self._get_selected_sentences(sentences, labels)
+            selected_sentences = self._get_selected_sentences(sentences, labels, doc_ids)
             main_doc = self._get_main_document(sentences, doc_ids)
             main_doc = split_paragraph('\t'.join(main_doc),
                                     self.args.max_len_paragraph,
@@ -77,8 +77,11 @@ class HierGoldSelect(object):
                                     self.args.min_sentence_length,
                                     self.high_freq_src,
                                     tokenizer=self.tokenizer)
-            selected_sents[-1][-1] += ' <SUPP_START>'
-            src = selected_sents + main_doc
+            if len(selected_sents) > 0:
+                selected_sents[-1][-1] += ' <SUPP_START>'
+                src = selected_sents + main_doc
+            else:
+                main_doc[0][0] = '<SUPP_START> ' + main_doc[0][0]
             fpout_src.write(json.dumps(src)+'\n')
 
         fpout_tgt = open(tgt_out_path, 'w')

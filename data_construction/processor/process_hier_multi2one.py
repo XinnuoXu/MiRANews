@@ -58,9 +58,8 @@ class HierMultiToOne():
                 summary = '\t'.join(pair['[TITLE]']) + '\t' + '\t'.join(pair['[SUMMARY]'])
             else:
                 summary = '\t'.join(pair['[SUMMARY]'])
-            main_doc = split_paragraph(document, 
-                                    self.args.max_len_paragraph, 
-                                    self.args.max_num_paragraph,
+            document, _ = trunc_string(document,
+                                    8000,
                                     self.args.min_sentence_length,
                                     self.high_freq_src,
                                     tokenizer=self.tokenizer)
@@ -68,6 +67,17 @@ class HierMultiToOne():
                                     self.args.max_len_summ,
                                     self.args.min_sentence_length,
                                     self.high_freq_tgt)
+            if len(document.split('\t')) < self.args.min_doc_sent_num:
+                continue
+            if len(summary.split('\t')) < self.args.min_summ_sent_num:
+                continue
+
+            main_doc = split_paragraph(document, 
+                                    self.args.max_len_paragraph, 
+                                    self.args.max_num_paragraph,
+                                    self.args.min_sentence_length,
+                                    self.high_freq_src,
+                                    tokenizer=self.tokenizer)
             if len(main_doc) <= 0:
                 continue
             if sum([len(para) for para in main_doc]) < self.args.min_doc_sent_num:
@@ -76,7 +86,8 @@ class HierMultiToOne():
                 continue
             main_docs.append(main_doc)
             summs.append(summary)
-            if len(main_docs) == self.args.max_paragraph_in_cluster:
+            #if len(main_docs) == self.args.max_paragraph_in_cluster:
+            if len(main_docs) == self.args.max_docs_in_cluster:
                 break
         return main_docs, summs
 
