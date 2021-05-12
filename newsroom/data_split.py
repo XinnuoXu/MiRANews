@@ -16,6 +16,8 @@ SEP_TOK = '</s>'
 import sys
 import json
 import random
+from transformers import BartTokenizer
+tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
 
 def split():
     data = [line.strip() for line in open(INPUT_FILE)]
@@ -37,7 +39,7 @@ def split():
     fpout.write(json.dumps(data_test))
     fpout.close()
 
-def _preprocess(doc, max_length, high_freq_sent):
+def _preprocess(doc, max_length, high_freq_sent, tokenize=False):
     sents = doc.lower().split('\t')
     new_doc = []; length = 0
     for line in sents:
@@ -48,7 +50,11 @@ def _preprocess(doc, max_length, high_freq_sent):
         flist = line.split()
         if len(flist) <= MIN_SENTENCE_LENGTH:
             continue
-        length += len(flist)
+        if tokenize:
+            inputs = tokenizer(line)
+            length += len(inputs['input_ids'])
+        else:
+            length += len(flist)
         if length > max_length:
             break
         new_doc.append(line)
@@ -180,7 +186,9 @@ def _multi_in_single_out(set_name, high_freq_src, high_freq_tgt):
             pairs = flist[2]
             pair_obj = json.loads(pairs)
 
-            docs = []; summs = []
+            docs = []; summs = []; sups = []
+            sup_doc_num = len(pair_obj)-1
+            max_sup_len = MAX_LEN_SUP / sup_doc_num
             for pid in pair_obj:
                 pair = pair_obj[pid]
                 document = '\t'.join(pair['[DOCUMENT]'])
@@ -189,32 +197,31 @@ def _multi_in_single_out(set_name, high_freq_src, high_freq_tgt):
                     summary = '\t'.join(pair['[TITLE]']) + '\t' + '\t'.join(pair['[SUMMARY]'])
                 else:
                     summary = '\t'.join(pair['[SUMMARY]'])
-                document = _preprocess(document, MAX_LEN_DOC, high_freq_src)
+                document = _preprocess(document, MAX_LEN_DOC, high_freq_src, tokenize=True)
+                sup_document = _preprocess(document, max_sup_len, high_freq_src, tokenize=True)
                 summary = _preprocess(summary, MAX_LEN_SUMM, high_freq_tgt)
                 if len(document.split()) > MIN_LENGTH and len(summary.split()) > MIN_LENGTH:
                     docs.append(document)
                     summs.append(summary)
+                    sups.append(sup_document)
                 if len(docs) == MAX_DOCS_IN_CLUSTER:
                     break
             if len(docs) < 2:
                 continue
             for i in range(len(docs)):
-                src, tgt = _prepare_sup_docs(docs, summs, i)
+                src, tgt = _prepare_sup_docs(docs, summs, sups, i)
                 fpout_src.write(src+'\n')
                 fpout_tgt.write(tgt+'\n')
 
         fpout_src.close()
         fpout_tgt.close()
 
-def _prepare_sup_docs(docs, summs, idx):
-    sup_doc_num = len(docs)-1
-    max_sup_len = MAX_LEN_SUP / sup_doc_num
+def _prepare_sup_docs(docs, summs, sup_docs, idx):
     sups = []
     for i in range(len(docs)):
         if i == idx:
             continue
-        sup = _preprocess(docs[i], max_sup_len, [])
-        sups.append(SEP_TOK+' '+sup)
+        sups.append(SEP_TOK+' '+sup_docs[i])
     return CLS_TOK + ' ' + docs[idx] + '\t' + '\t'.join(sups), summs[idx]
 
 def multi_in_single_out():
