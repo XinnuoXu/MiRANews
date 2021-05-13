@@ -1,6 +1,8 @@
 #!/bin/bash
 
-RAW_PATH=/scratch/xxu/multi-multi/data_single_hier/multi_
+#RAW_PATH=/scratch/xxu/multi-multi/data_single_hier/multi_
+#RAW_PATH=/scratch/xxu/multi-multi/data_unsup_select_hier/multi_
+RAW_PATH=/scratch/xxu/multi-multi/data_gold_select_hier/multi_
 JSON_PATH=/scratch/xxu/multi-multi/json/multi
 
 rm ${JSON_PATH}*

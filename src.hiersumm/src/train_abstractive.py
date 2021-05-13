@@ -126,6 +126,8 @@ def train(args,device_id):
 
     model = Summarizer(args, word_padding_idx, main_doc_label_idx, vocab_size, device, checkpoint)
     optim = model_builder.build_optim(args, model, checkpoint)
+    if checkpoint is not None:
+        optim._step = int(args.train_from.split('/')[-1].split('.')[-2].split('_')[-1])
     logger.info(model)
     trainer = build_trainer(args, device_id, model, symbols, vocab_size, optim)
 

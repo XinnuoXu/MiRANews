@@ -9,7 +9,7 @@ python preprocess.py \
 	-mode pretrain_to_data \
 	-raw_path ${JSON_PATH} \
 	-save_path ${DATA_PATH} \
-	-max_src_ntokens_per_sent 300 \
+	-max_src_ntokens_per_sent 250 \
       	-lower \
 	-n_cpus 30 \
 	-log_file ../logs/preprocess.log
