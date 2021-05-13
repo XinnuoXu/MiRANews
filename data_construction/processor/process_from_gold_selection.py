@@ -53,10 +53,10 @@ class GoldSelect(object):
         self.cls_tok = tmp_tokenizer.cls_token
         self.sep_tok = tmp_tokenizer.sep_token
 
-    def _get_selected_sentences(self, sentences, labels):
+    def _get_selected_sentences(self, sentences, labels, doc_ids):
         selected_sentences = []
         for i, sentence in enumerate(sentences):
-            if labels[i] == 1:
+            if labels[i] == 1 and doc_ids[i] != 0:
                 selected_sentences.append(sentence)
         return selected_sentences
 
@@ -74,7 +74,7 @@ class GoldSelect(object):
             sentences = json_obj['docs']
             doc_ids = json_obj['doc_ids']
             labels = json_obj['labels']
-            selected_sentences = self._get_selected_sentences(sentences, labels)
+            selected_sentences = self._get_selected_sentences(sentences, labels, doc_ids)
             main_doc = self._get_main_document(sentences, doc_ids)
             main_doc, _ = trunc_string('\t'.join(main_doc), 
                                     self.args.max_len_doc, 
