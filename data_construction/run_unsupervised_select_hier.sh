@@ -13,5 +13,11 @@ python data_preprocess.py \
 	-output_dir ${OUTPUT_DIR} \
 	-save_path ${JSON_PATH} \
 	-mode hier_unsupervised_select \
+	-coherent_threshold_max 0.81 \
+	-paraphrase_threshold_max 0.91 \
+	-coherent_threshold_mean 0.73 \
+	-paraphrase_threshold_mean 0.83 \
+	-coherent_threshold_min 0.59 \
+	-paraphrase_threshold_min 0.75 \
 	-max_len_paragraph 150 \
-	-max_num_paragraph 24 \
+	-max_num_paragraph 15 \

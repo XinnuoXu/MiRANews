@@ -154,6 +154,7 @@ class UnsupervisedSelect():
             embeddings.append(left_doc_embs[i])
         cand_sentence_emb = torch.cat(embeddings)
         cosin_sim_scores = self._cosin_sim(curr_main_emb, cand_sentence_emb)
+        '''
         coherent_scores = cosin_sim_scores * (cosin_sim_scores > self.args.coherent_threshold)
         filterd_scores = coherent_scores + (-1000 * (coherent_scores >= self.args.paraphrase_threshold))
         sum_scores = torch.mean(filterd_scores, dim=0)
@@ -166,6 +167,42 @@ class UnsupervisedSelect():
             score = sorted_scores[i]
             if score > self.args.coherent_threshold:
                 sorted_sentences.append(sentences[sent_id])
+        '''
+
+        max_scores = torch.max(cosin_sim_scores, dim=0)[0]
+        mean_scores = torch.mean(cosin_sim_scores, dim=0)
+        min_scores = torch.min(cosin_sim_scores, dim=0)[0]
+
+        _, indices = torch.sort(mean_scores, descending=True)
+        indices = indices.tolist()
+        max_scores = max_scores.tolist()
+        mean_scores = mean_scores.tolist()
+        min_scores = min_scores.tolist()
+
+        sorted_sentences = []
+        for i in range(len(indices)):
+            sent_id = indices[i]
+
+            max_score = max_scores[sent_id]
+            if max_score < self.args.coherent_threshold_max:
+                continue
+            if max_score > self.args.paraphrase_threshold_max:
+                continue
+
+            mean_score = mean_scores[sent_id]
+            if mean_score < self.args.coherent_threshold_mean:
+                continue
+            if mean_score > self.args.paraphrase_threshold_mean:
+                continue
+
+            min_score = min_scores[sent_id]
+            if min_score < self.args.coherent_threshold_min:
+                continue
+            if min_score > self.args.paraphrase_threshold_min:
+                continue
+
+            sorted_sentences.append(sentences[sent_id])
+
         sups = '\t'.join(sorted_sentences)
         return (curr_main_doc + ' ' + self.sep_tok + ' ' + sups).replace('\t', ' ')
 
@@ -187,7 +224,7 @@ class UnsupervisedSelect():
                         fpout_src.write(src+'\n')
                         fpout_tgt.write(tgt+'\n')
                 except:
-                    continue
+                    pass
             fpout_src.close()
             fpout_tgt.close()
 

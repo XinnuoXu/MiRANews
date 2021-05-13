@@ -1,0 +1,6 @@
+python plot.py tmp/tmp.mean.unselect.json "Average cosine similarity, unselected sentences"
+python plot.py tmp/tmp.max.unselect.json "Max cosine similarity, unselected sentences"
+python plot.py tmp/tmp.min.unselect.json "Min cosine similarity, unselected sentences"
+python plot.py tmp/tmp.mean.select.json "Average cosine similarity, selected sentences"
+python plot.py tmp/tmp.max.select.json "Max cosine similarity, selected sentences"
+python plot.py tmp/tmp.min.select.json "Min cosine similarity, selected sentences"
