@@ -3,6 +3,8 @@
 JSON_PATH=/scratch/xxu/multi-multi/json/
 DATA_PATH=/scratch/xxu/multi-multi/data/
 
+rm -rf $DATA_PATH/*
+
 python preprocess.py \
 	-mode pretrain_to_data \
 	-raw_path ${JSON_PATH} \
