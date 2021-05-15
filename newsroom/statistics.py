@@ -141,6 +141,7 @@ if __name__ == '__main__':
         # Foreign novelty
         for i, summary_toks in enumerate(summaries):
             document_toks = [item for sublist in documents[:i]+documents[i+1:] for item in sublist]
+            #document_toks = [item for sublist in documents for item in sublist]
             novel, count = novel_ngrams(document_toks, summary_toks, 1)
             foreign_novel_unigrams_num += novel
             foreign_unigrams_num += count
@@ -165,6 +166,7 @@ if __name__ == '__main__':
         tmp_fgrams_num = 0
 
         for i, summary_toks in enumerate(summaries):
+            document_toks = [item for sublist in summaries[:i]+summaries[i+1:] for item in sublist]
             document_toks = [item for sublist in summaries[:i]+summaries[i+1:] for item in sublist]
             novel, count = novel_ngrams(document_toks, summary_toks, 1)
             summ_novel_unigrams_num += novel
